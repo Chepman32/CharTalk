@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run security:secrets
+      - run: npm audit --audit-level=critical
+      - run: npm run verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: artifacts/coverage
+          if-no-files-found: ignore
+          retention-days: 14
+
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Verify production container contract
+        run: npm run test:container:contract
+      - name: Build production API image
+        run: docker build --tag chartalk-api:${{ github.sha }} .
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+
+  android-native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: npm ci
+      - run: npm run build --workspace @chartalk/mobile
+      - name: Assemble standalone Android release smoke
+        working-directory: apps/mobile/android
+        env:
+          CHARTALK_ALLOW_DEBUG_SIGNING: 'true'
+        run: ./gradlew app:assembleRelease --no-daemon
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-release-smoke
+          path: apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: ignore
+          retention-days: 14
+
+  ios-native:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Install locked CocoaPods
+        working-directory: apps/mobile/ios
+        run: pod install --deployment
+      - name: Assemble unsigned iOS Release Simulator artifact
+        run: npm run test:ios:build -- --derived-data="$GITHUB_WORKSPACE/artifacts/ios-derived"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-release-simulator
+          path: artifacts/ios-derived/Build/Products/Release-iphonesimulator/CharTalk.app
+          if-no-files-found: ignore
+          retention-days: 14

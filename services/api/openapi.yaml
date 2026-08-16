@@ -1,0 +1,1024 @@
+openapi: 3.1.0
+info:
+  title: CharTalk API
+  version: 1.0.0
+  description: Catalog, signed content delivery, consented reporting, diagnostics, and content operations.
+servers:
+  - url: https://api.chartalk.app
+tags:
+  - name: Operations
+  - name: Catalog
+  - name: Content
+  - name: Reporting
+  - name: Admin
+paths:
+  /healthz:
+    get:
+      tags: [Operations]
+      summary: Process liveness
+      operationId: getLiveness
+      responses:
+        '200':
+          description: Process is alive.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthEnvelope'
+  /ready:
+    get:
+      tags: [Operations]
+      summary: Storage and content readiness
+      operationId: getReadiness
+      responses:
+        '200':
+          description: Service is ready.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadyEnvelope'
+        '503':
+          $ref: '#/components/responses/Problem'
+  /v1/health:
+    get:
+      tags: [Operations]
+      summary: Versioned liveness
+      operationId: getVersionedLiveness
+      responses:
+        '200':
+          description: Process is alive.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthEnvelope'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/ready:
+    get:
+      tags: [Operations]
+      summary: Versioned readiness
+      operationId: getVersionedReadiness
+      responses:
+        '200':
+          description: Service is ready.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadyEnvelope'
+        '503':
+          $ref: '#/components/responses/Problem'
+  /v1/catalog:
+    get:
+      tags: [Catalog]
+      summary: Get catalog metadata without narrative nodes
+      operationId: getCatalog
+      parameters:
+        - in: query
+          name: locale
+          schema:
+            type: string
+            enum: [ru-RU]
+      responses:
+        '200':
+          description: Current catalog. Supports ETag revalidation.
+          headers:
+            ETag:
+              schema: { type: string }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogEnvelope'
+        '304':
+          description: Catalog has not changed.
+        '404':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/characters/{characterId}:
+    get:
+      tags: [Catalog]
+      summary: Get a character and their stories
+      operationId: getCharacter
+      parameters:
+        - $ref: '#/components/parameters/CharacterId'
+      responses:
+        '200':
+          description: Character detail.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: object
+                    required: [character, stories]
+                    properties:
+                      character: { $ref: '#/components/schemas/Character' }
+                      stories:
+                        type: array
+                        items: { $ref: '#/components/schemas/Story' }
+                  meta: { $ref: '#/components/schemas/Meta' }
+        '404':
+          $ref: '#/components/responses/Problem'
+  /v1/content/manifests/{packId}:
+    get:
+      tags: [Content]
+      summary: Get current package manifest
+      operationId: getContentManifest
+      parameters:
+        - $ref: '#/components/parameters/PackId'
+      responses:
+        '200':
+          description: Signed package manifest.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data: { $ref: '#/components/schemas/ContentManifest' }
+                  meta: { $ref: '#/components/schemas/Meta' }
+        '404':
+          $ref: '#/components/responses/Problem'
+  /v1/content/packages/{packId}:
+    get:
+      tags: [Content]
+      summary: Download immutable signed content package
+      operationId: downloadContentPackage
+      parameters:
+        - $ref: '#/components/parameters/PackId'
+      responses:
+        '200':
+          description: Full content package. Verify checksum and Ed25519 signature before activation.
+          headers:
+            ETag:
+              schema: { type: string }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ContentPackage' }
+        '404':
+          $ref: '#/components/responses/Problem'
+  /v1/content/packages/{packId}/builds/{buildId}:
+    get:
+      tags: [Content]
+      summary: Download one exact immutable content build
+      operationId: downloadExactContentBuild
+      parameters:
+        - $ref: '#/components/parameters/PackId'
+        - $ref: '#/components/parameters/BuildId'
+      responses:
+        '200':
+          description: Full signed content package for exact-build replay.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ContentPackage' }
+        '404':
+          $ref: '#/components/responses/Problem'
+  /v1/content/packages/{packId}/builds/{buildId}/assets/{assetId}:
+    get:
+      tags: [Content]
+      summary: Stream a signed image asset from an exact build
+      operationId: downloadContentAsset
+      parameters:
+        - $ref: '#/components/parameters/PackId'
+        - $ref: '#/components/parameters/BuildId'
+        - in: path
+          name: assetId
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        '200':
+          description: Immutable image bytes; the client verifies the manifest SHA-256 digest.
+          content:
+            image/png: {}
+            image/jpeg: {}
+            image/webp: {}
+            image/avif: {}
+        '404':
+          $ref: '#/components/responses/Problem'
+  /v1/content-reports:
+    post:
+      tags: [Reporting]
+      summary: Submit a consented minimized content report
+      operationId: createContentReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ContentReport' }
+      responses:
+        '202':
+          description: Report queued idempotently by reportId.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AcceptedReportEnvelope' }
+        '400':
+          $ref: '#/components/responses/Problem'
+        '413':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/diagnostics/events:
+    post:
+      tags: [Reporting]
+      summary: Submit an allowlisted diagnostic event
+      operationId: createDiagnosticEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DiagnosticEvent' }
+      responses:
+        '202':
+          description: Event accepted.
+        '422':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/sync/push:
+    post:
+      tags: [Sync]
+      summary: Push a versioned event batch (legacy alias)
+      operationId: pushSync
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SyncPushRequest' }
+      responses:
+        '200':
+          description: Accepted or idempotently replayed event batch.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SyncPushEnvelope' }
+        '401':
+          $ref: '#/components/responses/Problem'
+        '403':
+          $ref: '#/components/responses/Problem'
+        '409':
+          description: A deterministic sequence, build, or state conflict.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SyncPushEnvelope' }
+        '422':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+        '500':
+          $ref: '#/components/responses/Problem'
+        '404':
+          description: Sync is deliberately disabled for this release.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+  /v1/runs/{runId}/events:push:
+    post:
+      tags: [Sync]
+      summary: Push a versioned event batch for one run
+      operationId: pushRunEvents
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - $ref: '#/components/parameters/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SyncPushRequest' }
+      responses:
+        '200':
+          description: Accepted or idempotently replayed event batch.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SyncPushEnvelope' }
+        '401':
+          $ref: '#/components/responses/Problem'
+        '403':
+          $ref: '#/components/responses/Problem'
+        '409':
+          description: A deterministic sequence, build, or state conflict.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SyncPushEnvelope' }
+        '422':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+  /v1/runs/{runId}/events:
+    get:
+      tags: [Sync]
+      summary: Pull a run's events after a durable cursor
+      operationId: pullRunEvents
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - $ref: '#/components/parameters/DeviceId'
+        - $ref: '#/components/parameters/AfterCursor'
+      responses:
+        '200':
+          description: Events and the next cursor.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SyncPullEnvelope' }
+        '401':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+  /v1/admin/content/validate:
+    post:
+      tags: [Admin]
+      summary: Compile and validate a content package (writer/editor/QA/publisher)
+      operationId: validateContentPackage
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ContentPackage' }
+      responses:
+        '200':
+          description: Deterministic compilation report.
+        '401':
+          $ref: '#/components/responses/Problem'
+        '403':
+          $ref: '#/components/responses/Problem'
+        '413':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/admin/content/publish:
+    post:
+      tags: [Admin]
+      summary: Gate, sign, and publish an approved content package (publisher only)
+      operationId: publishContentPackage
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: header
+          name: X-CharTalk-Confirm-Build-Id
+          required: true
+          description: Exact immutable build ID typed by the publisher; aliases are rejected.
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ContentPackage' }
+      responses:
+        '201':
+          description: Production-eligible package published.
+        '401':
+          $ref: '#/components/responses/Problem'
+        '403':
+          $ref: '#/components/responses/Problem'
+        '404':
+          description: Signing capability is disabled.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '409':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    CharacterId:
+      in: path
+      name: characterId
+      required: true
+      schema: { type: string, minLength: 1 }
+    PackId:
+      in: path
+      name: packId
+      required: true
+      schema: { type: string, minLength: 1 }
+    BuildId:
+      in: path
+      name: buildId
+      required: true
+      schema: { type: string, minLength: 1 }
+    RunId:
+      in: path
+      name: runId
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 200
+        pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$'
+    DeviceId:
+      in: header
+      name: x-device-id
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 200
+        pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$'
+    AfterCursor:
+      in: query
+      name: after
+      required: false
+      schema:
+        type: string
+        maxLength: 20
+        pattern: '^\\d+$'
+  responses:
+    Problem:
+      description: RFC 9457-compatible problem response.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    RateLimited:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          schema: { type: integer, minimum: 1 }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+  schemas:
+    Meta:
+      type: object
+      required: [requestId]
+      properties:
+        requestId: { type: string }
+    Problem:
+      type: object
+      required: [type, title, status, detail, instance, requestId]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer, minimum: 400, maximum: 599 }
+        detail: { type: string }
+        instance: { type: string }
+        requestId: { type: string }
+        errors: {}
+    HealthEnvelope:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [status, version]
+          properties:
+            status: { const: ok }
+            version: { type: string }
+        meta: { $ref: '#/components/schemas/Meta' }
+    ReadyEnvelope:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [status, version, contentBuildId]
+          properties:
+            status: { const: ready }
+            version: { type: string }
+            contentBuildId: { type: string }
+        meta: { $ref: '#/components/schemas/Meta' }
+    Character:
+      type: object
+      required:
+        [
+          characterId,
+          name,
+          ageLabel,
+          isAdult,
+          hook,
+          description,
+          genres,
+          dynamics,
+          portraitAssetId,
+          accent,
+        ]
+      properties:
+        characterId: { type: string }
+        name: { type: string }
+        ageLabel: { type: string }
+        isAdult: { type: boolean }
+        hook: { type: string }
+        description: { type: string }
+        genres: { type: array, items: { type: string } }
+        dynamics: { type: array, items: { type: string } }
+        portraitAssetId: { type: string }
+        accent: { type: string, enum: [ember, ochre, rose, plum, moss] }
+    Story:
+      type: object
+      required:
+        [
+          storyId,
+          characterId,
+          title,
+          premise,
+          status,
+          rating,
+          durationMinutes,
+          warningIds,
+          episodeIds,
+        ]
+      properties:
+        storyId: { type: string }
+        characterId: { type: string }
+        title: { type: string }
+        premise: { type: string }
+        status: { type: string, enum: [complete, ongoing, mini] }
+        rating: { type: string, enum: [12+, 16+, 18+] }
+        durationMinutes: { type: integer, minimum: 1 }
+        warningIds: { type: array, items: { type: string } }
+        episodeIds: { type: array, minItems: 1, items: { type: string } }
+    ContentManifest:
+      type: object
+      required:
+        [
+          packId,
+          locale,
+          schemaVersion,
+          contentVersion,
+          buildId,
+          minEngineVersion,
+          maxEngineVersion,
+          createdAt,
+          checksum,
+          signature,
+        ]
+      properties:
+        packId: { type: string }
+        locale: { const: ru-RU }
+        schemaVersion: { type: integer }
+        contentVersion: { type: string }
+        buildId: { type: string }
+        minEngineVersion: { type: string }
+        maxEngineVersion: { type: string }
+        createdAt: { type: string, format: date-time }
+        signingKeyId: { type: string, minLength: 1, maxLength: 100 }
+        checksum: { type: string }
+        signature: { type: string }
+    CatalogEnvelope:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required:
+            [
+              packId,
+              locale,
+              buildId,
+              contentVersion,
+              checksum,
+              characters,
+              stories,
+              episodes,
+              warnings,
+            ]
+          properties:
+            packId: { type: string }
+            locale: { const: ru-RU }
+            buildId: { type: string }
+            contentVersion: { type: string }
+            checksum: { type: string, pattern: '^sha256:' }
+            characters:
+              { type: array, items: { $ref: '#/components/schemas/Character' } }
+            stories:
+              { type: array, items: { $ref: '#/components/schemas/Story' } }
+            episodes:
+              {
+                type: array,
+                items: { type: object, additionalProperties: true },
+              }
+            warnings:
+              {
+                type: array,
+                items: { type: object, additionalProperties: true },
+              }
+        meta: { $ref: '#/components/schemas/Meta' }
+    ContentPackage:
+      type: object
+      required:
+        [manifest, characters, stories, episodes, nodes, warnings, assets]
+      properties:
+        manifest: { $ref: '#/components/schemas/ContentManifest' }
+        characters:
+          { type: array, items: { $ref: '#/components/schemas/Character' } }
+        stories: { type: array, items: { $ref: '#/components/schemas/Story' } }
+        episodes:
+          { type: array, items: { type: object, additionalProperties: true } }
+        nodes:
+          { type: array, items: { type: object, additionalProperties: true } }
+        warnings:
+          { type: array, items: { type: object, additionalProperties: true } }
+        assets:
+          { type: array, items: { type: object, additionalProperties: true } }
+      additionalProperties: false
+    ContentReport:
+      type: object
+      required:
+        [
+          reportId,
+          contentBuildId,
+          appVersion,
+          platform,
+          category,
+          consentGrantedAt,
+        ]
+      properties:
+        reportId: { type: string, minLength: 8, maxLength: 100 }
+        runId: { type: [string, 'null'], maxLength: 100 }
+        nodeId: { type: [string, 'null'], maxLength: 200 }
+        choiceId: { type: [string, 'null'], maxLength: 200 }
+        contentBuildId: { type: string, maxLength: 100 }
+        appVersion: { type: string, maxLength: 40 }
+        platform: { type: string, enum: [ios, android, web, test, unknown] }
+        diagnosticCode: { type: [string, 'null'], maxLength: 100 }
+        category:
+          {
+            type: string,
+            enum: [typo, continuity, intent, warning, safety, technical, other],
+          }
+        note: { type: [string, 'null'], maxLength: 500 }
+        consentGrantedAt: { type: string, format: date-time }
+      additionalProperties: false
+    AcceptedReportEnvelope:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [reportId, status]
+          properties:
+            reportId: { type: string }
+            status: { const: queued }
+        meta: { $ref: '#/components/schemas/Meta' }
+    SyncEffect:
+      type: object
+      required: [effectId, op]
+      properties:
+        effectId: { type: string, minLength: 1, maxLength: 200 }
+        op:
+          type: string
+          enum:
+            [
+              increment,
+              set,
+              setMemory,
+              addMemory,
+              removeMemory,
+              addPromise,
+              resolvePromise,
+              advanceArc,
+              startCooldown,
+              addToSet,
+            ]
+        path: { type: string, minLength: 1, maxLength: 200 }
+        by: { type: integer }
+        min: { type: integer }
+        max: { type: integer }
+        value: {}
+        key: { type: string, minLength: 1, maxLength: 200 }
+        promiseId: { type: string, minLength: 1, maxLength: 200 }
+        outcome: { type: string, enum: [kept, broken, released] }
+        arcId: { type: string, minLength: 1, maxLength: 200 }
+        phase: { type: string, minLength: 1, maxLength: 200 }
+        cooldownId: { type: string, minLength: 1, maxLength: 200 }
+        turns: { type: integer, minimum: 0, maximum: 1000 }
+      additionalProperties: false
+    SyncRun:
+      type: object
+      required:
+        [
+          runId,
+          storyId,
+          episodeId,
+          characterId,
+          packId,
+          contentBuildId,
+          sequence,
+          activeNodeId,
+          stateHash,
+          status,
+        ]
+      properties:
+        runId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        storyId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        episodeId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        characterId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        packId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        contentBuildId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        sequence: { type: integer, minimum: 0 }
+        activeNodeId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        stateHash: { type: string, pattern: '^sha256:[a-f0-9]{64}$' }
+        status: { type: string, enum: [active, completed, archived] }
+        parentRunId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        branchFromSequence: { type: integer, minimum: 0 }
+        label: { type: string, maxLength: 60 }
+      additionalProperties: false
+    SyncEvent:
+      type: object
+      required:
+        [
+          eventId,
+          operationId,
+          runId,
+          sequence,
+          nodeId,
+          choiceId,
+          contentBuildId,
+          frozenEffects,
+          beforeStateHash,
+          afterStateHash,
+          committedAt,
+        ]
+      properties:
+        eventId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        operationId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        runId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        sequence: { type: integer, minimum: 0 }
+        nodeId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        choiceId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        contentBuildId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        frozenEffects:
+          {
+            type: array,
+            items: { $ref: '#/components/schemas/SyncEffect' },
+            maxItems: 100,
+          }
+        beforeStateHash: { type: string, pattern: '^sha256:[a-f0-9]{64}$' }
+        afterStateHash: { type: string, pattern: '^sha256:[a-f0-9]{64}$' }
+        committedAt: { type: string, format: date-time }
+      additionalProperties: false
+    SyncPushRequest:
+      type: object
+      required: [deviceId, run, events]
+      properties:
+        deviceId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        cursor: { type: [string, 'null'], maxLength: 500 }
+        run: { $ref: '#/components/schemas/SyncRun' }
+        events:
+          {
+            type: array,
+            minItems: 1,
+            maxItems: 100,
+            items: { $ref: '#/components/schemas/SyncEvent' },
+          }
+      additionalProperties: false
+    SyncConflict:
+      type: object
+      required:
+        [
+          code,
+          runId,
+          serverSequence,
+          clientSequence,
+          existingEventId,
+          messageKey,
+          forkRunId,
+        ]
+      properties:
+        code:
+          {
+            type: string,
+            enum:
+              [
+                RUN_SEQUENCE_CONFLICT,
+                RUN_SEQUENCE_GAP,
+                STATE_HASH_MISMATCH,
+                CONTENT_BUILD_UNAVAILABLE,
+                RUN_QUARANTINED,
+              ],
+          }
+        runId:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        serverSequence: { type: [integer, 'null'], minimum: 0 }
+        clientSequence: { type: [integer, 'null'], minimum: 0 }
+        existingEventId:
+          {
+            type: [string, 'null'],
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        messageKey:
+          {
+            type: string,
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+        forkRunId:
+          {
+            type: [string, 'null'],
+            minLength: 1,
+            maxLength: 200,
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9._:-]*$',
+          }
+      additionalProperties: false
+    SyncPushResponse:
+      type: object
+      required: [cursor, run, acceptedEventIds, duplicateEventIds, conflict]
+      properties:
+        cursor: { type: string, minLength: 1 }
+        run: { $ref: '#/components/schemas/SyncRun' }
+        acceptedEventIds:
+          { type: array, items: { type: string, minLength: 1, maxLength: 200 } }
+        duplicateEventIds:
+          { type: array, items: { type: string, minLength: 1, maxLength: 200 } }
+        conflict:
+          {
+            anyOf:
+              [{ $ref: '#/components/schemas/SyncConflict' }, { type: 'null' }],
+          }
+      additionalProperties: false
+    SyncPushEnvelope:
+      type: object
+      required: [data, meta]
+      properties:
+        data: { $ref: '#/components/schemas/SyncPushResponse' }
+        meta: { $ref: '#/components/schemas/Meta' }
+    SyncPullResponse:
+      type: object
+      required: [cursor, events, runs, hasMore]
+      properties:
+        cursor: { type: string, minLength: 1 }
+        events:
+          {
+            type: array,
+            items: { $ref: '#/components/schemas/SyncEvent' },
+            maxItems: 100,
+          }
+        runs: { type: array, items: { $ref: '#/components/schemas/SyncRun' } }
+        hasMore: { type: boolean }
+      additionalProperties: false
+    SyncPullEnvelope:
+      type: object
+      required: [data, meta]
+      properties:
+        data: { $ref: '#/components/schemas/SyncPullResponse' }
+        meta: { $ref: '#/components/schemas/Meta' }
+    DiagnosticEvent:
+      type: object
+      required: [eventName, contentBuildId, occurredAt]
+      properties:
+        eventId: { type: string, minLength: 8, maxLength: 100 }
+        eventName:
+          {
+            type: string,
+            enum:
+              [
+                app_opened,
+                content_error,
+                onboarding_started,
+                onboarding_completed,
+                preference_selected,
+                character_viewed,
+                story_started,
+                chapter_download_started,
+                chapter_download_completed,
+                chapter_download_failed,
+                decision_presented,
+                choice_selected,
+                choice_undone,
+                choice_committed,
+                response_rendered,
+                checkpoint_reached,
+                chapter_completed,
+                ending_reached,
+                recap_viewed,
+                branch_created,
+                timeline_switched,
+                scene_skipped,
+                content_problem_reported,
+                notification_prompt_shown,
+                notification_permission_result,
+                notification_opened,
+                paywall_viewed,
+                purchase_completed,
+                purchase_restored,
+                purchase_failed,
+                content_migration_started,
+                content_migration_completed,
+                content_migration_failed,
+                recovery_performed,
+              ],
+          }
+        contentBuildId: { type: string, maxLength: 100 }
+        occurredAt: { type: string, format: date-time }
+        nodeType:
+          {
+            type: string,
+            enum: [decision, reaction, bridge, checkpoint, ending],
+          }
+        durationBucket: { type: string, enum: [under_1s, 1_to_3s, over_3s] }
+        latencyBucket:
+          { type: string, enum: [under_50ms, 50_to_100ms, over_100ms] }
+        optionPosition: { type: integer, minimum: 1, maximum: 4 }
+        networkClass: { type: string, enum: [offline, cellular, wifi, unknown] }
+        errorCode: { type: string, maxLength: 64, pattern: '^[A-Z0-9_.-]+$' }
+      additionalProperties: false

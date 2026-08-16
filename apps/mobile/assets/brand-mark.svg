@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title description">
+  <title id="title">CharTalk</title>
+  <desc id="description">Four warm dialogue marks forming an open doorway on a charcoal field.</desc>
+  <rect width="1024" height="1024" rx="224" fill="#111118"/>
+  <path d="M270 278C270 245 297 218 330 218H374V718H330C297 718 270 691 270 658V278Z" fill="#E26F3F"/>
+  <path d="M424 218H544V718H424V218Z" fill="#EFA052"/>
+  <path d="M594 218H714C747 218 774 245 774 278V484H654V338H594V218Z" fill="#D2A63F"/>
+  <path d="M594 534H774V658C774 691 747 718 714 718H594V534Z" fill="#A45A99"/>
+  <circle cx="714" cy="806" r="54" fill="#FAF7F0"/>
+</svg>

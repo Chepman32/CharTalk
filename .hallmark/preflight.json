@@ -1,0 +1,8 @@
+{
+  "date": "2026-08-13",
+  "framework": "greenfield Expo SDK 57 mobile + Vite content studio",
+  "fontStack": "Lora display + Manrope body + JetBrains Mono utility",
+  "palette": "Midnight warm-charcoal neutrals and ember accent",
+  "motion": "Restrained state motion with reduced-motion support",
+  "spacing": "Semantic 4pt scale"
+}

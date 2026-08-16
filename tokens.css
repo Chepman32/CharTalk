@@ -1,0 +1,84 @@
+/* Hallmark · macrostructure: Workbench · tone: atmospheric · anchor hue: ember */
+/* hallmark:genre: atmospheric */
+/* hallmark:palette: midnight */
+/* hallmark:typography: editorial */
+/* hallmark:layout: workbench */
+
+:root {
+  color-scheme: dark;
+
+  --color-ink-950: oklch(0.145 0.014 274);
+  --color-ink-900: oklch(0.178 0.017 274);
+  --color-ink-850: oklch(0.215 0.019 274);
+  --color-ink-800: oklch(0.255 0.021 274);
+  --color-ink-700: oklch(0.335 0.024 274);
+  --color-ash-500: oklch(0.595 0.018 278);
+  --color-ash-300: oklch(0.765 0.014 278);
+  --color-paper-100: oklch(0.925 0.012 78);
+  --color-paper-50: oklch(0.975 0.008 78);
+  --color-ember-500: oklch(0.69 0.16 43);
+  --color-ember-400: oklch(0.76 0.14 55);
+  --color-ochre-500: oklch(0.72 0.13 81);
+  --color-plum-500: oklch(0.58 0.12 323);
+  --color-moss-500: oklch(0.65 0.1 154);
+  --color-danger-500: oklch(0.63 0.19 25);
+  --color-info-500: oklch(0.68 0.1 235);
+
+  --surface-canvas: var(--color-ink-950);
+  --surface-raised: var(--color-ink-900);
+  --surface-panel: var(--color-ink-850);
+  --surface-interactive: var(--color-ink-800);
+  --text-primary: var(--color-paper-50);
+  --text-secondary: var(--color-ash-300);
+  --text-muted: var(--color-ash-500);
+  --border-subtle: var(--color-ink-700);
+  --accent-primary: var(--color-ember-500);
+  --accent-primary-hover: var(--color-ember-400);
+
+  --font-display: 'Lora', ui-serif, Georgia, serif;
+  --font-body: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: clamp(2rem, 5vw, 3.75rem);
+  --leading-tight: 1.08;
+  --leading-copy: 1.58;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-pill: 999rem;
+  --shadow-lift: 0 1rem 3rem oklch(0.08 0.01 274 / 0.44);
+  --focus-ring: 0 0 0 0.1875rem oklch(0.76 0.14 55 / 0.45);
+
+  --duration-fast: 120ms;
+  --duration-normal: 220ms;
+  --duration-deliberate: 420ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  --shell-max: 90rem;
+  --reader-max: 44rem;
+  --touch-min: 2.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 1ms;
+    --duration-normal: 1ms;
+    --duration-deliberate: 1ms;
+  }
+}

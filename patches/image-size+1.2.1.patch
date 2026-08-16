@@ -1,0 +1,37 @@
+diff --git a/node_modules/image-size/dist/types/icns.js b/node_modules/image-size/dist/types/icns.js
+index f2bfafe..452d99f 100644
+--- a/node_modules/image-size/dist/types/icns.js
++++ b/node_modules/image-size/dist/types/icns.js
+@@ -82,6 +82,8 @@ exports.ICNS = {
+         let imageOffset = SIZE_HEADER;
+         let imageHeader = readImageHeader(input, imageOffset);
+         let imageSize = getImageSize(imageHeader[0]);
++        if (imageHeader[1] < SIZE_HEADER)
++            throw new TypeError('Invalid ICNS entry length');
+         imageOffset += imageHeader[1];
+         if (imageOffset === fileLength)
+             return imageSize;
+@@ -93,6 +95,8 @@ exports.ICNS = {
+         while (imageOffset < fileLength && imageOffset < inputLength) {
+             imageHeader = readImageHeader(input, imageOffset);
+             imageSize = getImageSize(imageHeader[0]);
++            if (imageHeader[1] < SIZE_HEADER)
++                throw new TypeError('Invalid ICNS entry length');
+             imageOffset += imageHeader[1];
+             result.images.push(imageSize);
+         }
+diff --git a/node_modules/image-size/dist/types/utils.js b/node_modules/image-size/dist/types/utils.js
+index 5224bba..290ca61 100644
+--- a/node_modules/image-size/dist/types/utils.js
++++ b/node_modules/image-size/dist/types/utils.js
+@@ -52,6 +52,10 @@ function readBox(input, offset) {
+     if (input.length - offset < 4)
+         return;
+     const boxSize = (0, exports.readUInt32BE)(input, offset);
++    // ISO BMFF boxes smaller than their 8-byte header are malformed. Rejecting
++    // them also guarantees that every successful scan advances the cursor.
++    if (boxSize < 8)
++        return;
+     if (input.length - offset < boxSize)
+         return;
+     return {

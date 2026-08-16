@@ -1,0 +1,20 @@
+{
+  "name": "@chartalk/dialogue-engine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@chartalk/content-schema": "1.0.0",
+    "@noble/hashes": "2.3.0"
+  },
+  "devDependencies": {
+    "fast-check": "4.9.0"
+  }
+}
