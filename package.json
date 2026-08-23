@@ -15,6 +15,9 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "npm run start --workspace @chartalk/mobile --",
+    "android": "npm run android --workspace @chartalk/mobile --",
+    "ios": "npm run ios --workspace @chartalk/mobile --",
     "dev": "npm run start --workspace @chartalk/mobile",
     "dev:mobile": "npm run start --workspace @chartalk/mobile",
     "dev:studio": "npm run dev --workspace @chartalk/content-studio",
@@ -61,6 +64,7 @@
     "eslint": "9.39.5",
     "patch-package": "8.0.1",
     "prettier": "3.9.6",
+    "react-native": "0.86.2",
     "sharp": "0.35.3",
     "tsx": "4.23.12",
     "typescript": "5.9.3",
