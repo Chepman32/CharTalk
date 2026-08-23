@@ -23,6 +23,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { useApp } from '@/state/AppProvider'
 import { useTheme } from '@/theme/ThemeProvider'
+import { pillTextColor, type PillTone } from '@/ui/pill-style'
 import { textScaleMultiplier } from '@/ui/text-scale'
 
 type TextVariant =
@@ -190,18 +191,11 @@ export function SectionLabel({ children }: React.PropsWithChildren) {
 export function Pill({
   children,
   tone = 'neutral',
-}: React.PropsWithChildren<{ tone?: 'neutral' | 'accent' }>) {
+}: React.PropsWithChildren<{ tone?: PillTone }>) {
   const { theme, styles } = useStyles()
   return (
     <View style={[styles.pill, tone === 'accent' && styles.pillAccent]}>
-      <Text
-        variant="caption"
-        color={
-          tone === 'accent'
-            ? theme.colors.buttonPrimaryText
-            : theme.colors.textSecondary
-        }
-      >
+      <Text variant="caption" color={pillTextColor(tone, theme.colors)}>
         {children}
       </Text>
     </View>

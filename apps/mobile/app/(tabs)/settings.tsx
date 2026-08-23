@@ -12,7 +12,6 @@ import {
   TextAa,
   TimerIcon,
   Trash,
-  UserCircle,
   Vibrate,
   WarningCircle,
   Wind,
@@ -24,7 +23,7 @@ import { serializeLocalDataExport } from '@/privacy-export'
 import { useApp } from '@/state/AppProvider'
 import { useTheme } from '@/theme/ThemeProvider'
 import { SettingsRow } from '@/ui/SettingsRow'
-import { Pill, Screen, SectionLabel, Text } from '@/ui/primitives'
+import { Screen, SectionLabel, Text } from '@/ui/primitives'
 
 export default function SettingsScreen() {
   const router = useRouter()
@@ -109,18 +108,6 @@ export default function SettingsScreen() {
       <View style={styles.header}>
         <SectionLabel>Устройство</SectionLabel>
         <Text variant="title">Настройки</Text>
-        <View style={styles.profile}>
-          <UserCircle color={theme.colors.primary} size={32} weight="fill" />
-          <View style={styles.profileCopy}>
-            <Text variant="heading">
-              {snapshot?.profile?.displayName ?? 'Читатель'}
-            </Text>
-            <Text variant="caption" color={theme.colors.textMuted}>
-              Локальный профиль · без аккаунта
-            </Text>
-          </View>
-          <Pill>16+</Pill>
-        </View>
       </View>
 
       <View>
@@ -296,12 +283,5 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   header: { gap: spacing[3], paddingTop: spacing[4] },
-  profile: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing[3],
-    paddingVertical: spacing[3],
-  },
-  profileCopy: { flex: 1 },
   version: { textAlign: 'center', marginTop: spacing[4] },
 })

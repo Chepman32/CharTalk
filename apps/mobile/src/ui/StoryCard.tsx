@@ -14,12 +14,10 @@ import { Pill, Text } from '@/ui/primitives'
 export function StoryCard({
   story,
   character: providedCharacter,
-  isDownloaded = true,
   onPress,
 }: {
   story: Story
   character?: Character
-  isDownloaded?: boolean
   onPress(): void
 }) {
   const { contentCatalog } = useApp()
@@ -75,7 +73,7 @@ export function StoryCard({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${story.title}. ${character.name}.${tagLabel} ${formatMinuteCount(story.durationMinutes)}. ${isDownloaded ? 'Доступно офлайн.' : 'Потребуется загрузка.'}`}
+      accessibilityLabel={`${story.title}. ${character.name}.${tagLabel} ${formatMinuteCount(story.durationMinutes)}.`}
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
@@ -90,10 +88,7 @@ export function StoryCard({
       <View style={styles.copy}>
         <View style={styles.meta}>
           <Pill tone="accent">{story.rating}</Pill>
-          <Pill>{story.durationMinutes} мин</Pill>
-          <Pill tone={isDownloaded ? 'neutral' : 'accent'}>
-            {isDownloaded ? 'Офлайн' : 'Скачать'}
-          </Pill>
+          <Pill tone="media">{story.durationMinutes} мин</Pill>
         </View>
         <View style={styles.titleRow}>
           <View style={styles.titleCopy}>

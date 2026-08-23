@@ -3,8 +3,8 @@ import type { Story } from '@chartalk/content-schema'
 import { useRouter } from 'expo-router'
 import {
   ArrowRight,
-  DownloadSimple,
   GitBranchIcon,
+  SlidersHorizontal,
   Sparkle,
 } from 'phosphor-react-native'
 import React, { useMemo, useState } from 'react'
@@ -17,15 +17,16 @@ import {
 } from 'react-native'
 
 import {
-  catalogPage,
   type CatalogSort,
   type DurationFilter,
   queryCatalogStories,
 } from '@/catalog-query'
+import { countActiveCatalogFilters } from '@/catalog-filter-options'
 import { contentForBuild } from '@/content-for-run'
 import { formatRunCount, formatStoryCount } from '@/format'
 import { useApp } from '@/state/AppProvider'
 import { type ThemeColorAliases, useThemeColors } from '@/theme/useThemeColors'
+import { CatalogFilterSheet } from '@/ui/CatalogFilterSheet'
 import { StoryCard } from '@/ui/StoryCard'
 import {
   Button,
@@ -35,28 +36,6 @@ import {
   SectionLabel,
   Text,
 } from '@/ui/primitives'
-
-const PAGE_SIZE = 6
-const durationValues: DurationFilter[] = ['any', 'short', 'medium', 'long']
-const sortValues: CatalogSort[] = [
-  'recommended',
-  'newest',
-  'updated',
-  'short',
-  'complete',
-]
-const statusValues: Array<Story['status'] | null> = [
-  null,
-  'complete',
-  'ongoing',
-  'mini',
-]
-const ratingValues: Array<Story['rating'] | null> = [null, '12+', '16+', '18+']
-
-const nextValue = <T,>(values: readonly T[], current: T): T => {
-  const index = values.indexOf(current)
-  return values[(index + 1) % values.length] ?? values[0]!
-}
 
 export default function StoriesScreen() {
   const nativeColors = useThemeColors()
@@ -73,7 +52,6 @@ export default function StoriesScreen() {
     clearError,
     catalogStatus,
     catalogUpdatedAt,
-    refreshCatalog,
   } = useApp()
   const [search, setSearch] = useState('')
   const [genre, setGenre] = useState<string | null>(null)
@@ -83,7 +61,16 @@ export default function StoriesScreen() {
   const [rating, setRating] = useState<Story['rating'] | null>(null)
   const [downloadedOnly, setDownloadedOnly] = useState(false)
   const [sort, setSort] = useState<CatalogSort>('recommended')
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const activeFilterCount = countActiveCatalogFilters({
+    genre,
+    tone,
+    duration,
+    status,
+    rating,
+    downloadedOnly,
+    sort,
+  })
   const activeRuns = snapshot?.runs.filter(run => run.status === 'active') ?? []
   const branchedStoryIds = useMemo(() => {
     const runStoryIds = new Set(snapshot?.runs.map(run => run.storyId) ?? [])
@@ -144,7 +131,6 @@ export default function StoriesScreen() {
       tone,
     ],
   )
-  const page = catalogPage(stories, visibleCount)
   const boundaryVisibleCount = useMemo(
     () =>
       queryCatalogStories(discoveryCatalog, {
@@ -171,7 +157,6 @@ export default function StoriesScreen() {
     setRating(null)
     setDownloadedOnly(false)
     setSort('recommended')
-    setVisibleCount(PAGE_SIZE)
   }
 
   return (
@@ -191,14 +176,6 @@ export default function StoriesScreen() {
             сеть для чтения не понадобится.
           </Text>
         </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Открыть обновления"
-          onPress={() => router.push('/downloads')}
-          style={styles.iconButton}
-        >
-          <DownloadSimple color={nativeColors.textPrimary} size={22} />
-        </Pressable>
       </View>
 
       {error ? <InlineError message={error} onDismiss={clearError} /> : null}
@@ -335,130 +312,58 @@ export default function StoriesScreen() {
         <TextInput
           accessibilityLabel="Поиск по персонажам и историям"
           autoCorrect={false}
-          onChangeText={value => {
-            setSearch(value)
-            setVisibleCount(PAGE_SIZE)
-          }}
+          onChangeText={setSearch}
           placeholder="Имя персонажа или история"
           placeholderTextColor={nativeColors.placeholder}
           selectionColor={nativeColors.focus}
           style={styles.search}
           value={search}
         />
-        <View style={styles.filters}>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              setGenre(nextValue([null, ...genres], genre))
-              setVisibleCount(PAGE_SIZE)
-            }}
-            style={[styles.chip, Boolean(genre) && styles.chipActive]}
-          >
-            <Text variant="caption">Жанр: {genre ?? 'все'}</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              setTone(nextValue([null, ...tones], tone))
-              setVisibleCount(PAGE_SIZE)
-            }}
-            style={[styles.chip, Boolean(tone) && styles.chipActive]}
-          >
-            <Text variant="caption">Тон: {tone ?? 'любой'}</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              setDuration(nextValue(durationValues, duration))
-              setVisibleCount(PAGE_SIZE)
-            }}
-            style={[styles.chip, duration !== 'any' && styles.chipActive]}
-          >
-            <Text variant="caption">
-              Длина:{' '}
-              {duration === 'any'
-                ? 'любая'
-                : duration === 'short'
-                  ? 'до 15 мин'
-                  : duration === 'medium'
-                    ? '15–30 мин'
-                    : '30+ мин'}
+        <Pressable
+          accessibilityLabel={`Открыть фильтры каталога${
+            activeFilterCount > 0 ? `. Выбрано: ${activeFilterCount}` : ''
+          }`}
+          accessibilityRole="button"
+          accessibilityState={{ expanded: filtersOpen }}
+          onPress={() => setFiltersOpen(true)}
+          style={({ pressed }) => [
+            styles.filterTrigger,
+            activeFilterCount > 0 && styles.filterTriggerActive,
+            pressed && styles.pressed,
+          ]}
+        >
+          <SlidersHorizontal
+            color={
+              activeFilterCount > 0
+                ? nativeColors.emberSoft
+                : nativeColors.textPrimary
+            }
+            size={22}
+          />
+          <View style={styles.filterTriggerCopy}>
+            <Text variant="label">Фильтры</Text>
+            <Text variant="caption" color={nativeColors.textMuted}>
+              {activeFilterCount > 0
+                ? `Выбрано: ${activeFilterCount}`
+                : 'Показать все варианты'}
             </Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              setStatus(nextValue(statusValues, status))
-              setVisibleCount(PAGE_SIZE)
-            }}
-            style={[styles.chip, Boolean(status) && styles.chipActive]}
+          </View>
+          <Text
+            variant="label"
+            color={
+              activeFilterCount > 0
+                ? nativeColors.emberSoft
+                : nativeColors.textMuted
+            }
           >
-            <Text variant="caption">
-              Статус:{' '}
-              {status === 'complete'
-                ? 'завершена'
-                : status === 'ongoing'
-                  ? 'выходит'
-                  : status === 'mini'
-                    ? 'мини'
-                    : 'любой'}
-            </Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              setRating(nextValue(ratingValues, rating))
-              setVisibleCount(PAGE_SIZE)
-            }}
-            style={[styles.chip, Boolean(rating) && styles.chipActive]}
-          >
-            <Text variant="caption">Рейтинг: {rating ?? 'любой'}</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={{ selected: downloadedOnly }}
-            onPress={() => {
-              setDownloadedOnly(value => !value)
-              setVisibleCount(PAGE_SIZE)
-            }}
-            style={[styles.chip, downloadedOnly && styles.chipActive]}
-          >
-            <Text variant="caption">На устройстве</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              setSort(nextValue(sortValues, sort))
-              setVisibleCount(PAGE_SIZE)
-            }}
-            style={[styles.chip, sort !== 'recommended' && styles.chipActive]}
-          >
-            <Text variant="caption">
-              Сначала:{' '}
-              {sort === 'recommended'
-                ? 'рекомендованные'
-                : sort === 'newest'
-                  ? 'новые'
-                  : sort === 'updated'
-                    ? 'обновлённые'
-                    : sort === 'short'
-                      ? 'короткие'
-                      : 'завершённые'}
-            </Text>
-          </Pressable>
-        </View>
+            {activeFilterCount || 'Все'}
+          </Text>
+        </Pressable>
         <View style={styles.resultsHeader}>
           <Text variant="caption" color={nativeColors.textMuted}>
             Найдено: {stories.length}
           </Text>
-          {search ||
-          genre ||
-          tone ||
-          duration !== 'any' ||
-          status ||
-          rating ||
-          downloadedOnly ||
-          sort !== 'recommended' ? (
+          {search || activeFilterCount > 0 ? (
             <Pressable accessibilityRole="button" onPress={resetFilters}>
               <Text variant="label" color={nativeColors.emberSoft}>
                 Сбросить
@@ -478,14 +383,14 @@ export default function StoriesScreen() {
             />
           </View>
         ) : null}
-        {page.items.length === 0 ? (
+        {stories.length === 0 ? (
           <EmptyState
             title="Ничего не нашлось."
             body="Уберите один из фильтров или сбросьте условия поиска."
           />
         ) : (
           <View style={[styles.grid, width >= 700 && styles.gridWide]}>
-            {page.items.map(story => (
+            {stories.map(story => (
               <View
                 key={story.storyId}
                 style={width >= 700 ? styles.gridCell : undefined}
@@ -507,7 +412,6 @@ export default function StoriesScreen() {
                   character={discoveryCatalog.characters.find(
                     item => item.characterId === story.characterId,
                   )}
-                  isDownloaded={downloadedStoryIds.has(story.storyId)}
                   onPress={() =>
                     router.push({
                       pathname: '/story/[storyId]',
@@ -519,13 +423,6 @@ export default function StoriesScreen() {
             ))}
           </View>
         )}
-        {page.hasMore ? (
-          <Button
-            label={`Показать ещё ${Math.min(PAGE_SIZE, stories.length - visibleCount)}`}
-            variant="secondary"
-            onPress={() => setVisibleCount(count => count + PAGE_SIZE)}
-          />
-        ) : null}
       </View>
 
       <View style={styles.offlineNote}>
@@ -543,20 +440,29 @@ export default function StoriesScreen() {
             ? 'Каталог не обновился, но встроенные истории и сохранённые карточки никуда не делись.'
             : 'Ничего скачивать для чтения не нужно. Обновления никогда не заменяют версию, по которой идёт активное прохождение.'}
         </Text>
-        {catalogStatus !== 'fresh' ? (
-          <Button
-            label="Обновить каталог"
-            variant="quiet"
-            loading={catalogStatus === 'loading'}
-            onPress={() => void refreshCatalog()}
-          />
-        ) : null}
-        <Button
-          label="Управлять обновлениями"
-          variant="quiet"
-          onPress={() => router.push('/downloads')}
-        />
       </View>
+
+      <CatalogFilterSheet
+        visible={filtersOpen}
+        genres={genres}
+        tones={tones}
+        genre={genre}
+        tone={tone}
+        duration={duration}
+        status={status}
+        rating={rating}
+        downloadedOnly={downloadedOnly}
+        sort={sort}
+        onGenreChange={setGenre}
+        onToneChange={setTone}
+        onDurationChange={setDuration}
+        onStatusChange={setStatus}
+        onRatingChange={setRating}
+        onDownloadedOnlyChange={setDownloadedOnly}
+        onSortChange={setSort}
+        onReset={resetFilters}
+        onClose={() => setFiltersOpen(false)}
+      />
     </Screen>
   )
 }
@@ -580,15 +486,6 @@ const createStyles = (nativeColors: ThemeColorAliases) =>
       paddingTop: spacing[4],
     },
     headerCopy: { flex: 1, gap: spacing[2] },
-    iconButton: {
-      width: 48,
-      height: 48,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: nativeColors.border,
-      borderRadius: radius.pill,
-    },
     section: { gap: spacing[4] },
     search: {
       minHeight: 50,
@@ -600,18 +497,25 @@ const createStyles = (nativeColors: ThemeColorAliases) =>
       paddingHorizontal: spacing[4],
       fontSize: 16,
     },
-    filters: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing[2] },
-    chip: {
-      minHeight: touchTarget.minimum,
-      justifyContent: 'center',
-      paddingHorizontal: spacing[3],
+    filterTrigger: {
+      minHeight: touchTarget.comfortable,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing[3],
+      paddingHorizontal: spacing[4],
+      paddingVertical: spacing[3],
       borderWidth: 1,
       borderColor: nativeColors.border,
-      borderRadius: radius.pill,
+      borderRadius: radius.medium,
+      backgroundColor: nativeColors.interactive,
     },
-    chipActive: {
+    filterTriggerActive: {
       borderColor: nativeColors.focus,
       backgroundColor: nativeColors.panel,
+    },
+    filterTriggerCopy: {
+      flex: 1,
+      gap: spacing[1],
     },
     resultsHeader: {
       minHeight: touchTarget.minimum,
