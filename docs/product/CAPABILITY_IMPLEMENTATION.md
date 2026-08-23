@@ -37,7 +37,7 @@ Surfaces:
 States and transitions:
 
 - onboarding → stories → character → run;
-- restoring → showing incoming → waiting choice → provisional choice → committing → reaction → next decision/checkpoint/ending;
+- restoring → showing incoming → waiting choice → immediate durable commit → reaction → next decision/checkpoint/ending;
 - downloaded package: absent → downloading → verifying → installed → active → rollback candidate;
 - content: outline → graph-ready → draft → voice review → continuity review → rating review → logic QA → device QA → approved → scheduled → published → deprecated (with a legacy QA import alias).
 

@@ -12,7 +12,7 @@ CharTalk is a Russian-first, local-first mobile interactive-fiction app. Every d
 - `packages/content-compiler` — graph, counterfactual, language, package, and capacity validators.
 - `packages/content-integrity` — canonical hashing, signature verification, and template validation shared across install boundaries.
 - `packages/design-system` — semantic design tokens shared by native and web surfaces.
-- `packages/test-fixtures` — bundled Russian sample content, a deterministic 240-story bulk fixture (5,040 decisions / 29,040 reachable nodes), and deterministic saves. Every story in the reader catalog is bundled for immediate offline reading; bulk content is fixture-only until editorial approval.
+- `packages/test-fixtures` — bundled Russian sample content, a deterministic 240-story bulk fixture (12,000 decisions / 60,960 reachable nodes, with at least 50 choice points on every route to an ending), and deterministic saves. Every story in the reader catalog is bundled for immediate offline reading; bulk content is fixture-only until editorial approval.
 
 ## Requirements
 
@@ -87,9 +87,9 @@ ships all 243 stories in its catalog (the authored sample plus the 240-story
 fixture) for immediate offline reading.
 
 The Android standalone smoke harness verifies the native four-choice accessibility
-contract and force-stop recovery at waiting, recovered-provisional, and committed
-turn boundaries. It intentionally uses the explicit debug-signing opt-in only for
-local/emulator evidence; production signing remains fail-closed.
+contract, immediate commit after an option tap, and force-stop recovery at waiting
+and committed turn boundaries. It intentionally uses the explicit debug-signing
+opt-in only for local/emulator evidence; production signing remains fail-closed.
 
 The iOS Release build command emits an unsigned Simulator artifact for local
 verification. The same artifact was installed, launched, terminated, and

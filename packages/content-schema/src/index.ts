@@ -346,6 +346,7 @@ export const storySchema = z
     characterId: z.string().min(1),
     title: z.string().min(1).max(120),
     premise: z.string().min(1).max(240),
+    previewAssetId: z.string().min(1).optional(),
     status: z.enum(['complete', 'ongoing', 'mini']),
     rating: z.enum(['12+', '16+', '18+']),
     durationMinutes: z.number().int().positive().max(10_000),

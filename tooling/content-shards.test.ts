@@ -20,7 +20,7 @@ describe('content shard publication pipeline', () => {
   it('partitions a fixture package deterministically without pretending it is signed', () => {
     const source = generateBulkFixtureContentPackage({
       storyCount: 5,
-      stageCount: 3,
+      stageCount: 50,
     })
     const first = buildContentShards(source, {
       maxStoriesPerShard: 2,
@@ -50,7 +50,7 @@ describe('content shard publication pipeline', () => {
   it('signs every shard and verifies its exact payload with the release key', () => {
     const source = generateBulkFixtureContentPackage({
       storyCount: 4,
-      stageCount: 3,
+      stageCount: 50,
     })
     const { privateKey, publicKey } = generateKeyPairSync('ed25519')
     const result = buildContentShards(source, {
@@ -81,7 +81,7 @@ describe('content shard publication pipeline', () => {
   it('writes mode-restricted shard JSON and a deterministic manifest', () => {
     const source = generateBulkFixtureContentPackage({
       storyCount: 3,
-      stageCount: 3,
+      stageCount: 50,
     })
     const result = buildContentShards(source, {
       maxStoriesPerShard: 2,
@@ -115,7 +115,7 @@ describe('content shard publication pipeline', () => {
   it('can be reassembled by the mobile content library without losing graph records', () => {
     const source = generateBulkFixtureContentPackage({
       storyCount: 7,
-      stageCount: 3,
+      stageCount: 50,
     })
     const result = buildContentShards(source, {
       maxStoriesPerShard: 2,

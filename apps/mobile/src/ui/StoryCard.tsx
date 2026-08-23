@@ -5,7 +5,7 @@ import { ArrowRight } from 'phosphor-react-native'
 import React, { useMemo } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 
-import { portraitSource } from '@/content'
+import { assetSource } from '@/content'
 import { formatMinuteCount } from '@/format'
 import { useApp } from '@/state/AppProvider'
 import { useTheme } from '@/theme/ThemeProvider'
@@ -79,7 +79,7 @@ export function StoryCard({
     >
       <Image
         accessible={false}
-        source={portraitSource(character.portraitAssetId)}
+        source={assetSource(story.previewAssetId ?? character.portraitAssetId)}
         style={styles.image}
         contentFit="cover"
         transition={180}

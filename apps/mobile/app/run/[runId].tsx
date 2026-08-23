@@ -5,7 +5,7 @@ import { useAudioPlayer } from 'expo-audio'
 import { Image } from 'expo-image'
 import * as Haptics from 'expo-haptics'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { Flag, GitBranchIcon, PaperPlaneRight, X } from 'phosphor-react-native'
+import { Flag, GitBranchIcon, X } from 'phosphor-react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ActivityIndicator,
@@ -35,7 +35,6 @@ import { useApp } from '@/state/AppProvider'
 import { type ThemeColorAliases, useThemeColors } from '@/theme/useThemeColors'
 import { Button, InlineError, Text } from '@/ui/primitives'
 
-const UNDO_WINDOW_MS = 3_000
 const CHOICE_TRAY_MAX_HEIGHT_DP = 280
 const CHOICE_TRAY_MIN_HEIGHT_DP = 220
 const CHOICE_TRAY_VIEWPORT_RATIO = 0.42
@@ -73,8 +72,6 @@ export default function RunScreen() {
     snapshot,
     contentPackages,
     ensureContentForBuild,
-    setProvisional,
-    clearProvisional,
     getTranscriptAnchor,
     setTranscriptAnchor,
     commitChoice,
@@ -115,12 +112,6 @@ export default function RunScreen() {
     : undefined
   const existingProvisional =
     snapshot?.provisional?.runId === runId ? snapshot.provisional : null
-  const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(
-    existingProvisional?.choiceId ?? null,
-  )
-  const [recoveredProvisional, setRecoveredProvisional] = useState(
-    Boolean(existingProvisional),
-  )
   const [committing, setCommitting] = useState(false)
   const [typing, setTyping] = useState(false)
   const [visibleTranscriptCount, setVisibleTranscriptCount] = useState(
@@ -136,7 +127,8 @@ export default function RunScreen() {
   )
   const [pendingRecap, setPendingRecap] = useState(false)
   const listRef = useRef<FlatList<TranscriptEntry>>(null)
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const commitInFlightRef = useRef(false)
+  const recoveredProvisionalRef = useRef<string | null>(null)
   const visibleAnchorRef = useRef<string | null>(null)
   const anchorHydratedRunRef = useRef<string | null>(null)
   const decisionPresentedKeyRef = useRef<string | null>(null)
@@ -161,49 +153,77 @@ export default function RunScreen() {
     }
   }, [ensureContentForBuild, run, runContent])
 
-  const selectedChoice = decision?.choices.find(
-    item => item.choiceId === selectedChoiceId,
+  const choose = useCallback(
+    async (choiceId: string) => {
+      if (!run || commitInFlightRef.current) return
+      commitInFlightRef.current = true
+      setCommitting(true)
+      const selectedAt = new Date().toISOString()
+      const optionPosition =
+        (decision?.choices.findIndex(choice => choice.choiceId === choiceId) ??
+          -1) + 1
+      if (snapshot?.settings.sound) playFromStart(choicePlayer)
+      if (optionPosition >= 1 && optionPosition <= 4) {
+        void reportDiagnostic({
+          eventName: 'choice_selected',
+          contentBuildId: run.contentBuildId,
+          occurredAt: selectedAt,
+          optionPosition: optionPosition as 1 | 2 | 3 | 4,
+        })
+      }
+      try {
+        if (snapshot?.settings.haptics) {
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(
+            () => {},
+          )
+        }
+        setTyping(true)
+        Animated.timing(typingOpacity, {
+          toValue: 1,
+          duration: snapshot?.settings.reduceMotion ? 0 : 180,
+          useNativeDriver: true,
+        }).start()
+        const updated = await commitChoice({
+          runId: run.runId,
+          operationId: createOperationId(),
+          expectedSequence: run.sequence,
+          expectedNodeId: run.activeNodeId,
+          choiceId,
+        })
+        if (snapshot?.settings.sound) playFromStart(commitPlayer)
+        if (updated.status === 'completed') setPendingRecap(true)
+      } finally {
+        setTyping(false)
+        typingOpacity.setValue(0)
+        setCommitting(false)
+        commitInFlightRef.current = false
+      }
+    },
+    [
+      choicePlayer,
+      commitChoice,
+      commitPlayer,
+      decision?.choices,
+      reportDiagnostic,
+      run,
+      snapshot?.settings,
+      typingOpacity,
+    ],
   )
 
-  const doCommit = useCallback(async () => {
-    if (!run || !selectedChoiceId || committing) return
-    if (timerRef.current) clearTimeout(timerRef.current)
-    setCommitting(true)
-    try {
-      if (snapshot?.settings.haptics) {
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-      }
-      setTyping(true)
-      Animated.timing(typingOpacity, {
-        toValue: 1,
-        duration: snapshot?.settings.reduceMotion ? 0 : 180,
-        useNativeDriver: true,
-      }).start()
-      const updated = await commitChoice({
-        runId: run.runId,
-        operationId: createOperationId(),
-        expectedSequence: run.sequence,
-        expectedNodeId: run.activeNodeId,
-        choiceId: selectedChoiceId,
-      })
-      if (snapshot?.settings.sound) playFromStart(commitPlayer)
-      setSelectedChoiceId(null)
-      setRecoveredProvisional(false)
-      if (updated.status === 'completed') setPendingRecap(true)
-    } finally {
-      setTyping(false)
-      typingOpacity.setValue(0)
-      setCommitting(false)
+  useEffect(() => {
+    if (
+      !run ||
+      !existingProvisional ||
+      existingProvisional.nodeId !== run.activeNodeId
+    ) {
+      return
     }
-  }, [
-    commitChoice,
-    commitPlayer,
-    committing,
-    run,
-    selectedChoiceId,
-    snapshot?.settings,
-    typingOpacity,
-  ])
+    const recoveryKey = `${existingProvisional.runId}:${existingProvisional.nodeId}:${existingProvisional.choiceId}`
+    if (recoveredProvisionalRef.current === recoveryKey) return
+    recoveredProvisionalRef.current = recoveryKey
+    void choose(existingProvisional.choiceId)
+  }, [choose, existingProvisional, run])
 
   useEffect(() => {
     if (!run) return
@@ -317,14 +337,6 @@ export default function RunScreen() {
   ])
 
   useEffect(() => {
-    if (!selectedChoiceId || recoveredProvisional) return
-    timerRef.current = setTimeout(() => void doCommit(), UNDO_WINDOW_MS)
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-  }, [doCommit, recoveredProvisional, selectedChoiceId])
-
-  useEffect(() => {
     if (run?.transcript.length && !transcriptWindow.hasNewer) {
       const timer = setTimeout(
         () =>
@@ -340,53 +352,6 @@ export default function RunScreen() {
     snapshot?.settings.reduceMotion,
     transcriptWindow.hasNewer,
   ])
-
-  const choose = async (choiceId: string) => {
-    if (!run || committing) return
-    if (snapshot?.settings.sound) playFromStart(choicePlayer)
-    const createdAt = new Date()
-    const provisional = {
-      runId: run.runId,
-      nodeId: run.activeNodeId,
-      choiceId,
-      createdAt: createdAt.toISOString(),
-      expiresAt: new Date(createdAt.getTime() + UNDO_WINDOW_MS).toISOString(),
-    }
-    setSelectedChoiceId(choiceId)
-    setRecoveredProvisional(false)
-    await setProvisional(provisional)
-    const optionPosition =
-      (decision?.choices.findIndex(choice => choice.choiceId === choiceId) ??
-        -1) + 1
-    if (optionPosition >= 1 && optionPosition <= 4) {
-      void reportDiagnostic({
-        eventName: 'choice_selected',
-        contentBuildId: run.contentBuildId,
-        occurredAt: provisional.createdAt,
-        optionPosition: optionPosition as 1 | 2 | 3 | 4,
-      })
-    }
-  }
-
-  const undo = async () => {
-    if (!run) return
-    const optionPosition =
-      (decision?.choices.findIndex(
-        choice => choice.choiceId === selectedChoiceId,
-      ) ?? -1) + 1
-    if (timerRef.current) clearTimeout(timerRef.current)
-    setSelectedChoiceId(null)
-    setRecoveredProvisional(false)
-    await clearProvisional(run.runId)
-    void reportDiagnostic({
-      eventName: 'choice_undone',
-      contentBuildId: run.contentBuildId,
-      occurredAt: new Date().toISOString(),
-      ...(optionPosition >= 1 && optionPosition <= 4
-        ? { optionPosition: optionPosition as 1 | 2 | 3 | 4 }
-        : {}),
-    })
-  }
 
   const transcript = useMemo<TranscriptEntry[]>(() => {
     if (!run) return []
@@ -680,73 +645,8 @@ export default function RunScreen() {
         showsVerticalScrollIndicator={false}
       />
 
-      <View style={styles.composer} testID="run-composer">
-        {selectedChoice && recoveredProvisional ? (
-          <View style={styles.recovered}>
-            <Text variant="caption" color={nativeColors.ochre}>
-              Незавершённый выбор восстановлен
-            </Text>
-            <Text>{selectedChoice.text}</Text>
-            <View style={styles.recoveredActions}>
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => void undo()}
-                style={styles.textAction}
-              >
-                <Text variant="label" color={nativeColors.textSecondary}>
-                  Выбрать другой
-                </Text>
-              </Pressable>
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => void doCommit()}
-                style={styles.sendAction}
-              >
-                <Text variant="label" color={nativeColors.inverse}>
-                  Отправить
-                </Text>
-                <PaperPlaneRight
-                  color={nativeColors.inverse}
-                  size={18}
-                  weight="fill"
-                />
-              </Pressable>
-            </View>
-          </View>
-        ) : selectedChoice ? (
-          <View style={styles.pending}>
-            <View style={styles.pendingCopy}>
-              <Text variant="caption" color={nativeColors.emberSoft}>
-                Отправим через 3 секунды
-              </Text>
-              <Text numberOfLines={2}>{selectedChoice.text}</Text>
-            </View>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Отменить выбор"
-              onPress={() => void undo()}
-              style={styles.undoButton}
-            >
-              <Text variant="label">Отменить</Text>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Отправить сейчас"
-              onPress={() => void doCommit()}
-              style={styles.sendIcon}
-            >
-              {committing ? (
-                <ActivityIndicator color={nativeColors.inverse} />
-              ) : (
-                <PaperPlaneRight
-                  color={nativeColors.inverse}
-                  size={20}
-                  weight="fill"
-                />
-              )}
-            </Pressable>
-          </View>
-        ) : revealing ? (
+      <View style={styles.responseTray} testID="run-response-tray">
+        {typing || revealing ? (
           <View style={styles.completed}>
             <Text variant="caption" color={nativeColors.textMuted}>
               {character.name} отвечает…
@@ -886,7 +786,7 @@ const createStyles = (
       borderRadius: radius.pill,
       backgroundColor: nativeColors.textMuted,
     },
-    composer: {
+    responseTray: {
       flexShrink: 0,
       borderTopWidth: StyleSheet.hairlineWidth,
       borderTopColor: nativeColors.border,
@@ -915,62 +815,11 @@ const createStyles = (
     },
     choicePressed: { backgroundColor: nativeColors.interactive },
     choiceText: { flex: 1 },
-    pending: {
-      width: '100%',
-      maxWidth: 680,
-      alignSelf: 'center',
-      padding: spacing[3],
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing[2],
-    },
-    pendingCopy: { flex: 1, gap: spacing[1] },
-    undoButton: {
-      minHeight: touchTarget.minimum,
-      justifyContent: 'center',
-      paddingHorizontal: spacing[2],
-    },
-    sendIcon: {
-      width: touchTarget.minimum,
-      height: touchTarget.minimum,
-      borderRadius: radius.pill,
-      backgroundColor: nativeColors.emberSoft,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
     completed: {
       width: '100%',
       maxWidth: 680,
       alignSelf: 'center',
       padding: spacing[4],
       gap: spacing[2],
-    },
-    recovered: {
-      width: '100%',
-      maxWidth: 680,
-      alignSelf: 'center',
-      padding: spacing[4],
-      gap: spacing[2],
-      borderLeftWidth: 3,
-      borderLeftColor: nativeColors.ochre,
-    },
-    recoveredActions: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      gap: spacing[2],
-    },
-    textAction: {
-      minHeight: touchTarget.minimum,
-      justifyContent: 'center',
-      paddingHorizontal: spacing[3],
-    },
-    sendAction: {
-      minHeight: touchTarget.minimum,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing[2],
-      paddingHorizontal: spacing[4],
-      backgroundColor: nativeColors.emberSoft,
-      borderRadius: radius.medium,
     },
   })

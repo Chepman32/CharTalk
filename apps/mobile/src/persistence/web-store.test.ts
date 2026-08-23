@@ -14,7 +14,7 @@ describe('WebSnapshotStore content registry', () => {
   it('seeds multiple bundled packages for catalog discovery', async () => {
     const bulkFixture = generateBulkFixtureContentPackage({
       storyCount: 2,
-      stageCount: 3,
+      stageCount: 50,
     })
     const store = new WebSnapshotStore([sampleContentPackage, bulkFixture])
 

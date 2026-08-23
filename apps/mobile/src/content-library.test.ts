@@ -39,7 +39,7 @@ describe('mobile content catalog', () => {
   it('surfaces the bulk fixture in the merged discovery catalog', () => {
     const bulkFixture = generateBulkFixtureContentPackage({
       storyCount: 3,
-      stageCount: 3,
+      stageCount: 50,
     })
 
     const merged = mergeContentPackages([sampleContentPackage, bulkFixture])

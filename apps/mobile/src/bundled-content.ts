@@ -96,7 +96,7 @@ const loadedBulkPackages = new Map<string, Promise<ContentPackage>>()
 /**
  * Loads one story-owned package from the application bundle. The import is
  * deliberately dynamic: catalog metadata is available at startup, while the
- * 11 MB shard payload is parsed only when a reader actually opens a story (or
+ * story-shard payload is parsed only when a reader actually opens a story (or
  * resumes a run pinned to that build). No network request is involved.
  */
 export const loadBundledContentPackage = async (

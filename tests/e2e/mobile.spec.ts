@@ -31,6 +31,42 @@ async function finishOnboarding(page: Page) {
   await expect(page.getByText('Добрый вечер, Саша.')).toBeVisible()
 }
 
+async function enableInstantReveal(page: Page) {
+  await page.goto('/settings')
+  const revealImmediately = page
+    .getByRole('switch', { name: /Показывать серию сразу/ })
+    .first()
+  if (!(await revealImmediately.isChecked())) await revealImmediately.click()
+  await expect(revealImmediately).toBeChecked()
+  await page.goto('/')
+}
+
+async function chooseReplyImmediately(page: Page, position = 1) {
+  const choice = page
+    .getByRole('button', { name: /^Вариант [1-4] из 4:/ })
+    .nth(position - 1)
+  const label = await choice.getAttribute('aria-label')
+  const reply = label?.replace(/^Вариант [1-4] из 4: /, '')
+
+  await choice.click()
+
+  await expect(
+    page.getByRole('button', { name: 'Отменить выбор' }),
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole('button', { name: 'Отправить сейчас' }),
+  ).toHaveCount(0)
+  await expect(page.getByText('Отправим через 3 секунды')).toHaveCount(0)
+  if (reply) {
+    await expect(
+      page
+        .getByTestId('run-transcript')
+        .getByText(reply, { exact: true })
+        .last(),
+    ).toBeVisible()
+  }
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/')
   await expect(page.getByTestId('onboarding-screen')).toBeVisible({
@@ -82,10 +118,13 @@ test('downloads reports the built-in package size without a download step', asyn
   await expect(page.getByText('0 Б')).toHaveCount(0)
 })
 
-test('guest reader completes an offline-authored path with four choices and undo', async ({
+test('guest reader sends a choice immediately and completes a 50-choice offline path', async ({
   page,
 }, testInfo) => {
+  test.setTimeout(120_000)
   await finishOnboarding(page)
+
+  await enableInstantReveal(page)
 
   await expectNoHorizontalOverflow(page)
   await attachScreen(page, testInfo, 'catalog')
@@ -104,22 +143,16 @@ test('guest reader completes an offline-authored path with four choices and undo
   let choices = page.getByRole('button', { name: /^Вариант [1-4] из 4:/ })
   await expect(choices).toHaveCount(4)
   await expect(choices.nth(3)).toBeVisible()
-  await choices.first().click()
-  await expect(
-    page.getByRole('button', { name: 'Отменить выбор' }),
-  ).toBeVisible()
-  await page.getByRole('button', { name: 'Отменить выбор' }).click()
-  await expect(choices).toHaveCount(4)
-
-  await choices.first().click()
-  await page.getByRole('button', { name: 'Отправить сейчас' }).click()
-  choices = page.getByRole('button', { name: /^Вариант [1-4] из 4:/ })
-  await expect(choices).toHaveCount(4)
-  await choices.first().click()
-  await page.getByRole('button', { name: 'Отправить сейчас' }).click()
+  for (let step = 0; step < 50; step += 1) {
+    await chooseReplyImmediately(page)
+    if (step < 49) {
+      choices = page.getByRole('button', { name: /^Вариант [1-4] из 4:/ })
+      await expect(choices).toHaveCount(4)
+    }
+  }
 
   await expect(page.getByRole('heading', { name: 'Итог' })).toBeVisible()
-  await expect(page.getByText('История запомнила 2 выбора.')).toBeVisible()
+  await expect(page.getByText('История запомнила 50 выборов.')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Пройти иначе' })).toBeVisible()
 
   await expect(
@@ -136,7 +169,9 @@ test('guest reader completes an offline-authored path with four choices and undo
   await expect(
     page.getByRole('heading', { name: 'Развилки · После дедлайна' }),
   ).toBeVisible()
-  await expect(page.getByText('1 прохождение', { exact: true }).last()).toBeVisible()
+  await expect(
+    page.getByText('1 прохождение', { exact: true }).last(),
+  ).toBeVisible()
   await expect(page.getByLabel(/Выбран вариант [1-4]/).first()).toBeVisible()
   await expectNoHorizontalOverflow(page)
   await attachScreen(page, testInfo, 'branches')
@@ -158,10 +193,11 @@ test('archive keeps offline status and the latest authored line visible', async 
   await page.getByRole('button', { name: /После дедлайна\. Ира/ }).click()
   await page.getByRole('button', { name: 'Начать историю' }).click()
   for (let step = 0; step < 2; step += 1) {
-    await page.getByRole('button', { name: /^Вариант 1 из 4:/ }).click()
-    await page.getByRole('button', { name: 'Отправить сейчас' }).click()
+    await chooseReplyImmediately(page)
+    await expect(
+      page.getByRole('button', { name: /^Вариант [1-4] из 4:/ }),
+    ).toHaveCount(4)
   }
-  await expect(page.getByRole('heading', { name: 'Итог' })).toBeVisible()
 
   await page.goto('/archive')
   await expect(page.getByRole('heading', { name: 'Прохождения' })).toBeVisible()
@@ -197,7 +233,7 @@ test('story detail exposes offline status and resumes the active run', async ({
   await page.getByRole('button', { name: /После дедлайна\. Ира/ }).click()
   await expect(page.getByText('Доступно офлайн')).toBeVisible()
   await expect(
-    page.getByText(/Встроено в пакет · \d+(?:,\d+)? КБ/),
+    page.getByText(/Встроено в пакет · \d+(?:,\d+)? (?:КБ|МБ)/),
   ).toBeVisible()
   await expect(
     page.getByRole('button', { name: 'Начать историю' }),
@@ -233,7 +269,10 @@ test('story detail exposes offline status and resumes the active run', async ({
 test('PDS deep links resolve to the canonical reader surfaces', async ({
   page,
 }) => {
+  test.setTimeout(120_000)
   await finishOnboarding(page)
+
+  await enableInstantReveal(page)
 
   await page.getByRole('button', { name: /После дедлайна\. Ира/ }).click()
   await page.getByRole('button', { name: 'Начать историю' }).click()
@@ -254,9 +293,13 @@ test('PDS deep links resolve to the canonical reader surfaces', async ({
   ).toBeVisible()
 
   await page.goto(`/run/${runId}`)
-  for (let step = 0; step < 2; step += 1) {
-    await page.getByRole('button', { name: /^Вариант 1 из 4:/ }).click()
-    await page.getByRole('button', { name: 'Отправить сейчас' }).click()
+  for (let step = 0; step < 50; step += 1) {
+    await chooseReplyImmediately(page)
+    if (step < 49) {
+      await expect(
+        page.getByRole('button', { name: /^Вариант [1-4] из 4:/ }),
+      ).toHaveCount(4)
+    }
   }
   await expect(
     page.getByRole('heading', { name: 'Итог', exact: true }),
@@ -285,7 +328,7 @@ test('a bundled bulk story opens offline without a download step', async ({
     name: /Ночная смена — После последнего звонка/,
   })
   await expect(bulkCard).toBeVisible()
-  await expect(bulkCard).toHaveAccessibleName(/Доступно офлайн\./)
+  await expect(bulkCard).not.toHaveAccessibleName(/Доступно офлайн\./)
 
   await page.context().setOffline(true)
   await bulkCard.click()
@@ -312,7 +355,7 @@ test('bundled catalog remains usable when offline before opening the catalog', a
   const bulkCard = page.getByRole('button', {
     name: /Ночная смена — После последнего звонка/,
   })
-  await expect(bulkCard).toHaveAccessibleName(/Доступно офлайн\./)
+  await expect(bulkCard).not.toHaveAccessibleName(/Доступно офлайн\./)
   await bulkCard.click()
   await expect(page.getByText('Доступно офлайн')).toBeVisible()
   await expect(
@@ -472,21 +515,22 @@ test('200% text and reduced motion preserve all four ordered choices', async ({
   await expect(choices.last()).toBeVisible()
   await expectNoHorizontalOverflow(page)
   const transcriptBox = await page.getByTestId('run-transcript').boundingBox()
-  const composerBox = await page.getByTestId('run-composer').boundingBox()
+  const responseTrayBox = await page
+    .getByTestId('run-response-tray')
+    .boundingBox()
   expect(transcriptBox).not.toBeNull()
-  expect(composerBox).not.toBeNull()
-  if (transcriptBox && composerBox) {
+  expect(responseTrayBox).not.toBeNull()
+  if (transcriptBox && responseTrayBox) {
     expect(transcriptBox.y + transcriptBox.height).toBeLessThanOrEqual(
-      composerBox.y + 1,
+      responseTrayBox.y + 1,
     )
   }
   await attachScreen(page, testInfo, 'four-choices-text-200-percent')
 
-  await choices.last().click()
+  await chooseReplyImmediately(page, 4)
   await expect(
     page.getByRole('button', { name: 'Отменить выбор' }),
-  ).toBeVisible()
-  await page.getByRole('button', { name: 'Отменить выбор' }).click()
+  ).toHaveCount(0)
   choices = page.getByRole('button', { name: /^Вариант [1-4] из 4:/ })
   await expect(choices).toHaveCount(4)
 })

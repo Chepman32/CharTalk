@@ -3,22 +3,25 @@ import { dirname, resolve } from 'node:path'
 
 import { contentPackageSchema } from '@chartalk/content-schema'
 import { auditRussianQuality } from '@chartalk/content-integrity'
+import { generateBulkFixtureContentPackage } from '@chartalk/test-fixtures'
 
-const inputPath = resolve(
-  process.cwd(),
-  process.argv[2] ?? 'apps/mobile/src/bundled-content.bulk.json',
-)
+const inputArgument = process.argv[2]
+const inputPath = inputArgument
+  ? resolve(process.cwd(), inputArgument)
+  : undefined
 const outputPath = resolve(
   process.cwd(),
   'artifacts/russian-quality-report.json',
 )
 
-const source = await readFile(inputPath, 'utf8')
-const parsed = contentPackageSchema.parse(JSON.parse(source))
+const parsed = inputPath
+  ? contentPackageSchema.parse(JSON.parse(await readFile(inputPath, 'utf8')))
+  : contentPackageSchema.parse(generateBulkFixtureContentPackage())
 const quality = auditRussianQuality(parsed)
 const report = {
   generatedAt: new Date().toISOString(),
-  source: inputPath,
+  source:
+    inputPath ?? '@chartalk/test-fixtures:generateBulkFixtureContentPackage',
   mode: 'automated-screen',
   humanReviewRequired: true,
   buildId: parsed.manifest.buildId,

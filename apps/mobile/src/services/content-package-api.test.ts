@@ -201,7 +201,7 @@ describe('installContentPackage', () => {
     let run = await repository.createRun('story.ira.after-deadline')
     expect(run.contentBuildId).toBe(signed.manifest.buildId)
 
-    for (let turn = 0; run.status === 'active' && turn < 10; turn += 1) {
+    for (let turn = 0; run.status === 'active' && turn < 50; turn += 1) {
       const node = signed.nodes.find(item => item.nodeId === run.activeNodeId)
       if (node?.type !== 'decision') {
         throw new Error(`Unexpected active node ${run.activeNodeId}`)

@@ -1685,7 +1685,7 @@ Character accent не может ухудшить contrast; critical state не 
 | `runs` | `run_id`, `profile_id`, `story_id`, `build_id`, status, active node, sequence, parent run |
 | `run_snapshots` | `run_id`, `sequence`, `state_json`, `state_hash`, active node, checkpoint |
 | `choice_events` | `event_id`, `run_id`, `sequence`, node, choice, frozen effects, before/after hash, timestamps |
-| `provisional_choices` | operation, run/node/choice/build, created time | Durable pre-commit grace selection, если feature enabled |
+| `provisional_choices` | operation, run/node/choice/build, created time | Legacy recovery compatibility only; the active reader does not create grace selections |
 | `transcript_entries` | `entry_id`, `run_id`, `sequence`, speaker, `text_id`, frozen surface, shown state |
 | `run_checkpoints` | `checkpoint_id`, `run_id`, sequence, label, snapshot reference |
 | `unlocked_endings` | profile, story, ending, first run/date/build |
@@ -1799,17 +1799,17 @@ Transaction:
 
 При mismatch вернуть typed conflict, ничего не применять. Crash до commit оставляет старые choices; crash после commit восстанавливает reaction.
 
-### Опциональное grace undo, если OQ-08 принят
+### Немедленная отправка выбора (решение 2026-08-23, supersedes OQ-08)
 
-Undo не откатывает уже committed narrative event. Используется двухфазный local flow:
-
-1. Tap одной транзакцией пишет отдельный `provisional_choice` с run/node/choice/build и показывает compact confirmation/«Отменить»; reaction и outgoing transcript ещё не видны.
-2. В течение 3 секунд Undo удаляет только provisional record и возвращает исходные четыре choices.
-3. По окончании окна `finalizeProvisionalChoice` вызывает обычную atomic apply-choice transaction.
-4. Background/kill не угадывает намерение: при возврате pending selection восстанавливается с явными действиями «Отправить» и «Выбрать другой ответ».
-5. В sync/analytics попадает только finalized event; `choice_selected` может измеряться локально/по consent отдельно от `choice_committed`.
-
-Это сохраняет правило: отправленный пузырь и reaction появляются только после commit, а append-only event log не нуждается в destructive undo.
+Tap по любому из четырёх ответов сразу запускает обычную atomic
+apply-choice transaction. Reader не показывает selected-text confirmation,
+трёхсекундную задержку, «Отменить» или отдельную кнопку отправки. Пока commit
+выполняется, повторные taps блокируются синхронным in-flight guard. Outgoing
+bubble и reaction становятся видимыми только после успешного commit; crash до
+commit оставляет прежние choices, crash после commit восстанавливает уже
+сохранённую reaction. Legacy `provisional_choice` от старого app build
+автоматически финализируется при открытии reader и затем удаляется обычной
+commit transaction.
 
 ## 14.7. Integrity и encryption
 
@@ -3278,7 +3278,7 @@ Publish требует typed confirmation exact `buildId`; кнопка не п�
 | OQ-05 | Системный UI на `ты` или `вы` | Brand/Product | All UI copy | Нейтральное `вы` до brand decision |
 | OQ-06 | Policy по `ё` | Editorial | House style | Всегда `ё`, кроме character-specific intentional omission |
 | OQ-07 | Видимы ли relationship tiers | Product/Narrative | Progress UX | Hidden by default; qualitative summary at chapter end |
-| OQ-08 | Grace undo до reaction | Product | Turn UX/state machine | 3 секунды, только до первого reaction bubble |
+| OQ-08 | Grace undo до reaction | Product | Turn UX/state machine | Superseded 2026-08-23: tap immediately starts atomic commit; no grace/cancel/send confirmation UI |
 | OQ-09 | Когда unlock replay | Product/Narrative | Checkpoints/branch UX | После завершения главы |
 | OQ-10 | Unlimited branches или cap | Product/Engineering | Storage/sync | 10 active branches/story, archive beyond |
 | OQ-11 | Accounts в MVP | Product/Engineering | Backend scope | После vertical slice; guest first |

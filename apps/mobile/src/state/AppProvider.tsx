@@ -5,7 +5,6 @@ import type {
   CreateRunOptions,
   GrammarProfile,
   LocalProfile,
-  ProvisionalChoice,
   ReaderSettings,
   StoryRun,
   SubmitContentReportInput,
@@ -80,8 +79,6 @@ interface AppContextValue {
   getTranscriptAnchor(runId: string): Promise<string | null>
   setTranscriptAnchor(runId: string, entryId: string | null): Promise<void>
   commitChoice(request: CommitChoiceRequest): Promise<StoryRun>
-  setProvisional(choice: ProvisionalChoice): Promise<void>
-  clearProvisional(runId: string): Promise<void>
   archiveRun(runId: string): Promise<void>
   installContentUpdate(
     packId: string,
@@ -588,10 +585,6 @@ export function AppProvider({ children }: React.PropsWithChildren) {
         }
         return result.run
       },
-      setProvisional: choice =>
-        perform(() => runtime!.repository.setProvisional(choice)),
-      clearProvisional: runId =>
-        perform(() => runtime!.repository.clearProvisional(runId)),
       archiveRun: runId => perform(() => runtime!.repository.archiveRun(runId)),
       installContentUpdate: async (packId, buildId) => {
         if (!runtime) throw new Error('Локальное хранилище ещё запускается.')

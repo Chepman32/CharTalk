@@ -1,8 +1,10 @@
-import { existsSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
+import { compileContentPackage } from '@chartalk/content-compiler'
 import { generateBulkFixtureContentPackage } from '@chartalk/test-fixtures'
 
 import {
@@ -58,7 +60,18 @@ describe('bundled reader catalog', () => {
         ),
       ),
     ).toBe(true)
-  }, 30_000)
+  }, 60_000)
+
+  it('keeps every bundled normal route at fifty choice points or longer', async () => {
+    const packages = await loadBundledContentPackages()
+    const shortStoryBlockers = packages.flatMap(packageContent =>
+      compileContentPackage(packageContent).blockers.filter(
+        issue => issue.code === 'STORY_TOO_SHORT',
+      ),
+    )
+
+    expect(shortStoryBlockers).toEqual([])
+  }, 60_000)
 
   it('keeps the startup catalog metadata separate from lazy shard payloads', () => {
     expect(bundledContentCatalogPackages).toHaveLength(6)
@@ -95,7 +108,7 @@ describe('bundled reader catalog', () => {
       50, 50, 50, 50, 40,
     ])
     expect(first[1]?.manifest.buildId).toBe(
-      'ru-bulk-fixture-2026.08.14.1.shard.001',
+      'ru-bulk-fixture-2026.08.23.3.shard.001',
     )
     expect(
       first
@@ -127,6 +140,37 @@ describe('bundled reader catalog', () => {
         existsSync(resolve(process.cwd(), 'apps/mobile/assets', asset.path)),
       ),
     ).toBe(true)
+  })
+
+  it('gives every bundled story a distinct local preview image', () => {
+    const stories = bundledContentCatalogPackages.flatMap(
+      content => content.stories,
+    )
+    const previewAssetIds = stories.map(story => story.previewAssetId)
+    const assetById = new Map(
+      bundledContentCatalogPackages.flatMap(content =>
+        content.assets.map(asset => [asset.assetId, asset] as const),
+      ),
+    )
+    const previewAssets = previewAssetIds.flatMap(assetId => {
+      const asset = assetId ? assetById.get(assetId) : undefined
+      return asset?.kind === 'cover' ? [asset] : []
+    })
+
+    expect(previewAssetIds.every(Boolean)).toBe(true)
+    expect(new Set(previewAssetIds).size).toBe(stories.length)
+    expect(previewAssets).toHaveLength(stories.length)
+    expect(new Set(previewAssets.map(asset => asset.checksum)).size).toBe(
+      stories.length,
+    )
+    for (const asset of previewAssets) {
+      const bytes = readFileSync(
+        resolve(process.cwd(), 'apps/mobile/assets', asset.path),
+      )
+      expect(`sha256:${createHash('sha256').update(bytes).digest('hex')}`).toBe(
+        asset.checksum,
+      )
+    }
   })
 
   it('exposes every bundled story through the merged offline catalog', () => {

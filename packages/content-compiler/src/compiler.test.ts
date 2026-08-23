@@ -180,47 +180,60 @@ const fixture = (overrides?: Partial<ContentPackage>): ContentPackage => ({
   ...overrides,
 })
 
+const validFixture = (): ContentPackage =>
+  generateBulkFixtureContentPackage({ storyCount: 1, stageCount: 50 })
+
 describe('compileContentPackage', () => {
-  it('accepts a fully distinct four-choice package and reports fixture counts', () => {
+  it('blocks a story that can reach an ending before fifty choice points', () => {
     const report = compileContentPackage(fixture())
 
+    expect(report.blockers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'STORY_TOO_SHORT',
+          path: 'story.ira',
+        }),
+      ]),
+    )
+  })
+
+  it('accepts a fifty-choice package and reports fixture counts', () => {
+    const report = compileContentPackage(validFixture())
+
     expect(report.blockers).toEqual([])
-    expect(report.counts.decisionNodeCount).toBe(1)
-    expect(report.counts.choiceCandidateCount).toBe(4)
-    expect(report.counts.uniqueDecisionCharacterTextCount).toBe(1)
+    expect(report.counts.decisionNodeCount).toBe(50)
+    expect(report.counts.choiceCandidateCount).toBe(200)
+    expect(report.counts.uniqueDecisionCharacterTextCount).toBeGreaterThan(0)
     expect(report.counts.approvedTextUnitCount).toBe(0)
     expect(report.counts.fixtureTextUnitCount).toBeGreaterThan(0)
     expect(report.analysis.nodeTypeCounts).toEqual({
-      decision: 1,
-      reaction: 4,
+      decision: 50,
+      reaction: 200,
       bridge: 0,
       checkpoint: 0,
       ending: 4,
     })
-    expect(report.analysis.baselineExactlyFourDecisionCount).toBe(1)
-    expect(report.analysis.decisionWithCompleteFallbackCount).toBe(1)
+    expect(report.analysis.baselineExactlyFourDecisionCount).toBe(50)
+    expect(report.analysis.decisionWithCompleteFallbackCount).toBe(50)
     expect(report.analysis.staticReachabilityBasisPoints).toBe(10_000)
-    expect(report.analysis.writtenNeverReadPaths).toEqual([
-      'memories.memory.choice.1',
-      'memories.memory.choice.2',
-      'memories.memory.choice.3',
-      'memories.memory.choice.4',
-    ])
+    expect(report.analysis.writtenNeverReadPaths).toEqual([])
     expect(report.analysis.packageSourceBytes).toBeGreaterThan(0)
   })
 
   it('indexes history-aware conditions and every structured effect write', () => {
-    const pack = structuredClone(fixture())
+    const pack = structuredClone(validFixture())
+    const speakerId = pack.characters[0]?.characterId
+    if (!speakerId) throw new Error('fixture changed')
     const decision = pack.nodes[0]
     if (decision?.type !== 'decision') throw new Error('fixture changed')
     decision.messageVariants.unshift({
       variantId: 'variant.memory-aware',
-      priority: 10,
+      priority: 30,
       when: { op: 'hasMemory', key: 'memory.choice.1', value: true },
       messages: [
         {
           messageId: 'message.memory-aware',
-          speakerId: 'char.ira',
+          speakerId,
           text: 'Я помню твой ответ.',
           delayMs: 0,
           kind: 'message',
@@ -229,12 +242,12 @@ describe('compileContentPackage', () => {
     })
     decision.messageVariants.unshift({
       variantId: 'variant.seen-aware',
-      priority: 9,
+      priority: 29,
       when: { op: 'seen', nodeId: 'node.seen-marker' },
       messages: [
         {
           messageId: 'message.seen-aware',
-          speakerId: 'char.ira',
+          speakerId,
           text: 'Я вижу, что мы уже были здесь.',
           delayMs: 0,
           kind: 'message',
@@ -243,7 +256,7 @@ describe('compileContentPackage', () => {
     })
     decision.messageVariants.unshift({
       variantId: 'variant.history-aware',
-      priority: 8,
+      priority: 28,
       when: {
         op: 'all',
         args: [
@@ -254,7 +267,7 @@ describe('compileContentPackage', () => {
       messages: [
         {
           messageId: 'message.history-aware',
-          speakerId: 'char.ira',
+          speakerId,
           text: 'Я помню, что это было недавно.',
           delayMs: 0,
           kind: 'message',
@@ -586,6 +599,17 @@ describe('compileContentPackage', () => {
     )
   })
 
+  it('blocks a story preview that is missing or is not a cover asset', () => {
+    const pack = validFixture()
+    pack.stories[0]!.previewAssetId = 'portrait.ira'
+
+    const report = compileContentPackage(pack)
+
+    expect(report.blockers.map(item => item.code)).toContain(
+      'PREVIEW_ASSET_MISSING',
+    )
+  })
+
   it('blocks unsupported or incomplete authored placeholders', () => {
     const pack = fixture()
     const decision = pack.nodes[0]
@@ -601,20 +625,22 @@ describe('compileContentPackage', () => {
   })
 
   it('keeps a valid development fixture behind the production release gate', () => {
-    const { report, gate } = evaluateProductionRelease(fixture())
+    const source = validFixture()
+    const { report, gate } = evaluateProductionRelease(source)
 
     expect(report.blockers).toEqual([])
     expect(gate).toMatchObject({
       eligible: false,
-      nonApprovedNodes: fixture().nodes.length,
-      fixtureAssets: 1,
+      nonApprovedNodes: source.nodes.length,
+      fixtureAssets: 4,
       approvedTextUnits: 0,
       requiredApprovedTextUnits: 300_000,
-      decisionNodes: 1,
+      decisionNodes: 50,
       requiredDecisionNodes: 60_000,
-      uniqueDecisionCharacterTexts: 1,
+      uniqueDecisionCharacterTexts:
+        report.counts.uniqueDecisionCharacterTextCount,
       requiredUniqueDecisionCharacterTexts: 60_000,
-      uniquePlayerChoiceTexts: 4,
+      uniquePlayerChoiceTexts: report.counts.uniquePlayerChoiceTextCount,
       requiredUniquePlayerChoiceTexts: 240_000,
       characters: 1,
       requiredCharacters: 12,
@@ -661,21 +687,21 @@ describe('compileContentPackage', () => {
   it('computes per-character ending coverage from an indexed catalog', () => {
     const pack = generateBulkFixtureContentPackage({
       storyCount: 16,
-      stageCount: 3,
+      stageCount: 50,
     })
     const { report, gate } = evaluateProductionRelease(pack)
 
     expect(report.blockers).toEqual([])
     expect(gate.characters).toBe(16)
-    expect(gate.minimumEndingsPerCharacter).toBe(16)
-    expect(gate.decisionNodes).toBe(144)
-    expect(gate.uniqueDecisionCharacterTexts).toBe(720)
+    expect(gate.minimumEndingsPerCharacter).toBe(4)
+    expect(gate.decisionNodes).toBe(800)
+    expect(gate.uniqueDecisionCharacterTexts).toBe(4_000)
   })
 
   it('partitions a catalog into deterministic story shards with exact local graphs', () => {
     const source = generateBulkFixtureContentPackage({
       storyCount: 8,
-      stageCount: 3,
+      stageCount: 50,
     })
     const shards = partitionContentPackage(source, { maxStoriesPerShard: 3 })
     const repeated = partitionContentPackage(source, {
@@ -697,6 +723,16 @@ describe('compileContentPackage', () => {
       shards.every(shard => shard.manifest.signature.startsWith('ed25519:')),
     ).toBe(true)
     expect(shards[0]?.manifest.packId).toContain('.shard.001')
+    expect(
+      shards.every(shard => {
+        const assetIds = new Set(shard.assets.map(asset => asset.assetId))
+        return shard.stories.every(
+          story =>
+            story.previewAssetId !== undefined &&
+            assetIds.has(story.previewAssetId),
+        )
+      }),
+    ).toBe(true)
   })
 })
 

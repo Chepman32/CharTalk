@@ -25,6 +25,29 @@ Generated 2026-08-13 and 2026-08-15 with the workspace image-generation tool as 
 
 No portrait represents or implies a real person's likeness. The content manifest marks these assets `generated-fixture`, so the production publication gate rejects them.
 
+## Story preview covers
+
+The bundled catalog uses 243 story-specific licensed photographs. No photograph
+or normalized output is reused. The mix is intentionally women-led without
+turning the catalog into a wall of landscapes: 124 women portraits, 12 men
+portraits, 22 buildings, 12 vehicles, 24 everyday objects, 16 everyday scenes,
+5 interiors, 11 nature details, and 17 landscapes.
+
+The auditable record is
+`packages/test-fixtures/src/story-previews.generated.ts`. Every entry contains
+the story ID, immutable cover asset ID and path, exact source page, provider
+source ID, category, normalized SHA-256 digest, and author where the upstream
+catalog exposes one. Pexels sources use the
+[Pexels license](https://www.pexels.com/license/); Unsplash sources use the
+[Unsplash license](https://unsplash.com/license).
+
+All source files were visually curated, square-cropped with attention-aware
+positioning, resized to 1024×1024, encoded as progressive JPEG at quality 82,
+and stripped of embedded metadata on 2026-08-23. The resulting assets are
+allowed on story catalog cards and other story-preview surfaces. They do not
+replace character identity portraits on profile or detail surfaces, and their
+use does not imply endorsement by any depicted person.
+
 ## Development attachment
 
 The opening scene of the bundled sample story «После дедлайна» includes one

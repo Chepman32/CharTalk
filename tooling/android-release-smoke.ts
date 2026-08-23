@@ -542,24 +542,6 @@ export function runAndroidReleaseSmoke(
       dumpAndroidUi(adbPath, serial),
     )
     tapAndroidNode(adbPath, serial, resumedWaitingContract.nodes[3])
-    waitForAndroidNode(
-      adbPath,
-      serial,
-      {
-        contentDescription: 'Отправить сейчас',
-      },
-      timeoutMs,
-    )
-
-    interruptionBoundaries.push('provisional')
-    forceStopAndRelaunch(adbPath, serial, packageName, activity)
-    const resumedProvisional = waitForResumedRunNode(
-      adbPath,
-      serial,
-      [{ text: 'Отправить' }],
-      timeoutMs,
-    )
-    tapAndroidNode(adbPath, serial, resumedProvisional)
     waitForAndroidNode(adbPath, serial, { resourceId: 'choice-1' }, timeoutMs)
 
     interruptionBoundaries.push('committed')
@@ -574,7 +556,7 @@ export function runAndroidReleaseSmoke(
       resumedEntry.contentDescription || 'direct run screen'
 
     console.log(
-      `Android native smoke passed on ${serial}${options.offline ? ' offline' : ''}: ${contract.choiceIds.join(', ')} accessible; waiting, provisional, and committed states resumed after force-stop.`,
+      `Android native smoke passed on ${serial}${options.offline ? ' offline' : ''}: ${contract.choiceIds.join(', ')} accessible; a choice committed immediately and waiting/committed states resumed after force-stop.`,
     )
     void storiesScreen
     void firstChoice

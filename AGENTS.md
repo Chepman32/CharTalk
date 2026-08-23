@@ -64,7 +64,7 @@ Use these principles when making product or content decisions:
 
 The implemented reader is guest-first and complete without an account. Current
 scope includes onboarding, a bundled catalog, character/story details, the
-four-choice reader, provisional choice, durable resume, recap, branches,
+four-choice reader with immediate choice commit, durable resume, recap, branches,
 archive, appearance and reading preferences, content controls, local export and
 deletion, reports, optional signed content update infrastructure, and local
 weekend reading reminders.
@@ -381,16 +381,16 @@ The conceptual turn state machine is:
 restoring
   → showing incoming
   → waiting for choice
-  → provisional choice
   → committing
   → showing outgoing reply and reaction
   → next decision | checkpoint | ending
 ```
 
-The three-second provisional window is durable by product decision. The reader
-may replace or immediately send the provisional selection, but once committed it
-must not be silently changed. Interruption at every boundary must return to a
-coherent state after relaunch.
+Tapping a reply immediately starts its durable commit. The reader does not show
+a selected-text confirmation field, grace delay, cancel action, or separate send
+action. A provisional selection persisted by an older app build is committed on
+reader recovery. Interruption at every boundary must return to a coherent state
+after relaunch.
 
 The dialogue engine returns an immutable turn plan. Repositories, not UI code,
 apply the plan transactionally. The outgoing bubble and reaction become visible

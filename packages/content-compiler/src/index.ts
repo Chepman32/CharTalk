@@ -21,6 +21,13 @@ import {
 
 export type ValidationSeverity = 'blocker' | 'warning'
 
+/**
+ * A completed reader path must give the player enough room for choices to
+ * accumulate into a meaningful trajectory. This is deliberately validated at
+ * package compilation time so a short graph cannot be bundled or published.
+ */
+export const MINIMUM_STORY_CHOICE_POINTS = 50
+
 export interface ValidationIssue {
   code:
     | 'AMBIGUOUS_PRIORITY'
@@ -44,7 +51,9 @@ export interface ValidationIssue {
     | 'MISSING_MEMORY_PAYOFF'
     | 'IMAGE_ASSET_INVALID'
     | 'PORTRAIT_ASSET_MISSING'
+    | 'PREVIEW_ASSET_MISSING'
     | 'SCHEMA_INVALID'
+    | 'STORY_TOO_SHORT'
     | 'UNSUPPORTED_PLACEHOLDER'
     | 'UNSAFE_ASSET_PATH'
     | 'UNSAFE_SAFE_ROUTE'
@@ -650,6 +659,88 @@ function collectReachable(
   return reachable
 }
 
+interface ChoicePointDistance {
+  nodeId: string
+  choicePoints: number
+}
+
+function pushChoicePointDistance(
+  queue: ChoicePointDistance[],
+  entry: ChoicePointDistance,
+): void {
+  queue.push(entry)
+  let index = queue.length - 1
+  while (index > 0) {
+    const parentIndex = Math.floor((index - 1) / 2)
+    const parent = queue[parentIndex]
+    if (!parent || parent.choicePoints <= entry.choicePoints) break
+    queue[index] = parent
+    index = parentIndex
+  }
+  queue[index] = entry
+}
+
+function popChoicePointDistance(
+  queue: ChoicePointDistance[],
+): ChoicePointDistance | undefined {
+  const first = queue[0]
+  const last = queue.pop()
+  if (!first || !last || queue.length === 0) return first
+
+  let index = 0
+  while (true) {
+    const leftIndex = index * 2 + 1
+    const rightIndex = leftIndex + 1
+    const left = queue[leftIndex]
+    const right = queue[rightIndex]
+    if (!left) break
+    const nextIndex =
+      right && right.choicePoints < left.choicePoints ? rightIndex : leftIndex
+    const next = queue[nextIndex]
+    if (!next || next.choicePoints >= last.choicePoints) break
+    queue[index] = next
+    index = nextIndex
+  }
+  queue[index] = last
+  return first
+}
+
+/**
+ * Returns the smallest number of decision nodes on any static route from an
+ * episode entry to an ending. Automatic nodes do not add a choice point.
+ */
+function minimumChoicePointsToEnding(
+  entryNodeId: string,
+  nodes: ReadonlyMap<string, ContentNode>,
+): number | undefined {
+  const distances = new Map<string, number>([[entryNodeId, 0]])
+  const queue: ChoicePointDistance[] = []
+  pushChoicePointDistance(queue, { nodeId: entryNodeId, choicePoints: 0 })
+
+  while (queue.length > 0) {
+    const current = popChoicePointDistance(queue)
+    if (!current || distances.get(current.nodeId) !== current.choicePoints)
+      continue
+    const node = nodes.get(current.nodeId)
+    if (!node) continue
+    if (node.type === 'ending') return current.choicePoints
+
+    const nextChoicePointCount =
+      current.choicePoints + (node.type === 'decision' ? 1 : 0)
+    for (const destination of nodeDestinations(node)) {
+      const previous = distances.get(destination)
+      if (previous !== undefined && previous <= nextChoicePointCount) continue
+      distances.set(destination, nextChoicePointCount)
+      pushChoicePointDistance(queue, {
+        nodeId: destination,
+        choicePoints: nextChoicePointCount,
+      })
+    }
+  }
+
+  return undefined
+}
+
 function immediateReactionSignature(
   choice: ChoiceCandidate,
   nodes: ReadonlyMap<string, ContentNode>,
@@ -721,7 +812,13 @@ function nextOutcomeSignature(
       .join('|')}`
   }
   const resolved = resolveDecision(terminal.node, terminal.state)
-  return `decision:${resolved.choices
+  const messages = resolved.messages
+    .map(
+      message =>
+        `${message.kind}:${message.assetId ?? ''}:${normalizeRussianText(message.text)}`,
+    )
+    .join('|')
+  return `decision:${messages}:${resolved.choices
     .map(nextChoice => {
       const effects = nextChoice.effects.map(effect =>
         Object.fromEntries(
@@ -1338,6 +1435,17 @@ export function compileContentPackage(input: unknown): CompilationReport {
         path: story.storyId,
       })
     }
+    if (story.previewAssetId) {
+      const preview = assets.get(story.previewAssetId)
+      if (!preview || preview.kind !== 'cover') {
+        issues.push({
+          code: 'PREVIEW_ASSET_MISSING',
+          severity: 'blocker',
+          message: `${story.storyId} references a missing story preview asset`,
+          path: story.storyId,
+        })
+      }
+    }
     for (const episodeId of story.episodeIds) {
       const episode = episodes.get(episodeId)
       if (!episode || episode.storyId !== story.storyId) {
@@ -1415,6 +1523,27 @@ export function compileContentPackage(input: unknown): CompilationReport {
       }
     }
   }
+
+  for (const story of pack.stories) {
+    const choicePointCounts = story.episodeIds
+      .map(episodeId => episodes.get(episodeId))
+      .filter(
+        (episode): episode is ContentPackage['episodes'][number] =>
+          episode !== undefined && episode.storyId === story.storyId,
+      )
+      .map(episode => minimumChoicePointsToEnding(episode.entryNodeId, nodes))
+      .filter((count): count is number => count !== undefined)
+    const shortestPath = Math.min(...choicePointCounts)
+    if (shortestPath < MINIMUM_STORY_CHOICE_POINTS) {
+      issues.push({
+        code: 'STORY_TOO_SHORT',
+        severity: 'blocker',
+        message: `${story.storyId} can reach an ending after ${shortestPath} choice points; every story requires at least ${MINIMUM_STORY_CHOICE_POINTS}`,
+        path: story.storyId,
+      })
+    }
+  }
+
   for (const warning of pack.warnings) {
     for (const effect of warning.safeRoute.effects) {
       try {
@@ -1799,6 +1928,9 @@ export function partitionContentPackage(
     )
     const shardNodes = content.nodes.filter(node => reachable.has(node.nodeId))
     const assetIds = new Set<string>()
+    for (const story of shardStories) {
+      if (story.previewAssetId) assetIds.add(story.previewAssetId)
+    }
     for (const character of content.characters) {
       if (characterIds.has(character.characterId)) {
         assetIds.add(character.portraitAssetId)

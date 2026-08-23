@@ -8,8 +8,13 @@ import type {
   NarrativeMessage,
 } from '@chartalk/content-schema'
 
+import {
+  storyPreviewAssetsFor,
+  storyPreviewDefinitionFor,
+} from './story-previews.generated'
+
 export const BULK_FIXTURE_DEFAULTS = {
-  stageCount: 6,
+  stageCount: 50,
   storyCount: 240,
 } as const
 
@@ -21,8 +26,8 @@ export const BULK_FIXTURE_DEFAULTS = {
  * catalog shape.
  */
 export const BULK_FIXTURE_SCALE_DEFAULTS = {
-  stageCount: 6,
-  storyCount: 2_858,
+  stageCount: 50,
+  storyCount: 1_200,
 } as const
 
 export interface BulkFixtureOptions {
@@ -524,6 +529,34 @@ const decisionBeats = [
   ],
 ] as const
 
+/**
+ * Fifty choice points need fifty distinct pieces of scene evidence. Keeping
+ * the object and its position separate gives the generated fixture a
+ * readable, non-numeric progression without repeating the same chat copy.
+ */
+const stageEvidenceObjects = [
+  'листок с зачёркнутой датой',
+  'конверт без обратного адреса',
+  'фотография с обрезанным краем',
+  'ключ на синей ленте',
+  'чек с неровной печатью',
+  'карта с пустым кварталом',
+  'папка с тонкой резинкой',
+  'диктофон с короткой записью',
+  'блокнот с одной лишней строкой',
+  'билет с вчерашней датой',
+] as const
+const stageEvidencePositions = [
+  'на краю стола',
+  'у окна',
+  'возле чашки',
+  'под лампой',
+  'рядом с открытым блокнотом',
+] as const
+
+const stageEvidenceFor = (stage: number): string =>
+  `${stageEvidenceObjects[stage % stageEvidenceObjects.length]!} ${stageEvidencePositions[Math.floor(stage / stageEvidenceObjects.length) % stageEvidencePositions.length]!}`
+
 const anchorPlaces = [
   'в архиве на Полевой',
   'у киоска на Северной',
@@ -846,6 +879,7 @@ const makeStory = (
   const theme = themes[index % themes.length]!
   const anchor = anchorForStory(index)
   const storyId = `story.bulk.${pad(index + 1)}`
+  const preview = storyPreviewDefinitionFor(storyId)
   const stem = storyTitleStems[index % storyTitleStems.length]!
   const title = `${theme[0]?.toUpperCase() ?? theme}${theme.slice(1)} — ${stem}`
   const premises = [
@@ -858,15 +892,16 @@ const makeStory = (
     characterId: character.characterId,
     title,
     premise: premises[index % premises.length]!,
+    ...(preview ? { previewAssetId: preview.asset.assetId } : {}),
     status: 'complete',
     rating: '16+',
-    durationMinutes: stageCount * 4,
+    durationMinutes: Math.round(stageCount * 1.5),
     warningIds: [],
     episodeIds: [`episode.bulk.${pad(index + 1)}.1`],
   }
 }
 
-const makeAssets = (): ContentAsset[] => [
+const makeAssets = (storyIds: readonly string[]): ContentAsset[] => [
   {
     assetId: 'portrait.ira',
     kind: 'portrait',
@@ -911,36 +946,30 @@ const makeAssets = (): ContentAsset[] => [
     altText: 'Графический портрет Веры с короткими рыжими кудрями.',
     provenance: 'generated-fixture',
   },
+  ...storyPreviewAssetsFor(storyIds),
 ]
 
-const decisionIdsForStage = (storyId: string, stage: number): string[] =>
+const decisionIdForStage = (storyId: string, stage: number): string =>
   stage === 0
-    ? [`${storyId}.decision.00.root`]
-    : Array.from(
-        { length: branchCount },
-        (_, branch) => `${storyId}.decision.${pad(stage, 2)}.${branch + 1}`,
-      )
+    ? `${storyId}.decision.00.root`
+    : `${storyId}.decision.${pad(stage, 2)}`
 
-const endingNodeId = (
-  storyId: string,
-  decisionBranch: number,
-  choiceBranch: number,
-): string => `${storyId}.ending.${decisionBranch + 1}.${choiceBranch + 1}`
+const endingNodeId = (storyId: string, choiceBranch: number): string =>
+  `${storyId}.ending.${choiceBranch + 1}`
 
 const makeChoice = (
   storyId: string,
   storyIndex: number,
   stage: number,
-  decisionBranch: number,
   choiceBranch: number,
   reactionId: string,
 ): ChoiceCandidate => {
   const [, intent] = choiceIntents[choiceBranch]!
-  const choiceId = `${storyId}.choice.${pad(stage, 2)}.${decisionBranch + 1}.${choiceBranch + 1}`
+  const choiceId = `${storyId}.choice.${pad(stage, 2)}.${choiceBranch + 1}`
   const clue = choiceClueForStory(storyIndex)
   const contextRow =
     decisionContexts[stage % decisionContexts.length] ?? decisionContexts[0]!
-  const context = contextRow[decisionBranch] ?? contextRow[0]
+  const context = contextRow[choiceBranch] ?? contextRow[0]
   const choiceSet =
     choiceTextSets[(storyIndex + stage) % choiceTextSets.length]!
   const choiceText = choiceSet[choiceBranch]!.replace(
@@ -952,6 +981,7 @@ const makeChoice = (
     text: choiceText,
     intent,
     priority: 0,
+    intentionalRepeatId: `${storyId}.choice-template.${choiceBranch + 1}`,
     when: { op: 'all', args: [] },
     effects: [
       {
@@ -971,36 +1001,35 @@ const makeDecision = (
   storyIndex: number,
   stage: number,
   stageCount: number,
-  branch: number,
 ): DecisionNode => {
-  const nodeId = decisionIdsForStage(storyId, stage)[branch]!
+  const nodeId = decisionIdForStage(storyId, stage)
   const firstName = character.name.split(' ')[0] ?? character.name
   const anchor = anchorForStory(storyIndex)
-  const context = decisionContexts[stage % decisionContexts.length]![branch]!
+  const stageEvidence = stageEvidenceFor(stage)
+  const context = decisionContexts[stage % decisionContexts.length]![0]
   const prompt = decisionPrompts[
-    (storyIndex + stage + branch) % decisionPrompts.length
+    (storyIndex + stage) % decisionPrompts.length
   ]!.replace('{context}', context.accusative)
-  const beat = decisionBeats[stage % decisionBeats.length]![branch]!
+  const beat = decisionBeats[stage % decisionBeats.length]![0]
   const setup = [
     `${firstName}, я снова сверилась с записями ${anchor}.`,
     `На этот раз деталь нашлась ${anchor}.`,
     `Ладно, давай без лишних кругов. Записи ${anchor} перед нами.`,
     `Я пока не делаю выводов. Записи ${anchor} перед нами — слишком многое указывает на ${context.accusative}.`,
-  ][(storyIndex + stage + branch) % 4]!
+  ][(storyIndex + stage) % 4]!
   const choices = four(
     Array.from({ length: branchCount }, (_, choiceBranch) =>
       makeChoice(
         storyId,
         storyIndex,
         stage,
-        branch,
         choiceBranch,
         `${nodeId}.reaction.${choiceBranch + 1}`,
       ),
     ),
   )
   const memoryKey = `${storyId}.memory.lastIntent`
-  const fallbackText = `${beat} ${setup} ${prompt}`
+  const fallbackText = `${beat} ${setup} Рядом лежит ${stageEvidence}. ${prompt}`
   const messageVariants = [
     ...choiceIntents.map(([, intent]) => ({
       variantId: `${nodeId}.after-${intent}`,
@@ -1043,7 +1072,6 @@ const makeEnding = (
   storyId: string,
   character: Character,
   storyIndex: number,
-  decisionBranch: number,
   choiceBranch: number,
 ): ContentNode => {
   const theme = themes[storyIndex % themes.length]!
@@ -1056,21 +1084,20 @@ const makeEnding = (
     'Пауза перед следующим шагом',
   ] as const
   const endingMoments = [
-    'после первого разговора',
-    'после проверки деталей',
-    'после найденной зацепки',
+    'после долгой проверки деталей',
+    'после названной границы',
+    'после нескольких честных разговоров',
     'после последнего вопроса',
   ] as const
-  const nodeId = endingNodeId(storyId, decisionBranch, choiceBranch)
-  const context = (decisionContexts[decisionBranch % decisionContexts.length]![
-    choiceBranch
-  ] ?? decisionContexts[0]![choiceBranch])!
+  const nodeId = endingNodeId(storyId, choiceBranch)
+  const context =
+    decisionContexts[choiceBranch % decisionContexts.length]![choiceBranch]!
   return {
     nodeId,
     type: 'ending',
     sceneId: `${storyId}.scene.main`,
-    endingId: `${storyId}.outcome.${decisionBranch + 1}.${choiceBranch + 1}`,
-    title: `${character.name}: ${endingTitles[choiceBranch]} · ${context.accusative} · ${endingMoments[decisionBranch]} · ${theme}`,
+    endingId: `${storyId}.outcome.${choiceBranch + 1}`,
+    title: `${character.name}: ${endingTitles[choiceBranch]} · ${context.accusative} · ${endingMoments[choiceBranch]} · ${theme}`,
     messages: [
       message(
         `${nodeId}.message`,
@@ -1099,89 +1126,51 @@ const makeStoryNodes = (
 ): ContentNode[] => {
   const nodes: ContentNode[] = []
   for (let stage = 0; stage < stageCount; stage += 1) {
-    const decisions = decisionIdsForStage(storyId, stage)
-    for (let branch = 0; branch < decisions.length; branch += 1) {
-      nodes.push(
-        makeDecision(storyId, character, storyIndex, stage, stageCount, branch),
-      )
-      for (
-        let choiceBranch = 0;
-        choiceBranch < branchCount;
-        choiceBranch += 1
-      ) {
-        const decisionId = decisions[branch]!
-        const reactionId = `${decisionId}.reaction.${choiceBranch + 1}`
-        const nextStage = stage + 1
-        const nextNodeId =
-          nextStage < stageCount
-            ? decisionIdsForStage(storyId, nextStage)[choiceBranch]!
-            : endingNodeId(storyId, branch, choiceBranch)
-        const contextRow =
-          decisionContexts[stage % decisionContexts.length] ??
-          decisionContexts[0]!
-        const context = contextRow[branch] ?? contextRow[0]
-        const anchor = anchorForStory(storyIndex)
-        nodes.push({
-          nodeId: reactionId,
-          type: 'reaction',
-          sceneId: `${storyId}.scene.main`,
-          messages: [
-            message(
-              `${reactionId}.message`,
-              character.characterId,
-              [
-                [
-                  `«Давай начнём с проверки ${context.genitive}», — говорит ${character.name.split(' ')[0] ?? character.name}. Она ещё раз сверяет записи ${anchor}.`,
-                  `«Сначала проверим ${context.accusative}, а выводы оставим на потом», — говорит ${character.name.split(' ')[0] ?? character.name} и возвращается к записям ${anchor}.`,
-                  `«Давай разложим ${context.accusative} по шагам», — предлагает ${character.name.split(' ')[0] ?? character.name}, перелистывая записи ${anchor}.`,
-                  `«Начнём с проверки ${context.genitive}; так будет проще не упустить важное», — говорит ${character.name.split(' ')[0] ?? character.name} и отмечает страницу ${anchor}.`,
-                ],
-                [
-                  `«Хорошо. Сначала обозначим границу и проверим ${context.accusative}», — отвечает ${character.name.split(' ')[0] ?? character.name} и делает пометку в записях ${anchor}.`,
-                  `«Границу лучше назвать прямо, а ${withRussianS(context.instrumental)} разобраться отдельно», — отвечает ${character.name.split(' ')[0] ?? character.name}, не убирая записи ${anchor}.`,
-                  `«Давай обозначим границу и отдельно проверим ${context.accusative}, чтобы не додумывать за других», — говорит ${character.name.split(' ')[0] ?? character.name} и смотрит на записи ${anchor}.`,
-                  `«С этого места остановимся и уточним, что делать с ${context.accusative}», — предлагает ${character.name.split(' ')[0] ?? character.name}, сверяясь с записями ${anchor}.`,
-                ],
-                [
-                  `«Спасибо, что не отмахиваешься. Посмотрим на ${context.accusative} вместе», — говорит ${character.name.split(' ')[0] ?? character.name} и придвигает записи ${anchor} ближе.`,
-                  `«Я рядом. Давай спокойно разберём ${context.accusative}», — говорит ${character.name.split(' ')[0] ?? character.name}, раскладывая записи ${anchor}.`,
-                  `«Хорошо, разберём ${context.accusative} без спешки», — отвечает ${character.name.split(' ')[0] ?? character.name} и открывает записи ${anchor}.`,
-                  `«Не оставайся с этим один на один — посмотрим на ${context.accusative} вместе», — говорит ${character.name.split(' ')[0] ?? character.name}, подтягивая записи ${anchor}.`,
-                ],
-                [
-                  `«Не будем рубить с плеча — сначала сверим ${context.accusative}», — говорит ${character.name.split(' ')[0] ?? character.name}. Она откладывает выводы и возвращается к записям ${anchor}.`,
-                  `«Спешка здесь ни к чему: сначала проверим ${context.accusative}», — говорит ${character.name.split(' ')[0] ?? character.name} и ещё раз сверяет детали ${anchor}.`,
-                  `«Давай не будем делать выводы на бегу, пока не разберёмся ${withRussianS(context.instrumental)}», — предлагает ${character.name.split(' ')[0] ?? character.name}, перечитывая записи ${anchor}.`,
-                  `«Сначала сверим ${context.accusative}, потом решим, что это значит», — говорит ${character.name.split(' ')[0] ?? character.name}, закрывая папку ${anchor}.`,
-                ],
-              ][choiceBranch]![(storyIndex + stage + branch) % 4]!,
-              100,
-            ),
-          ],
-          nextNodeId,
-          effects: [],
-          editorial: editorial(character.characterId),
-        })
-      }
+    const decision = makeDecision(
+      storyId,
+      character,
+      storyIndex,
+      stage,
+      stageCount,
+    )
+    nodes.push(decision)
+    for (let choiceBranch = 0; choiceBranch < branchCount; choiceBranch += 1) {
+      const reactionId = `${decision.nodeId}.reaction.${choiceBranch + 1}`
+      const nextNodeId =
+        stage + 1 < stageCount
+          ? decisionIdForStage(storyId, stage + 1)
+          : endingNodeId(storyId, choiceBranch)
+      const contextRow =
+        decisionContexts[stage % decisionContexts.length] ??
+        decisionContexts[0]!
+      const context = contextRow[choiceBranch] ?? contextRow[0]
+      const anchor = anchorForStory(storyIndex)
+      const stageEvidence = stageEvidenceFor(stage)
+      nodes.push({
+        nodeId: reactionId,
+        type: 'reaction',
+        sceneId: `${storyId}.scene.main`,
+        messages: [
+          message(
+            `${reactionId}.message`,
+            character.characterId,
+            [
+              `«Давай начнём с проверки ${context.genitive}», — говорит ${character.name.split(' ')[0] ?? character.name}. Она ещё раз сверяет записи ${anchor}. Рядом лежит ${stageEvidence}.`,
+              `«Границу лучше назвать прямо, а ${withRussianS(context.instrumental)} разобраться отдельно», — отвечает ${character.name.split(' ')[0] ?? character.name}, не убирая записи ${anchor}. Рядом лежит ${stageEvidence}.`,
+              `«Спасибо, что не отмахиваешься. Я рядом: спокойно разберём ${context.accusative}», — говорит ${character.name.split(' ')[0] ?? character.name}, раскладывая записи ${anchor}. Рядом лежит ${stageEvidence}.`,
+              `«Сначала сверим ${context.accusative}, потом решим, что это значит», — говорит ${character.name.split(' ')[0] ?? character.name}, закрывая папку ${anchor}. Рядом лежит ${stageEvidence}.`,
+            ][choiceBranch]!,
+            100,
+          ),
+        ],
+        nextNodeId,
+        effects: [],
+        editorial: editorial(character.characterId),
+      })
     }
   }
-  const finalDecisionCount = decisionIdsForStage(storyId, stageCount - 1).length
-  for (
-    let decisionBranch = 0;
-    decisionBranch < finalDecisionCount;
-    decisionBranch += 1
-  ) {
-    for (let choiceBranch = 0; choiceBranch < branchCount; choiceBranch += 1) {
-      nodes.push(
-        makeEnding(
-          storyId,
-          character,
-          storyIndex,
-          decisionBranch,
-          choiceBranch,
-        ),
-      )
-    }
+  for (let choiceBranch = 0; choiceBranch < branchCount; choiceBranch += 1) {
+    nodes.push(makeEnding(storyId, character, storyIndex, choiceBranch))
   }
   return nodes
 }
@@ -1194,8 +1183,13 @@ export function generateBulkFixtureContentPackage(
   if (!Number.isInteger(storyCount) || storyCount < 1) {
     throw new Error('Bulk fixture storyCount must be a positive integer')
   }
-  if (!Number.isInteger(stageCount) || stageCount < 2) {
-    throw new Error('Bulk fixture stageCount must be an integer >= 2')
+  if (
+    !Number.isInteger(stageCount) ||
+    stageCount < BULK_FIXTURE_DEFAULTS.stageCount
+  ) {
+    throw new Error(
+      `Bulk fixture stageCount must be an integer >= ${BULK_FIXTURE_DEFAULTS.stageCount}`,
+    )
   }
 
   const characters = Array.from({ length: storyCount }, (_, index) =>
@@ -1222,11 +1216,11 @@ export function generateBulkFixtureContentPackage(
       packId: 'pack.ru.bulk.fixture',
       locale: 'ru-RU',
       schemaVersion: 1,
-      contentVersion: '0.1.0',
-      buildId: 'ru-bulk-fixture-2026.08.14.1',
+      contentVersion: '0.2.2',
+      buildId: 'ru-bulk-fixture-2026.08.23.3',
       minEngineVersion: '1.0.0',
       maxEngineVersion: '1.x',
-      createdAt: '2026-08-14T00:00:00.000Z',
+      createdAt: '2026-08-23T00:00:00.000Z',
       checksum: 'sha256:development-bulk-fixture',
       signature: 'ed25519:development-bulk-fixture',
     },
@@ -1235,6 +1229,6 @@ export function generateBulkFixtureContentPackage(
     episodes,
     nodes,
     warnings: [],
-    assets: makeAssets(),
+    assets: makeAssets(stories.map(story => story.storyId)),
   }
 }

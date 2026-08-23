@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { compileContentPackage } from '@chartalk/content-compiler'
+import { auditRussianQuality } from '@chartalk/content-integrity'
 
 import {
   BULK_FIXTURE_DEFAULTS,
@@ -12,11 +13,11 @@ describe('bulk fixture content generator', () => {
   it('creates a deterministic, schema-valid corpus with four authored choices', () => {
     const first = generateBulkFixtureContentPackage({
       storyCount: 8,
-      stageCount: 6,
+      stageCount: 50,
     })
     const second = generateBulkFixtureContentPackage({
       storyCount: 8,
-      stageCount: 6,
+      stageCount: 50,
     })
 
     expect(JSON.stringify(first)).toBe(JSON.stringify(second))
@@ -81,8 +82,7 @@ describe('bulk fixture content generator', () => {
   })
 
   it('documents the structural scale candidate separately from bundled content', () => {
-    const decisionsPerStory =
-      1 + (BULK_FIXTURE_SCALE_DEFAULTS.stageCount - 1) * 4
+    const decisionsPerStory = BULK_FIXTURE_SCALE_DEFAULTS.stageCount
 
     expect(
       BULK_FIXTURE_SCALE_DEFAULTS.storyCount * decisionsPerStory,
@@ -95,7 +95,7 @@ describe('bulk fixture content generator', () => {
   it('keeps generated Russian prompts grammatically safe across contexts', () => {
     const content = generateBulkFixtureContentPackage({
       storyCount: 240,
-      stageCount: 6,
+      stageCount: 50,
     })
     const texts = content.nodes
       .filter(node => node.type === 'decision')
@@ -114,10 +114,23 @@ describe('bulk fixture content generator', () => {
     expect(texts.every(text => !text.includes(': пазл'))).toBe(true)
   })
 
+  it('does not repeat generated text across a fifty-choice story', () => {
+    const content = generateBulkFixtureContentPackage({
+      storyCount: 1,
+      stageCount: 50,
+    })
+
+    const duplicateIssues = auditRussianQuality(content).issues.filter(
+      issue => issue.code === 'DUPLICATE_TEXT_UNIT',
+    )
+
+    expect(duplicateIssues).toEqual([])
+  })
+
   it('keeps generated choices conversational instead of label-like', () => {
     const content = generateBulkFixtureContentPackage({
       storyCount: 8,
-      stageCount: 6,
+      stageCount: 50,
     })
     const decisions = content.nodes.filter(node => node.type === 'decision')
     const choices = decisions.flatMap(node =>
@@ -167,7 +180,7 @@ describe('bulk fixture content generator', () => {
   it('keeps bulk prose contextual instead of concatenating template fragments', () => {
     const content = generateBulkFixtureContentPackage({
       storyCount: 8,
-      stageCount: 6,
+      stageCount: 50,
     })
     const decisions = content.nodes.filter(node => node.type === 'decision')
     const decisionTexts = decisions.flatMap(node =>
@@ -235,7 +248,7 @@ describe('bulk fixture content generator', () => {
   it('keeps the catalogue readable instead of exposing fixture labels as story copy', () => {
     const content = generateBulkFixtureContentPackage({
       storyCount: 32,
-      stageCount: 6,
+      stageCount: 50,
     })
 
     const titles = content.stories.map(story => story.title)
@@ -254,11 +267,11 @@ describe('bulk fixture content generator', () => {
   it('carries each authored intent into a later decision prompt', () => {
     const content = generateBulkFixtureContentPackage({
       storyCount: 1,
-      stageCount: 3,
+      stageCount: 50,
     })
     const decisions = content.nodes.filter(node => node.type === 'decision')
     const laterDecision = decisions.find(node =>
-      node.nodeId.includes('.decision.01.'),
+      node.nodeId.includes('.decision.01'),
     )
 
     expect(laterDecision).toBeDefined()
@@ -287,7 +300,7 @@ describe('bulk fixture content generator', () => {
   it('keeps catalog premises and hooks grammatically complete', () => {
     const content = generateBulkFixtureContentPackage({
       storyCount: 32,
-      stageCount: 6,
+      stageCount: 50,
     })
     const premises = content.stories.map(story => story.premise)
     const hooks = content.characters.map(character => character.hook)
@@ -313,7 +326,7 @@ describe('bulk fixture content generator', () => {
   it('uses the natural Russian с/со form before instrumental phrases', () => {
     const content = generateBulkFixtureContentPackage({
       storyCount: 8,
-      stageCount: 6,
+      stageCount: 50,
     })
     const copy = content.nodes.flatMap(node => {
       if (node.type === 'reaction')
@@ -342,7 +355,7 @@ describe('bulk fixture content generator', () => {
   it('does not expose generator IDs in reader-facing Russian copy', () => {
     const content = generateBulkFixtureContentPackage({
       storyCount: 8,
-      stageCount: 6,
+      stageCount: 50,
     })
     const visibleCopy = [
       ...content.stories.map(story => story.premise),

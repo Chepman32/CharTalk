@@ -7,6 +7,11 @@ import type {
   NarrativeMessage,
 } from '@chartalk/content-schema'
 
+import {
+  storyPreviewAssetIdFor,
+  storyPreviewAssetsFor,
+} from './story-previews.generated'
+
 interface FollowUpBlueprint {
   text: string
   intent: string
@@ -44,6 +49,45 @@ interface StoryBlueprint {
     BranchBlueprint,
   ]
 }
+
+const SAMPLE_STORY_CHOICE_POINTS = 50
+
+const continuationFrames = [
+  'сверить новую деталь с исходными записями',
+  'разделить факт и предположение',
+  'найти независимое подтверждение',
+  'оставить себе безопасный следующий шаг',
+  'проверить, что не потерялось по дороге',
+  'назвать границу до следующего разговора',
+] as const
+
+const continuationActions = [
+  {
+    text: (frame: string) => `Давай ${frame} и не будем спешить с выводом.`,
+    intent: 'verify-continuation',
+    reaction:
+      'Хорошо. Я откладываю выводы и отмечаю, что именно нужно сверить.',
+  },
+  {
+    text: (frame: string) =>
+      `Сначала обозначим границу, а потом попробуем ${frame}.`,
+    intent: 'set-continuation-boundary',
+    reaction:
+      'Граница названа прямо; теперь разговор можно продолжить без давления.',
+  },
+  {
+    text: (frame: string) => `Я рядом. Попробуем ${frame} вместе.`,
+    intent: 'support-continuation',
+    reaction:
+      'Она выдыхает и раскладывает следующий шаг так, чтобы не оставаться с ним одной.',
+  },
+  {
+    text: (frame: string) => `Оставим вопрос открытым и попробуем ${frame}.`,
+    intent: 'hold-continuation-question',
+    reaction:
+      'Версия остаётся версией, а в записях появляется конкретный план проверки.',
+  },
+] as const
 
 const message = (
   messageId: string,
@@ -147,6 +191,15 @@ function fixtureEditorial(speakerId: string): DecisionNode['editorial'] {
 
 function buildStoryNodes(blueprint: StoryBlueprint): ContentNode[] {
   const nodes: ContentNode[] = []
+  const continuationDecisionId = (stage: number, branch: number) =>
+    `${blueprint.storyId}.decision.continuation.${String(stage).padStart(2, '0')}.${branch + 1}`
+  const continuationReactionId = (
+    stage: number,
+    branch: number,
+    choiceIndex: number,
+  ) =>
+    `${blueprint.storyId}.reaction.continuation.${String(stage).padStart(2, '0')}.${branch + 1}.${choiceIndex + 1}`
+
   const rootChoices = blueprint.branches.map((branch, branchIndex) => {
     const number = branchIndex + 1
     return choice(
@@ -213,35 +266,95 @@ function buildStoryNodes(blueprint: StoryBlueprint): ContentNode[] {
 
     branch.followUps.forEach((followUp, followUpIndex) => {
       const followUpNumber = followUpIndex + 1
-      const endingNodeId = `${blueprint.storyId}.ending.${branchNumber}.${followUpNumber}`
+      nodes.push({
+        nodeId: `${blueprint.storyId}.reaction.${branchNumber}.${followUpNumber}`,
+        type: 'reaction',
+        sceneId: blueprint.sceneId,
+        messages: [
+          message(
+            `${blueprint.storyId}.reaction.${branchNumber}.${followUpNumber}.message`,
+            blueprint.characterId,
+            followUp.reaction,
+            160,
+          ),
+        ],
+        nextNodeId: continuationDecisionId(3, followUpIndex),
+        effects: [],
+        editorial: fixtureEditorial(blueprint.characterId),
+      })
+    })
+  })
+
+  for (let stage = 3; stage <= SAMPLE_STORY_CHOICE_POINTS; stage += 1) {
+    for (let branchIndex = 0; branchIndex < 4; branchIndex += 1) {
+      const branch = blueprint.branches[branchIndex]!
+      const frame =
+        continuationFrames[(stage + branchIndex) % continuationFrames.length]!
+      const nodeId = continuationDecisionId(stage, branchIndex)
+      const choiceCandidates = continuationActions.map(
+        (action, choiceIndex) => {
+          const isFinalChoicePoint = stage === SAMPLE_STORY_CHOICE_POINTS
+          const nextNodeId = isFinalChoicePoint
+            ? `${blueprint.storyId}.ending.${branchIndex + 1}.${choiceIndex + 1}`
+            : continuationReactionId(stage, branchIndex, choiceIndex)
+          return choice(
+            `${blueprint.storyId}.choice.continuation.${String(stage).padStart(2, '0')}.${branchIndex + 1}.${choiceIndex + 1}`,
+            action.text(frame),
+            action.intent,
+            nextNodeId,
+            `${branch.openingIntent}:${stage}:${action.intent}`,
+          )
+        },
+      ) as [ChoiceCandidate, ChoiceCandidate, ChoiceCandidate, ChoiceCandidate]
+
       nodes.push(
-        {
-          nodeId: `${blueprint.storyId}.reaction.${branchNumber}.${followUpNumber}`,
+        decision(
+          nodeId,
+          blueprint.sceneId,
+          blueprint.characterId,
+          `${branch.prompt} Сейчас важнее ${frame}.`,
+          choiceCandidates,
+          stage === SAMPLE_STORY_CHOICE_POINTS ? 'after' : 'none',
+        ),
+      )
+
+      if (stage === SAMPLE_STORY_CHOICE_POINTS) continue
+      continuationActions.forEach((action, choiceIndex) => {
+        nodes.push({
+          nodeId: continuationReactionId(stage, branchIndex, choiceIndex),
           type: 'reaction',
           sceneId: blueprint.sceneId,
           messages: [
             message(
-              `${blueprint.storyId}.reaction.${branchNumber}.${followUpNumber}.message`,
+              `${blueprint.storyId}.reaction.continuation.${String(stage).padStart(2, '0')}.${branchIndex + 1}.${choiceIndex + 1}.message`,
               blueprint.characterId,
-              followUp.reaction,
+              action.reaction,
               160,
             ),
           ],
-          nextNodeId: endingNodeId,
+          nextNodeId: continuationDecisionId(stage + 1, choiceIndex),
           effects: [],
           editorial: fixtureEditorial(blueprint.characterId),
-        },
-        {
-          nodeId: endingNodeId,
-          type: 'ending',
-          sceneId: blueprint.sceneId,
-          endingId: `${blueprint.storyId}.outcome.${branchNumber}.${followUpNumber}`,
-          title: followUp.endingTitle,
-          messages: [],
-          epilogueFacts: [followUp.epilogue],
-          editorial: fixtureEditorial(blueprint.characterId),
-        },
-      )
+        })
+      })
+    }
+  }
+
+  blueprint.branches.forEach((branch, branchIndex) => {
+    const branchNumber = branchIndex + 1
+    branch.followUps.forEach((followUp, followUpIndex) => {
+      const followUpNumber = followUpIndex + 1
+      const endingNodeId = `${blueprint.storyId}.ending.${branchNumber}.${followUpNumber}`
+      nodes.push({
+        nodeId: endingNodeId,
+        type: 'ending',
+        sceneId: blueprint.sceneId,
+        endingId: `${blueprint.storyId}.outcome.${branchNumber}.${followUpNumber}`,
+        title: followUp.endingTitle,
+        messages: [],
+        epilogueFacts: [followUp.epilogue],
+        editorial: fixtureEditorial(blueprint.characterId),
+      })
     })
   })
 
@@ -862,6 +975,7 @@ const assets: ContentAsset[] = [
     altText: 'Старая записка, ключ на синей ленте и билет на деревянном столе.',
     provenance: 'generated-fixture',
   },
+  ...storyPreviewAssetsFor([ira.storyId, asya.storyId, dina.storyId]),
 ]
 
 export const sampleContentPackage: ContentPackage = {
@@ -869,11 +983,11 @@ export const sampleContentPackage: ContentPackage = {
     packId: 'pack.ru.sample.core',
     locale: 'ru-RU',
     schemaVersion: 1,
-    contentVersion: '1.0.0',
-    buildId: 'ru-sample-2026.08.13.1',
+    contentVersion: '1.1.1',
+    buildId: 'ru-sample-2026.08.23.2',
     minEngineVersion: '1.0.0',
     maxEngineVersion: '1.x',
-    createdAt: '2026-08-13T00:00:00.000Z',
+    createdAt: '2026-08-23T00:00:00.000Z',
     checksum: 'sha256:development-fixture',
     signature: 'ed25519:development-fixture',
   },
@@ -925,9 +1039,10 @@ export const sampleContentPackage: ContentPackage = {
       title: 'После дедлайна',
       premise:
         'Поздняя редакция, письмо об увольнении и две строки, которые кто-то заменил.',
-      status: 'mini',
+      previewAssetId: storyPreviewAssetIdFor(ira.storyId),
+      status: 'complete',
       rating: '16+',
-      durationMinutes: 12,
+      durationMinutes: 75,
       warningIds: [],
       episodeIds: ['episode.ira.after-deadline.1'],
     },
@@ -937,9 +1052,10 @@ export const sampleContentPackage: ContentPackage = {
       title: 'Семь минут',
       premise:
         'Камера выключилась ненадолго. Этого хватило, чтобы нарушить всю временную линию.',
-      status: 'mini',
+      previewAssetId: storyPreviewAssetIdFor(asya.storyId),
+      status: 'complete',
       rating: '16+',
-      durationMinutes: 12,
+      durationMinutes: 75,
       warningIds: [],
       episodeIds: ['episode.asya.seven-minutes.1'],
     },
@@ -949,9 +1065,10 @@ export const sampleContentPackage: ContentPackage = {
       title: 'Три удара',
       premise:
         'Ночная запись из пустой квартиры проверяет не смелость, а качество вопросов.',
-      status: 'mini',
+      previewAssetId: storyPreviewAssetIdFor(dina.storyId),
+      status: 'complete',
       rating: '16+',
-      durationMinutes: 12,
+      durationMinutes: 75,
       warningIds: ['warning.dina.frightening'],
       episodeIds: ['episode.dina.three-knocks.1'],
     },

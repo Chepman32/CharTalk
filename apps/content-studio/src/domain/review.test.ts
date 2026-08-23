@@ -110,7 +110,11 @@ describe('content review diagnostics', () => {
       }
     }
 
-    const results = findOverusedNgrams(content, { n: 2, minCount: 3 })
+    const results = findOverusedNgrams(content, {
+      n: 2,
+      minCount: 3,
+      limit: 10_000,
+    })
 
     expect(results).toContainEqual(
       expect.objectContaining({

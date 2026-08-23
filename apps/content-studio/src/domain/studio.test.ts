@@ -636,28 +636,31 @@ describe('studio domain', () => {
     expect(state.auditLog).toHaveLength(workflow.length)
   })
 
-  it('simulates a complete two-choice path with the production engine', () => {
+  it('simulates a complete fifty-choice path with the production engine', () => {
     const start = createSimulator(
       sampleContentPackage,
       'story.ira.after-deadline',
     )
-    const afterFirst = chooseInSimulator(
+    let current = chooseInSimulator(
       sampleContentPackage,
       start,
       start.choices[0]!.choiceId,
     )
-    const complete = chooseInSimulator(
-      sampleContentPackage,
-      afterFirst,
-      afterFirst.choices[2]!.choiceId,
-    )
+    for (let turn = 1; current.status === 'active' && turn < 50; turn += 1) {
+      const choice = current.choices[turn === 1 ? 2 : 0]
+      if (!choice) throw new Error('Simulator did not expose a choice')
+      current = chooseInSimulator(
+        sampleContentPackage,
+        current,
+        choice.choiceId,
+      )
+    }
 
     expect(start.choices).toHaveLength(4)
-    expect(afterFirst.sequence).toBe(1)
-    expect(complete.status).toBe('completed')
-    expect(complete.sequence).toBe(2)
-    expect(chooseInSimulator(sampleContentPackage, complete, 'ignored')).toBe(
-      complete,
+    expect(current.status).toBe('completed')
+    expect(current.sequence).toBe(50)
+    expect(chooseInSimulator(sampleContentPackage, current, 'ignored')).toBe(
+      current,
     )
   })
 

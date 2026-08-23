@@ -568,7 +568,7 @@ describe('CharTalk API', () => {
     const body = (await authorized.json()) as {
       data: { counts: { choiceCandidateCount: number } }
     }
-    expect(body.data.counts.choiceCandidateCount).toBe(60)
+    expect(body.data.counts.choiceCandidateCount).toBe(2_364)
   })
 
   it('enforces CMS role tokens for validation versus publishing', async () => {

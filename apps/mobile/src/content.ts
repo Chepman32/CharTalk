@@ -1,5 +1,7 @@
 import { sampleContentPackage } from '@chartalk/test-fixtures'
 
+import { storyPreviewSources } from './story-preview-sources.generated'
+
 export { sampleContentPackage }
 
 export const portraitSources: Record<string, number> = {
@@ -18,7 +20,9 @@ const fallbackPortrait = require('../assets/icon.png') as number
 const downloadedAssetSources = new Map<string, { uri: string }>()
 
 export const hasBundledAsset = (assetId: string): boolean =>
-  assetId in portraitSources || assetId in attachmentSources
+  assetId in portraitSources ||
+  assetId in attachmentSources ||
+  assetId in storyPreviewSources
 
 export const setDownloadedAssetSources = (
   sources: Readonly<Record<string, string>>,
@@ -33,6 +37,7 @@ export const assetSource = (assetId: string): number | { uri: string } =>
   downloadedAssetSources.get(assetId) ??
   portraitSources[assetId] ??
   attachmentSources[assetId] ??
+  storyPreviewSources[assetId] ??
   fallbackPortrait
 
 export const portraitSource = assetSource
