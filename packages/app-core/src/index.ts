@@ -24,6 +24,9 @@ export type TextScale = 'standard' | 'large' | 'extraLarge'
 export type GrammarProfile = 'masculine' | 'feminine' | 'neutralPhrasing'
 export type ThemePreference = 'system' | 'light' | 'dark' | 'solar' | 'mono'
 export type MessageSpeed = 'instant' | 'normal' | 'slow'
+export type NotificationFrequency = 'weekly' | 'fortnightly' | 'monthly'
+export type NotificationWeekendDay = 'saturday' | 'sunday'
+export type NotificationTime = 'morning' | 'afternoon' | 'evening'
 
 export interface ReaderSettings {
   theme: ThemePreference
@@ -36,6 +39,11 @@ export interface ReaderSettings {
   showContentWarnings: boolean
   analytics: boolean
   notifications: boolean
+  notificationDiscoveryReminders: boolean
+  notificationUnfinishedReminders: boolean
+  notificationFrequency: NotificationFrequency
+  notificationWeekendDay: NotificationWeekendDay
+  notificationTime: NotificationTime
   hiddenContentCategories: ContentWarning['category'][]
 }
 
@@ -50,6 +58,11 @@ export const defaultSettings: ReaderSettings = {
   showContentWarnings: true,
   analytics: false,
   notifications: false,
+  notificationDiscoveryReminders: true,
+  notificationUnfinishedReminders: true,
+  notificationFrequency: 'weekly',
+  notificationWeekendDay: 'saturday',
+  notificationTime: 'morning',
   hiddenContentCategories: [],
 }
 
@@ -143,7 +156,7 @@ export interface SubmitContentReportInput extends Omit<
 }
 
 export interface AppSnapshot {
-  schemaVersion: 4
+  schemaVersion: 5
   onboardingComplete: boolean
   profile: LocalProfile | null
   settings: ReaderSettings
@@ -247,7 +260,7 @@ export interface RepositoryOptions {
 }
 
 const emptySnapshot = (): AppSnapshot => ({
-  schemaVersion: 4,
+  schemaVersion: 5,
   onboardingComplete: false,
   profile: null,
   settings: { ...defaultSettings },
@@ -291,7 +304,7 @@ const upgradeSnapshot = (
       : 'standard'
   return {
     ...raw,
-    schemaVersion: 4,
+    schemaVersion: 5,
     profile: raw.profile
       ? {
           ...raw.profile,

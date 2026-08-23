@@ -1,5 +1,7 @@
 PODS:
-  - EXConstants (57.0.10):
+  - EXApplication (57.0.2):
+    - ExpoModulesCore
+  - EXConstants (57.0.13):
     - ExpoModulesCore
   - Expo (57.0.12):
     - ExpoModulesCore
@@ -86,6 +88,8 @@ PODS:
     - ExpoModulesJSI
     - ExpoModulesWorklets
     - RNWorklets
+  - ExpoNotifications (57.0.13):
+    - ExpoModulesCore
   - ExpoRouter (57.0.12):
     - ExpoModulesCore
     - RNScreens
@@ -2305,6 +2309,7 @@ PODS:
   - Yoga (0.0.0)
 
 DEPENDENCIES:
+  - EXApplication (from `../../../node_modules/expo-application/ios`)
   - EXConstants (from `../../../node_modules/expo-constants/ios`)
   - Expo (from `../../../node_modules/expo`)
   - ExpoAsset (from `../../../node_modules/expo-asset/ios`)
@@ -2323,6 +2328,7 @@ DEPENDENCIES:
   - ExpoModulesJSI (from `../../../node_modules/expo-modules-jsi/apple`)
   - ExpoModulesWorklets (from `../../../node_modules/expo-modules-core/ExpoModulesWorklets.podspec`)
   - ExpoModulesWorkletsAdapter (from `../../../node_modules/expo-modules-core`)
+  - ExpoNotifications (from `../../../node_modules/expo-notifications/ios`)
   - ExpoRouter (from `../../../node_modules/expo-router/ios`)
   - ExpoSecureStore (from `../../../node_modules/expo-secure-store/ios`)
   - ExpoSplashScreen (from `../../../node_modules/expo-splash-screen/ios`)
@@ -2415,6 +2421,8 @@ DEPENDENCIES:
   - Yoga (from `../../../node_modules/react-native/ReactCommon/yoga`)
 
 EXTERNAL SOURCES:
+  EXApplication:
+    :path: "../../../node_modules/expo-application/ios"
   EXConstants:
     :path: "../../../node_modules/expo-constants/ios"
   Expo:
@@ -2451,6 +2459,8 @@ EXTERNAL SOURCES:
     :podspec: "../../../node_modules/expo-modules-core/ExpoModulesWorklets.podspec"
   ExpoModulesWorkletsAdapter:
     :path: "../../../node_modules/expo-modules-core"
+  ExpoNotifications:
+    :path: "../../../node_modules/expo-notifications/ios"
   ExpoRouter:
     :path: "../../../node_modules/expo-router/ios"
   ExpoSecureStore:
@@ -2632,7 +2642,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  EXConstants: 7afce64f3083a0b506763e41e3e38718497ed230
+  EXApplication: bbd517d50878ca1d121fb3843392beb210181e28
+  EXConstants: 1b9bb962f72de86540a5314f4bec2eb3fdeff515
   Expo: 423915c60a05e620e67a1f1bfcb612a217fd6f1b
   ExpoAsset: 64e4684e2cb6c45a52009f91e18c45ff56ed4a09
   ExpoAudio: b69f36525132edba8d87a715b3a20c678ef78b30
@@ -2646,10 +2657,11 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: c26f14275017370cc8a4b7b43a0e23361f2053a5
   ExpoLinking: a516e12e2cb5af6eaeea32809c6a6ede1a7da8bb
   ExpoLogBox: 6bb73c341aca22e699bd4da6cc61afc844e1a648
-  ExpoModulesCore: a9efc00f85a23e1e0cb00514e9dcd3b8941f68bd
+  ExpoModulesCore: d51c27b49fe1f963e0f45b5590a324df835312da
   ExpoModulesJSI: b20fefa4cdd9097e7e6b715466d1900b8c5d4711
   ExpoModulesWorklets: 53d4ca8d32225cb3ec4660b9f03496192b4f3cac
   ExpoModulesWorkletsAdapter: 4e40578e1ef8a7ab957a641f40dc85e57665bde5
+  ExpoNotifications: 25e39e13c6c6f4bd599d3cf7992ca9e3b098d3e0
   ExpoRouter: 571fb707941479ed5a6e13d6122757e17bb3201f
   ExpoSecureStore: 94793113049a2d7478dfe1a13aa15081e9f61755
   ExpoSplashScreen: 2dda363bfc268b92f00530ee7fa2a3be4534cf57

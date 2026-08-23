@@ -76,12 +76,36 @@ describe('MemoryAppRepository', () => {
     })
     const snapshot = await repository.getSnapshot()
 
-    expect(snapshot.schemaVersion).toBe(4)
+    expect(snapshot.schemaVersion).toBe(5)
     expect(snapshot.settings.textScale).toBe('standard')
     expect(snapshot.reports[0]).toMatchObject({
       consentGrantedAt: '',
       contentBuildId: sampleContentPackage.manifest.buildId,
       appVersion: 'unknown',
+    })
+  })
+
+  it('adds notification preferences when upgrading an older snapshot', async () => {
+    const legacy = {
+      ...createEmptySnapshot(),
+      schemaVersion: 4,
+      settings: {
+        notifications: true,
+      },
+    } as unknown as AppSnapshot
+
+    const repository = new MemoryAppRepository(sampleContentPackage, {
+      initialSnapshot: legacy,
+    })
+    const snapshot = await repository.getSnapshot()
+
+    expect(snapshot.settings).toMatchObject({
+      notifications: true,
+      notificationDiscoveryReminders: true,
+      notificationUnfinishedReminders: true,
+      notificationFrequency: 'weekly',
+      notificationWeekendDay: 'saturday',
+      notificationTime: 'morning',
     })
   })
 

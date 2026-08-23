@@ -15,6 +15,7 @@ import React, { useEffect } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
+import { NotificationCoordinator } from '@/notifications/NotificationCoordinator'
 import { AppProvider } from '@/state/AppProvider'
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider'
 
@@ -90,6 +91,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AppProvider>
+          <NotificationCoordinator />
           <ThemeProvider>
             <ThemedNavigator />
           </ThemeProvider>

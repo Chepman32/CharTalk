@@ -12,8 +12,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@chartalk/app-core": "1.0.0",
     "@chartalk/analytics-schema": "1.0.0",
+    "@chartalk/app-core": "1.0.0",
     "@chartalk/content-integrity": "1.0.0",
     "@chartalk/content-schema": "1.0.0",
     "@chartalk/design-system": "1.0.0",
@@ -32,6 +32,7 @@
     "expo-haptics": "~57.0.1",
     "expo-image": "~57.0.2",
     "expo-linking": "~57.0.5",
+    "expo-notifications": "~57.0.13",
     "expo-router": "~57.0.12",
     "expo-secure-store": "~57.0.1",
     "expo-splash-screen": "~57.0.6",

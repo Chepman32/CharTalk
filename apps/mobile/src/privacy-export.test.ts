@@ -8,7 +8,7 @@ import {
 } from './privacy-export'
 
 const snapshot: AppSnapshot = {
-  schemaVersion: 4,
+  schemaVersion: 5,
   onboardingComplete: true,
   profile: {
     displayName: 'Саша',
@@ -27,6 +27,11 @@ const snapshot: AppSnapshot = {
     showContentWarnings: true,
     analytics: false,
     notifications: false,
+    notificationDiscoveryReminders: true,
+    notificationUnfinishedReminders: true,
+    notificationFrequency: 'weekly',
+    notificationWeekendDay: 'saturday',
+    notificationTime: 'morning',
     hiddenContentCategories: [],
   },
   runs: [],

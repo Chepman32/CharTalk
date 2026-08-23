@@ -7,6 +7,7 @@ import React, { useMemo, useState } from 'react'
 import { Pressable, StyleSheet, TextInput, View } from 'react-native'
 
 import { portraitSource } from '@/content'
+import { requestNotificationPermission } from '@/notifications/notification-gateway'
 import { useApp } from '@/state/AppProvider'
 import { type ThemeColorAliases, useThemeColors } from '@/theme/useThemeColors'
 import {
@@ -45,7 +46,13 @@ export default function OnboardingScreen() {
   const nativeColors = useThemeColors()
   const styles = useMemo(() => createStyles(nativeColors), [nativeColors])
   const router = useRouter()
-  const { completeOnboarding, contentCatalog, error, clearError } = useApp()
+  const {
+    completeOnboarding,
+    updateSettings,
+    contentCatalog,
+    error,
+    clearError,
+  } = useApp()
   const [step, setStep] = useState(0)
   const [displayName, setDisplayName] = useState('')
   const [grammarProfile, setGrammarProfile] =
@@ -60,7 +67,7 @@ export default function OnboardingScreen() {
     [contentCatalog.characters, selectedCharacterId],
   )
 
-  const finish = async () => {
+  const finish = async (shouldRequestNotifications: boolean) => {
     setSaving(true)
     try {
       await completeOnboarding({
@@ -68,6 +75,14 @@ export default function OnboardingScreen() {
         selectedCharacterId,
         grammarProfile,
       })
+      if (shouldRequestNotifications) {
+        try {
+          const permission = await requestNotificationPermission()
+          await updateSettings({ notifications: permission.granted })
+        } catch {
+          // Notification setup is optional and must not block onboarding.
+        }
+      }
       router.replace('/(tabs)/stories')
     } finally {
       setSaving(false)
@@ -322,7 +337,7 @@ export default function OnboardingScreen() {
             variant="quiet"
             accessibilityHint="Сохранить настройки по умолчанию и открыть каталог"
             loading={saving}
-            onPress={() => void finish()}
+            onPress={() => void finish(false)}
           />
         )}
         {step < steps.length - 1 ? (
@@ -336,7 +351,7 @@ export default function OnboardingScreen() {
             label="Открыть истории"
             icon={ArrowRight}
             loading={saving}
-            onPress={() => void finish()}
+            onPress={() => void finish(true)}
             testID="finish-onboarding"
           />
         )}

@@ -29,4 +29,32 @@ describe('settings screen', () => {
       hasAgePill: false,
     })
   })
+
+  it('shows permission recovery and notification preferences', () => {
+    expect({
+      hasNotificationSwitcher: settingsScreenSource.includes(
+        'label="Уведомления"',
+      ),
+      canRequestPermission: settingsScreenSource.includes(
+        'requestNotificationPermission',
+      ),
+      hasDiscoveryPreference: settingsScreenSource.includes(
+        'label="Новые истории"',
+      ),
+      hasUnfinishedPreference: settingsScreenSource.includes(
+        'label="Незавершённые истории"',
+      ),
+      hasFrequencyChoices: settingsScreenSource.includes('label="Частота"'),
+      hasWeekendDayChoices: settingsScreenSource.includes('label="День"'),
+      hasTimeChoices: settingsScreenSource.includes('label="Время"'),
+    }).toEqual({
+      hasNotificationSwitcher: true,
+      canRequestPermission: true,
+      hasDiscoveryPreference: true,
+      hasUnfinishedPreference: true,
+      hasFrequencyChoices: true,
+      hasWeekendDayChoices: true,
+      hasTimeChoices: true,
+    })
+  })
 })
