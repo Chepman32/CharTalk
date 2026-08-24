@@ -1,4 +1,4 @@
-import type { ContentNode, ContentPackage } from '@chartalk/content-schema'
+import type { ContentNode, ContentPackage } from '@razvilka/content-schema'
 
 import { collectAnnotatedTextUnits } from './text-preview'
 

@@ -6,12 +6,12 @@ import {
   compileContentPackage,
   evaluateProductionRelease,
   partitionContentPackage,
-} from '@chartalk/content-compiler'
-import { signContentPackage } from '@chartalk/content-compiler/signing'
+} from '@razvilka/content-compiler'
+import { signContentPackage } from '@razvilka/content-compiler/signing'
 import {
   contentPackageSchema,
   type ContentPackage,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 export interface ContentShardBuildOptions {
   maxStoriesPerShard?: number

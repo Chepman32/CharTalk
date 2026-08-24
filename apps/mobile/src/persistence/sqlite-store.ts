@@ -1,6 +1,6 @@
-import type { AppSnapshot, SnapshotStore } from '@chartalk/app-core'
-import type { DiagnosticEvent } from '@chartalk/analytics-schema'
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { AppSnapshot, SnapshotStore } from '@razvilka/app-core'
+import type { DiagnosticEvent } from '@razvilka/analytics-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 import * as SQLite from 'expo-sqlite'
 import { Paths } from 'expo-file-system'
 
@@ -250,7 +250,7 @@ export class SqliteSnapshotStore
   private async database(): Promise<SQLite.SQLiteDatabase> {
     if (!this.databasePromise) {
       const opening = (async () => {
-        const database = await SQLite.openDatabaseAsync('chartalk.db')
+        const database = await SQLite.openDatabaseAsync('razvilka.db')
         await database.execAsync(databasePragmaSql)
         const row = await database.getFirstAsync<UserVersionRow>(
           'PRAGMA user_version',

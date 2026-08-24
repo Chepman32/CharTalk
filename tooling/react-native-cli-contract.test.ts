@@ -51,9 +51,9 @@ describe('React Native Community CLI mobile contract', () => {
     ) as RootPackage
 
     expect(rootPackage.scripts).toMatchObject({
-      start: 'npm run start --workspace @chartalk/mobile --',
-      android: 'npm run android --workspace @chartalk/mobile --',
-      ios: 'npm run ios --workspace @chartalk/mobile --',
+      start: 'npm run start --workspace @razvilka/mobile --',
+      android: 'npm run android --workspace @razvilka/mobile --',
+      ios: 'npm run ios --workspace @razvilka/mobile --',
     })
   })
 
@@ -104,7 +104,7 @@ describe('React Native Community CLI mobile contract', () => {
 
   it('does not delegate Android or iOS bundles to Expo CLI', () => {
     const androidBuild = readText('android/app/build.gradle')
-    const xcodeProject = readText('ios/CharTalk.xcodeproj/project.pbxproj')
+    const xcodeProject = readText('ios/Razvilka.xcodeproj/project.pbxproj')
 
     expect(androidBuild).toContain('entryFile = file("$projectRoot/index.js")')
     expect(androidBuild).toContain("require.resolve('react-native/cli.js'")
@@ -114,7 +114,9 @@ describe('React Native Community CLI mobile contract', () => {
     expect(xcodeProject).toContain(
       'export ENTRY_FILE=\\"${ENTRY_FILE:-$PROJECT_ROOT/index.js}\\"',
     )
-    expect(xcodeProject).not.toContain("require('expo/scripts/resolveAppEntry')")
+    expect(xcodeProject).not.toContain(
+      "require('expo/scripts/resolveAppEntry')",
+    )
     expect(xcodeProject).not.toContain("require.resolve('@expo/cli'")
     expect(xcodeProject).not.toContain('export BUNDLE_COMMAND="export:embed"')
   })

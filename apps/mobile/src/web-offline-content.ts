@@ -1,6 +1,6 @@
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 
-const cacheName = 'chartalk-bundled-content-v1'
+const cacheName = 'razvilka-bundled-content-v1'
 const shardPaths = [1, 2, 3, 4, 5].map(
   index =>
     `/content/bundled-content.bulk.shard.${String(index).padStart(3, '0')}.json`,

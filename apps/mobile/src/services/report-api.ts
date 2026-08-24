@@ -1,4 +1,4 @@
-import type { ContentReport } from '@chartalk/app-core'
+import type { ContentReport } from '@razvilka/app-core'
 
 import { secureServiceBaseUrl } from './secure-endpoint'
 
@@ -26,7 +26,7 @@ export async function uploadContentReport(
   options: UploadOptions = {},
 ): Promise<boolean> {
   const baseUrl = secureServiceBaseUrl(
-    options.baseUrl ?? process.env.EXPO_PUBLIC_CHARTALK_API_URL,
+    options.baseUrl ?? process.env.EXPO_PUBLIC_RAZVILKA_API_URL,
   )
   if (!baseUrl || !report.consentGrantedAt) return false
 

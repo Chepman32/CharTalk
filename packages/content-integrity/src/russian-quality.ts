@@ -2,7 +2,7 @@ import type {
   ContentPackage,
   ContentNode,
   NarrativeMessage,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 export type RussianQualityIssueCode =
   | 'UNNATURAL_SLASH_FORM'

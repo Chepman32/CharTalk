@@ -1,9 +1,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 
-import { contentPackageSchema } from '@chartalk/content-schema'
-import { auditRussianQuality } from '@chartalk/content-integrity'
-import { generateBulkFixtureContentPackage } from '@chartalk/test-fixtures'
+import { contentPackageSchema } from '@razvilka/content-schema'
+import { auditRussianQuality } from '@razvilka/content-integrity'
+import { generateBulkFixtureContentPackage } from '@razvilka/test-fixtures'
 
 const inputArgument = process.argv[2]
 const inputPath = inputArgument
@@ -21,7 +21,7 @@ const quality = auditRussianQuality(parsed)
 const report = {
   generatedAt: new Date().toISOString(),
   source:
-    inputPath ?? '@chartalk/test-fixtures:generateBulkFixtureContentPackage',
+    inputPath ?? '@razvilka/test-fixtures:generateBulkFixtureContentPackage',
   mode: 'automated-screen',
   humanReviewRequired: true,
   buildId: parsed.manifest.buildId,

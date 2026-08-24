@@ -4,7 +4,7 @@ import { lstat, realpath, stat } from 'node:fs/promises'
 import { extname, resolve, sep } from 'node:path'
 import { Readable } from 'node:stream'
 
-import type { ContentAsset, ContentPackage } from '@chartalk/content-schema'
+import type { ContentAsset, ContentPackage } from '@razvilka/content-schema'
 
 import type { LoadedContentAsset } from './app'
 

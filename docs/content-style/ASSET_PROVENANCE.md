@@ -4,24 +4,24 @@ Every shipped asset lists source, generation/editing method, digest, review stat
 
 ## Brand and interface assets
 
-| Path                                   | Method                                             | SHA-256                                                            | Review / allowed use                |
-| -------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------- |
-| `apps/mobile/assets/brand-mark.svg`    | Original repo-native vector construction           | `e330aebf8bda05c78b78af4ad71276fe756bcd4d68f55db3790c86d8f50fbff3` | Brand review pending; internal/beta |
-| `apps/mobile/assets/icon.png`          | Rasterized original CharTalk glyph and color field | `49fe820ffd8f5a20a56f75a6a35dec8a5271fef38b853fe10fad71acfe0d731d` | Store/brand review pending          |
-| `apps/mobile/assets/adaptive-icon.png` | Android adaptive rendering of the original glyph   | `4c40671f2bae3d2882c0932acdf3ce99b7b6866f94e9829effbc80980c196950` | Store/brand review pending          |
-| `apps/mobile/assets/splash-icon.png`   | Splash rendering of the original glyph             | `168f1e5ff41076ea15390be23785e956612964c523b9e596ae2db90749349d81` | Store/brand review pending          |
-| `apps/mobile/assets/favicon.png`       | Small raster rendering of the original glyph       | `3ee6ee72f369ee94a0f253788a0ecc552212aaad0c814d4a1a4ae603fc6bf9e1` | Internal web QA                     |
+| Path                                   | Method                                                | SHA-256                                                            | Review / allowed use                |
+| -------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------- |
+| `apps/mobile/assets/brand-mark.svg`    | Original repo-native vector construction              | `f7b9e0f1abd43cc987f8c968f754de3a5108b26169a1d12cc6b6981b9d885149` | Brand review pending; internal/beta |
+| `apps/mobile/assets/icon.png`          | User-supplied artwork with AI-assisted edge extension | `4c9587cfa5fc1933a6bd9fe991b440b6ec259755bfa150e0ecb7f93d1e0ce766` | Store/brand review pending          |
+| `apps/mobile/assets/adaptive-icon.png` | 432 px Android derivative of the icon master          | `d78f7fd60abc421e8f7b98b474cd479ccb71bf090b198a6b0c66576ae83a9b3d` | Store/brand review pending          |
+| `apps/mobile/assets/splash-icon.png`   | Rounded 512 px splash derivative of the icon master   | `e2170191d505895d40647284c0ecc9312bcb4f09aa7637218bd68ac146a3fca8` | Store/brand review pending          |
+| `apps/mobile/assets/favicon.png`       | 64 px web derivative of the icon master               | `c3fdd3c0cdddb21766824d66920eaa53646d3b78cc454cdf7519fddb4b93b59c` | Internal web QA                     |
 
 ## Development portraits
 
-Generated 2026-08-13 and 2026-08-15 with the workspace image-generation tool as original fictional characters. Shared direction: square editorial portrait, grounded contemporary Russian setting, soft natural light, subtle analog grain, no text, logo, celebrity, or real-person reference.
+Originally generated 2026-08-13 and 2026-08-15, then regenerated 2026-08-24 with the built-in workspace image-generation tool as original fictional characters. The 2026-08-24 pass preserves each character's established identity while replacing severe expressions and dark backdrops with restrained warmth, softer natural light, open shadows, and subtle analog grain. No text, logo, celebrity, or real-person reference was used.
 
-| Character / path            | Prompt-specific direction                                                                                                      | SHA-256                                                            | Review / allowed use                                 |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ | ---------------------------------------------------- |
-| Ира — `portraits/ira.png`   | Adult woman, observant museum conservator, dark bob, rust overshirt, quiet archive backdrop, ember accent                      | `b514f8bd9003cc79488bf563bf0d81e7b8fbb06f211a3577be42ec3ddcd16f06` | Creative/legal review pending; fixture and beta only |
-| Ася — `portraits/asya.png`  | Adult woman, night-radio producer, wavy dark hair, headphones nearby, plum and rose studio light, direct restrained expression | `bdbdf62a649105a5ce8fc68f649ac70d8ad7532f9e40b6df629d5d1cf000f41c` | Creative/legal review pending; fixture and beta only |
-| Дина — `portraits/dina.png` | Adult woman, field researcher, practical jacket, moss/ochre dusk landscape, alert understated expression                       | `a4d01d7e0cc65ee50c381ea083d67ac1b0ba9a430f6f0d893f1cf0d45a35392f` | Creative/legal review pending; fixture and beta only |
-| Вера — `portraits/vera.png` | Adult woman, contemporary editor, short auburn curls, dark green jacket and cream shirt, moss/charcoal backdrop                | `e24cfbc0733bffbf248f95fa37c4bab6bd7bd53c75f8761ab655f763a53f524a` | Creative/legal review pending; fixture and beta only |
+| Character / path            | Prompt-specific direction                                                                                              | SHA-256                                                            | Review / allowed use                                 |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------- |
+| Ира — `portraits/ira.png`   | Short tousled dark bob and black turtleneck; calm direct gaze; warm cream and muted ember backdrop                     | `e1e69a72f0c1d7351d9eb6e6adf571031b7f682861140144f822e91d47745fbc` | Creative/legal review pending; fixture and beta only |
+| Ася — `portraits/asya.png`  | Sleek dark bob, dark blazer, and light knit top; attentive restrained warmth; cream and muted ochre backdrop           | `15c797c9c3aa48f59863abb0318f3b1b20701938b4c28aed6d13d92485d276b0` | Creative/legal review pending; fixture and beta only |
+| Дина — `portraits/dina.png` | Low dark ponytail, practical jacket, and headphones; grounded receptive expression; warm stone and muted plum backdrop | `23149991a0f62f5e520cb1a328f3c79bcbdac79eb8897ac855175e79fa5b8ded` | Creative/legal review pending; fixture and beta only |
+| Вера — `portraits/vera.png` | Short auburn curls, dark green jacket, and cream shirt; understated closed-mouth warmth; cream and moss backdrop       | `3b16997f02265b4ed10e3a869fa23a4998d9ea00053ef0ab5dcdebf209603138` | Creative/legal review pending; fixture and beta only |
 
 No portrait represents or implies a real person's likeness. The content manifest marks these assets `generated-fixture`, so the production publication gate rejects them.
 

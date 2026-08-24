@@ -1,4 +1,4 @@
-import { spacing } from '@chartalk/design-system'
+import { spacing } from '@razvilka/design-system'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { ArrowCounterClockwise, ArrowRight, Tray } from 'phosphor-react-native'
 import React, { useEffect, useMemo, useRef, useState } from 'react'

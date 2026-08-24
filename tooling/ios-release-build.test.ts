@@ -5,17 +5,17 @@ describe('iOS Release build plan', () => {
   it('builds the CocoaPods workspace with the signed-candidate configuration', () => {
     const plan = createIosReleaseBuildPlan(
       '/workspace/apps/mobile/ios',
-      '/tmp/chartalk-derived',
+      '/tmp/razvilka-derived',
     )
 
     expect(plan.workspacePath).toBe(
-      '/workspace/apps/mobile/ios/CharTalk.xcworkspace',
+      '/workspace/apps/mobile/ios/Razvilka.xcworkspace',
     )
     expect(plan.args).toEqual([
       '-workspace',
-      '/workspace/apps/mobile/ios/CharTalk.xcworkspace',
+      '/workspace/apps/mobile/ios/Razvilka.xcworkspace',
       '-scheme',
-      'CharTalk',
+      'Razvilka',
       '-configuration',
       'Release',
       '-sdk',
@@ -23,7 +23,7 @@ describe('iOS Release build plan', () => {
       '-destination',
       'generic/platform=iOS Simulator',
       '-derivedDataPath',
-      '/tmp/chartalk-derived',
+      '/tmp/razvilka-derived',
       '-quiet',
       'CODE_SIGNING_ALLOWED=NO',
       'build',

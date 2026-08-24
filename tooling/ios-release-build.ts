@@ -21,14 +21,14 @@ export function createIosReleaseBuildPlan(
   iosRoot: string,
   derivedDataPath: string,
 ): IosReleaseBuildPlan {
-  const workspacePath = resolve(iosRoot, 'CharTalk.xcworkspace')
+  const workspacePath = resolve(iosRoot, 'Razvilka.xcworkspace')
   return {
     workspacePath,
     args: [
       '-workspace',
       workspacePath,
       '-scheme',
-      'CharTalk',
+      'Razvilka',
       '-configuration',
       'Release',
       '-sdk',
@@ -69,7 +69,7 @@ export function runIosReleaseBuild(
 
   const derivedDataPath =
     options.derivedDataPath ??
-    mkdtempSync(join(tmpdir(), 'chartalk-ios-release-'))
+    mkdtempSync(join(tmpdir(), 'razvilka-ios-release-'))
   const plan = createIosReleaseBuildPlan(iosRoot, derivedDataPath)
   const missingFiles = [plan.workspacePath, podfileLockPath].filter(
     filePath => !existsSync(filePath),

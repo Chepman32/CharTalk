@@ -1,5 +1,5 @@
-import type { AppRepository } from '@chartalk/app-core'
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { AppRepository } from '@razvilka/app-core'
+import type { ContentPackage } from '@razvilka/content-schema'
 
 import type {
   ContentPackageStore,

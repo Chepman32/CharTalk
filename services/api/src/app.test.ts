@@ -1,9 +1,9 @@
 import { generateKeyPairSync } from 'node:crypto'
 import { describe, expect, it, vi } from 'vitest'
 
-import { sampleContentPackage } from '@chartalk/test-fixtures'
-import { initialNarrativeState } from '@chartalk/content-schema'
-import { applyChoice } from '@chartalk/dialogue-engine'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
+import { initialNarrativeState } from '@razvilka/content-schema'
+import { applyChoice } from '@razvilka/dialogue-engine'
 
 import { MemoryApiStore, createApi } from './app'
 import { MemorySyncStore } from './sync'
@@ -18,7 +18,7 @@ const setup = () => {
     signingPrivateKey: privateKey,
     signingKeyId: 'test-key-2026',
     syncEnabled: false,
-    allowedOrigins: ['https://studio.chartalk.app'],
+    allowedOrigins: ['https://studio.razvilka.app'],
   })
   return { app, store }
 }
@@ -73,7 +73,7 @@ const syncBatch = (choiceIndex = 0) => {
   }
 }
 
-describe('CharTalk API', () => {
+describe('Развилка API', () => {
   it('serves a versioned health envelope with security headers', async () => {
     const { app } = setup()
     const response = await app.request('/v1/health')
@@ -107,7 +107,7 @@ describe('CharTalk API', () => {
     const unavailable = await app.request('/readyz')
     expect(unavailable.status).toBe(503)
     expect(await unavailable.json()).toMatchObject({
-      type: 'https://chartalk.app/problems/not-ready',
+      type: 'https://razvilka.app/problems/not-ready',
       status: 503,
     })
     expect((await app.request('/healthz')).status).toBe(200)
@@ -131,7 +131,7 @@ describe('CharTalk API', () => {
     expect(blocked.status).toBe(429)
     expect(blocked.headers.get('retry-after')).toBe('60')
     expect(await blocked.json()).toMatchObject({
-      type: 'https://chartalk.app/problems/rate-limit-exceeded',
+      type: 'https://razvilka.app/problems/rate-limit-exceeded',
       status: 429,
     })
   })
@@ -253,14 +253,14 @@ describe('CharTalk API', () => {
     const response = await app.request('/v1/reports', {
       method: 'OPTIONS',
       headers: {
-        origin: 'https://studio.chartalk.app',
+        origin: 'https://studio.razvilka.app',
         'x-request-id': 'request-123',
       },
     })
 
     expect(response.status).toBe(204)
     expect(response.headers.get('access-control-allow-origin')).toBe(
-      'https://studio.chartalk.app',
+      'https://studio.razvilka.app',
     )
     expect(response.headers.get('vary')).toBe('Origin')
   })
@@ -598,7 +598,7 @@ describe('CharTalk API', () => {
       headers: {
         authorization: 'Bearer writer-token-with-entropy-123456',
         'content-type': 'application/json',
-        'x-chartalk-confirm-build-id': sampleContentPackage.manifest.buildId,
+        'x-razvilka-confirm-build-id': sampleContentPackage.manifest.buildId,
       },
       body: JSON.stringify(sampleContentPackage),
     })
@@ -635,7 +635,7 @@ describe('CharTalk API', () => {
       headers: {
         authorization: 'Bearer test-admin-token-with-entropy',
         'content-type': 'application/json',
-        'x-chartalk-confirm-build-id': sampleContentPackage.manifest.buildId,
+        'x-razvilka-confirm-build-id': sampleContentPackage.manifest.buildId,
       },
       body: JSON.stringify(sampleContentPackage),
     })
@@ -658,7 +658,7 @@ describe('CharTalk API', () => {
       headers: {
         authorization: 'Bearer test-admin-token-with-entropy',
         'content-type': 'application/json',
-        'x-chartalk-confirm-build-id': 'latest',
+        'x-razvilka-confirm-build-id': 'latest',
       },
       body: JSON.stringify(sampleContentPackage),
     })
@@ -682,7 +682,7 @@ describe('CharTalk API', () => {
       headers: {
         authorization: 'Bearer test-admin-token-with-entropy',
         'content-type': 'application/json',
-        'x-chartalk-confirm-build-id': candidate.manifest.buildId,
+        'x-razvilka-confirm-build-id': candidate.manifest.buildId,
       },
       body: JSON.stringify(candidate),
     })
@@ -704,7 +704,7 @@ describe('CharTalk API', () => {
       headers: {
         authorization: 'Bearer test-admin-token-with-entropy',
         'content-type': 'application/json',
-        'x-chartalk-confirm-build-id': 'malformed-build',
+        'x-razvilka-confirm-build-id': 'malformed-build',
       },
       body: JSON.stringify(sampleContentPackage),
     })

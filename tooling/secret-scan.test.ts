@@ -33,7 +33,7 @@ describe('secret scan', () => {
 
   it('allows environment lookups and explicit development fixtures', () => {
     const source = `
-      const token = process.env.CHARTALK_ADMIN_TOKEN
+      const token = process.env.RAZVILKA_ADMIN_TOKEN
       const adminToken = 'development-admin-token-change-me'
       const testToken = 'test-admin-token-with-entropy'
       const placeholderSecret = 'replace-with-production-secret'

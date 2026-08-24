@@ -1,14 +1,14 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { DurableAppRepository } from '@chartalk/app-core'
+import { DurableAppRepository } from '@razvilka/app-core'
 import {
   base64UrlEncode,
   checksumContentPackage,
   unsignedContentBytes,
-} from '@chartalk/content-integrity'
-import type { ContentPackage } from '@chartalk/content-schema'
-import { resolveDecision } from '@chartalk/dialogue-engine'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+} from '@razvilka/content-integrity'
+import type { ContentPackage } from '@razvilka/content-schema'
+import { resolveDecision } from '@razvilka/dialogue-engine'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import type { ContentPackageStore } from '@/persistence/content-store'
 import type { ContentMediaStore } from '@/persistence/media-store'
@@ -142,7 +142,7 @@ describe('installContentPackage', () => {
   ) =>
     installContentPackage({
       packId: signed.manifest.packId,
-      baseUrl: 'https://content.chartalk.test',
+      baseUrl: 'https://content.razvilka.test',
       publicKey: undefined,
       publicKeys,
       contentStore,
@@ -178,7 +178,7 @@ describe('installContentPackage', () => {
     await install({ buildId: signed.manifest.buildId, fetchImpl })
 
     expect(fetchImpl).toHaveBeenCalledWith(
-      `https://content.chartalk.test/v1/content/packages/${encodeURIComponent(
+      `https://content.razvilka.test/v1/content/packages/${encodeURIComponent(
         signed.manifest.packId,
       )}/builds/${encodeURIComponent(signed.manifest.buildId)}`,
       { headers: { accept: 'application/json' } },
@@ -246,7 +246,7 @@ describe('installContentPackage', () => {
 
     expect(mediaStore.prepareContentMedia).toHaveBeenCalledWith(
       expect.anything(),
-      'https://content.chartalk.test',
+      'https://content.razvilka.test',
     )
     expect(commit).toHaveBeenCalledOnce()
     expect(registerAssetSources).toHaveBeenCalledWith({

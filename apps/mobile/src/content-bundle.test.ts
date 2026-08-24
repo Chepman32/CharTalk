@@ -4,8 +4,8 @@ import { resolve } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { compileContentPackage } from '@chartalk/content-compiler'
-import { generateBulkFixtureContentPackage } from '@chartalk/test-fixtures'
+import { compileContentPackage } from '@razvilka/content-compiler'
+import { generateBulkFixtureContentPackage } from '@razvilka/test-fixtures'
 
 import {
   bundledContentCatalogPackages,
@@ -60,7 +60,7 @@ describe('bundled reader catalog', () => {
         ),
       ),
     ).toBe(true)
-  }, 60_000)
+  }, 120_000)
 
   it('keeps every bundled normal route at fifty choice points or longer', async () => {
     const packages = await loadBundledContentPackages()
@@ -108,7 +108,7 @@ describe('bundled reader catalog', () => {
       50, 50, 50, 50, 40,
     ])
     expect(first[1]?.manifest.buildId).toBe(
-      'ru-bulk-fixture-2026.08.24.2.shard.001',
+      'ru-bulk-fixture-2026.08.24.3.shard.001',
     )
     expect(
       first

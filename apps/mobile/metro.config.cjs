@@ -12,7 +12,9 @@ const config = mergeConfig(
   getExpoDefaultConfig(projectRoot),
 )
 
-config.watchFolders = [...new Set([...(config.watchFolders ?? []), workspaceRoot])]
+config.watchFolders = [
+  ...new Set([...(config.watchFolders ?? []), workspaceRoot]),
+]
 config.resolver.nodeModulesPaths = [
   ...new Set([
     ...(config.resolver.nodeModulesPaths ?? []),

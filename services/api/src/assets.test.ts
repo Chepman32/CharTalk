@@ -3,7 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import { loadContentAssetFile, verifyContentAssetFiles } from './assets'
 
@@ -18,7 +18,7 @@ describe('content asset files', () => {
   it('serves only a verified file scoped to the immutable build', async () => {
     const { mkdtemp } = await import('node:fs/promises')
     const { tmpdir } = await import('node:os')
-    const root = await mkdtemp(join(tmpdir(), 'chartalk-assets-'))
+    const root = await mkdtemp(join(tmpdir(), 'razvilka-assets-'))
     roots.push(root)
     const content = structuredClone(sampleContentPackage)
     const asset = content.assets[0]!
@@ -50,7 +50,7 @@ describe('content asset files', () => {
   it('rejects a digest mismatch', async () => {
     const { mkdtemp } = await import('node:fs/promises')
     const { tmpdir } = await import('node:os')
-    const root = await mkdtemp(join(tmpdir(), 'chartalk-assets-'))
+    const root = await mkdtemp(join(tmpdir(), 'razvilka-assets-'))
     roots.push(root)
     const content = structuredClone(sampleContentPackage)
     const asset = content.assets[0]!

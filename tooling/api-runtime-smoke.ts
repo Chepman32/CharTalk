@@ -125,25 +125,25 @@ async function stopServer(
 }
 
 export async function runApiRuntimeSmoke(
-  port = Number(process.env.CHARTALK_API_SMOKE_PORT ?? 4397),
+  port = Number(process.env.RAZVILKA_API_SMOKE_PORT ?? 4397),
 ): Promise<void> {
   if (!Number.isSafeInteger(port) || port < 1 || port > 65_535) {
     throw new Error(
-      'CHARTALK_API_SMOKE_PORT must be an integer from 1 to 65535',
+      'RAZVILKA_API_SMOKE_PORT must be an integer from 1 to 65535',
     )
   }
   const serverPath = resolve(projectRoot, 'services/api/dist/server.js')
   await access(serverPath)
-  const tempDirectory = await mkdtemp(join(tmpdir(), 'chartalk-api-smoke-'))
+  const tempDirectory = await mkdtemp(join(tmpdir(), 'razvilka-api-smoke-'))
   const server = spawn(process.execPath, [serverPath], {
     cwd: projectRoot,
     env: {
       ...process.env,
       NODE_ENV: 'development',
       PORT: String(port),
-      CHARTALK_API_HOST: '127.0.0.1',
-      CHARTALK_API_DB_PATH: join(tempDirectory, 'api.db'),
-      CHARTALK_ALLOWED_ORIGINS: 'http://localhost:5173',
+      RAZVILKA_API_HOST: '127.0.0.1',
+      RAZVILKA_API_DB_PATH: join(tempDirectory, 'api.db'),
+      RAZVILKA_ALLOWED_ORIGINS: 'http://localhost:5173',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   })

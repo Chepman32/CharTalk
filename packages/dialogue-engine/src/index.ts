@@ -11,7 +11,7 @@ import type {
   NarrativeMessage,
   NarrativeState,
   Scalar,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 const FORBIDDEN_PATH_SEGMENTS = new Set([
   '__proto__',

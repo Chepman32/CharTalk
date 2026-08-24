@@ -1,4 +1,4 @@
-import type { StoryRun } from '@chartalk/app-core'
+import type { StoryRun } from '@razvilka/app-core'
 
 /** Returns the most recently updated active run without mutating the snapshot. */
 export const latestActiveRunForStory = (

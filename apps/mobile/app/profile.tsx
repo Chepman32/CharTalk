@@ -1,5 +1,5 @@
-import type { GrammarProfile } from '@chartalk/app-core'
-import { radius, spacing, typography } from '@chartalk/design-system'
+import type { GrammarProfile } from '@razvilka/app-core'
+import { radius, spacing, typography } from '@razvilka/design-system'
 import { useRouter } from 'expo-router'
 import { Check } from 'phosphor-react-native'
 import React, { useMemo, useState } from 'react'

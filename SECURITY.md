@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Do not open a public issue for a suspected vulnerability. Send a minimal report to `security@chartalk.app` with the affected version, reproduction steps, impact, and whether user data or signing material may be exposed. Do not include real reader transcripts or credentials.
+Do not open a public issue for a suspected vulnerability. Send a minimal report to `security@razvilka.app` with the affected version, reproduction steps, impact, and whether user data or signing material may be exposed. Do not include real reader transcripts or credentials.
 
 The production owner must acknowledge a report within two business days, assign severity, preserve evidence, and follow the incident runbook. Public disclosure is coordinated after a fix or compensating control is available.
 

@@ -6,7 +6,7 @@ import type {
   ContentPackage,
   DecisionNode,
   NarrativeMessage,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 import {
   storyPreviewAssetsFor,
@@ -869,7 +869,7 @@ const makeAssets = (storyIds: readonly string[]): ContentAsset[] => [
     kind: 'portrait',
     path: 'portraits/ira.png',
     checksum:
-      'sha256:b514f8bd9003cc79488bf563bf0d81e7b8fbb06f211a3577be42ec3ddcd16f06',
+      'sha256:e1e69a72f0c1d7351d9eb6e6adf571031b7f682861140144f822e91d47745fbc',
     width: 1024,
     height: 1024,
     altText: 'Графический портрет Иры с короткими тёмными волосами.',
@@ -880,7 +880,7 @@ const makeAssets = (storyIds: readonly string[]): ContentAsset[] => [
     kind: 'portrait',
     path: 'portraits/asya.png',
     checksum:
-      'sha256:bdbdf62a649105a5ce8fc68f649ac70d8ad7532f9e40b6df629d5d1cf000f41c',
+      'sha256:15c797c9c3aa48f59863abb0318f3b1b20701938b4c28aed6d13d92485d276b0',
     width: 1024,
     height: 1024,
     altText: 'Графический портрет Аси с тёмным каре.',
@@ -891,7 +891,7 @@ const makeAssets = (storyIds: readonly string[]): ContentAsset[] => [
     kind: 'portrait',
     path: 'portraits/dina.png',
     checksum:
-      'sha256:a4d01d7e0cc65ee50c381ea083d67ac1b0ba9a430f6f0d893f1cf0d45a35392f',
+      'sha256:23149991a0f62f5e520cb1a328f3c79bcbdac79eb8897ac855175e79fa5b8ded',
     width: 1024,
     height: 1024,
     altText: 'Графический портрет Дины с наушниками на шее.',
@@ -902,9 +902,9 @@ const makeAssets = (storyIds: readonly string[]): ContentAsset[] => [
     kind: 'portrait',
     path: 'portraits/vera.png',
     checksum:
-      'sha256:e24cfbc0733bffbf248f95fa37c4bab6bd7bd53c75f8761ab655f763a53f524a',
-    width: 1254,
-    height: 1254,
+      'sha256:3b16997f02265b4ed10e3a869fa23a4998d9ea00053ef0ab5dcdebf209603138',
+    width: 1024,
+    height: 1024,
     altText: 'Графический портрет Веры с короткими рыжими кудрями.',
     provenance: 'generated-fixture',
   },
@@ -1175,7 +1175,7 @@ export function generateBulkFixtureContentPackage(
       locale: 'ru-RU',
       schemaVersion: 1,
       contentVersion: '0.2.4',
-      buildId: 'ru-bulk-fixture-2026.08.24.2',
+      buildId: 'ru-bulk-fixture-2026.08.24.3',
       minEngineVersion: '1.0.0',
       maxEngineVersion: '1.x',
       createdAt: '2026-08-24T00:00:00.000Z',

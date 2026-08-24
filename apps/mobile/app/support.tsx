@@ -1,4 +1,4 @@
-import { spacing } from '@chartalk/design-system'
+import { spacing } from '@razvilka/design-system'
 import { Envelope, FileText, Heart, ShieldCheck } from 'phosphor-react-native'
 import React, { useMemo } from 'react'
 import { Linking, StyleSheet, View } from 'react-native'
@@ -17,7 +17,7 @@ export default function SupportScreen() {
       <SectionLabel>Помощь без аккаунта</SectionLabel>
       <Text variant="title">Поддержка и документы</Text>
       <Text color={nativeColors.textSecondary}>
-        CharTalk работает локально. Для чтения не нужны регистрация, номер
+        «Развилка» работает локально. Для чтения не нужны регистрация, номер
         телефона или доступ к контактам.
       </Text>
       <View style={styles.promise}>
@@ -35,10 +35,10 @@ export default function SupportScreen() {
         <SettingsRow
           icon={Envelope}
           label="Написать в поддержку"
-          detail="support@chartalk.app"
+          detail="support@razvilka.app"
           onPress={() =>
             void Linking.openURL(
-              'mailto:support@chartalk.app?subject=CharTalk%20support',
+              'mailto:support@razvilka.app?subject=%D0%A0%D0%B0%D0%B7%D0%B2%D0%B8%D0%BB%D0%BA%D0%B0%20%E2%80%94%20%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0',
             )
           }
         />

@@ -34,6 +34,8 @@ export default tseslint.config(
   {
     files: [
       '**/*.config.{js,mjs,ts}',
+      '**/*.config.cjs',
+      'apps/mobile/index.js',
       'tooling/**/*.ts',
       'tooling/**/*.mjs',
       'scripts/**/*.ts',
@@ -43,6 +45,20 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
+    },
+  },
+  {
+    files: ['**/*.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        __dirname: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
   {

@@ -1,4 +1,4 @@
-import type { AppRepository } from '@chartalk/app-core'
+import type { AppRepository } from '@razvilka/app-core'
 import {
   syncPullResponseSchema,
   syncPushRequestSchema,
@@ -6,7 +6,7 @@ import {
   type SyncConflict,
   type SyncPullResponse,
   type SyncOutboxEntry,
-} from '@chartalk/sync-protocol'
+} from '@razvilka/sync-protocol'
 
 import type { SyncState, SyncStateStore } from '../persistence/sync-state'
 
@@ -103,7 +103,7 @@ export async function flushSyncOutbox(
   const random = options.random ?? Math.random
   let state = await options.stateStore.readSyncState()
   const baseUrl = secureServiceBaseUrl(
-    options.baseUrl ?? process.env.EXPO_PUBLIC_CHARTALK_API_URL,
+    options.baseUrl ?? process.env.EXPO_PUBLIC_RAZVILKA_API_URL,
   )
   if (!state.enabled) {
     return {
@@ -279,7 +279,7 @@ export async function pullSyncRun(
   options: SyncPullOptions,
 ): Promise<SyncPullResponse | null> {
   const baseUrl = secureServiceBaseUrl(
-    options.baseUrl ?? process.env.EXPO_PUBLIC_CHARTALK_API_URL,
+    options.baseUrl ?? process.env.EXPO_PUBLIC_RAZVILKA_API_URL,
   )
   if (!baseUrl || !options.accessToken || !options.deviceId) return null
   try {

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import type { CachedCatalog } from '@/catalog'
 
@@ -45,7 +45,7 @@ describe('fetchCatalog', () => {
 
     await expect(
       fetchCatalog({
-        baseUrl: 'https://api.chartalk.test',
+        baseUrl: 'https://api.razvilka.test',
         fetchImpl,
         now: () => '2026-08-14T09:00:00.000Z',
       }),
@@ -58,7 +58,7 @@ describe('fetchCatalog', () => {
       },
     })
     expect(fetchImpl).toHaveBeenCalledWith(
-      'https://api.chartalk.test/v1/catalog',
+      'https://api.razvilka.test/v1/catalog',
       expect.objectContaining({ headers: { accept: 'application/json' } }),
     )
   })
@@ -67,7 +67,7 @@ describe('fetchCatalog', () => {
     const fetchImpl = vi.fn(async () => new Response(null, { status: 304 }))
     await expect(
       fetchCatalog({
-        baseUrl: 'https://api.chartalk.test',
+        baseUrl: 'https://api.razvilka.test',
         cached,
         fetchImpl,
         now: () => '2026-08-14T09:30:00.000Z',
@@ -77,7 +77,7 @@ describe('fetchCatalog', () => {
       cache: { ...cached, fetchedAt: '2026-08-14T09:30:00.000Z' },
     })
     expect(fetchImpl).toHaveBeenCalledWith(
-      'https://api.chartalk.test/v1/catalog',
+      'https://api.razvilka.test/v1/catalog',
       expect.objectContaining({
         headers: { accept: 'application/json', 'if-none-match': 'W/"sample"' },
       }),
@@ -87,7 +87,7 @@ describe('fetchCatalog', () => {
   it('keeps cached metadata on offline, malformed, and unconfigured responses', async () => {
     await expect(
       fetchCatalog({
-        baseUrl: 'https://api.chartalk.test',
+        baseUrl: 'https://api.razvilka.test',
         cached,
         fetchImpl: vi.fn(async () => {
           throw new Error('offline')
@@ -97,7 +97,7 @@ describe('fetchCatalog', () => {
 
     await expect(
       fetchCatalog({
-        baseUrl: 'https://api.chartalk.test',
+        baseUrl: 'https://api.razvilka.test',
         cached,
         fetchImpl: vi.fn(
           async () =>

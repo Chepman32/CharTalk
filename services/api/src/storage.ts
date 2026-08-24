@@ -1,6 +1,6 @@
 import { DatabaseSync } from 'node:sqlite'
 
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 import type {
   SyncPrincipal,
   SyncStore,
@@ -12,7 +12,7 @@ import type {
   SyncPullResponse,
   SyncPushRequest,
   SyncPushResponse,
-} from '@chartalk/sync-protocol'
+} from '@razvilka/sync-protocol'
 
 import type { ApiReport, ApiStore, DiagnosticEvent } from './app'
 

@@ -1,5 +1,5 @@
-import type { ContentPackage } from '@chartalk/content-schema'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import type { ContentPackage } from '@razvilka/content-schema'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import bundledBulkCatalog001Json from './bundled-content.bulk.catalog.001.json'
 import bundledBulkCatalog002Json from './bundled-content.bulk.catalog.002.json'

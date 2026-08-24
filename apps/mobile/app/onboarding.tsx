@@ -1,5 +1,5 @@
-import { radius, spacing, typography } from '@chartalk/design-system'
-import type { GrammarProfile } from '@chartalk/app-core'
+import { radius, spacing, typography } from '@razvilka/design-system'
+import type { GrammarProfile } from '@razvilka/app-core'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { ArrowLeft, ArrowRight, Check } from 'phosphor-react-native'
@@ -18,7 +18,7 @@ import {
   Text,
 } from '@/ui/primitives'
 
-const steps = ['Вход', 'Ритм', 'Имя', 'Персонаж'] as const
+const steps = ['Начало', 'Выбор', 'О вас', 'История'] as const
 
 const grammarProfiles: {
   value: GrammarProfile
@@ -27,18 +27,18 @@ const grammarProfiles: {
 }[] = [
   {
     value: 'neutralPhrasing',
-    label: 'Нейтрально',
-    preview: '«Ваш ответ принят»',
+    label: 'Без указания рода',
+    preview: '«Вы пришли раньше всех»',
   },
   {
     value: 'masculine',
-    label: 'Мужская форма',
-    preview: '«Вы ответили первым»',
+    label: 'Мужской род',
+    preview: '«Вы пришли первым»',
   },
   {
     value: 'feminine',
-    label: 'Женская форма',
-    preview: '«Вы ответили первой»',
+    label: 'Женский род',
+    preview: '«Вы пришли первой»',
   },
 ]
 
@@ -90,7 +90,11 @@ export default function OnboardingScreen() {
   }
 
   return (
-    <Screen testID="onboarding-screen" contentStyle={styles.content}>
+    <Screen
+      testID="onboarding-screen"
+      scrollResetKey={step}
+      contentStyle={styles.content}
+    >
       <View
         style={styles.progress}
         accessibilityLabel={`Шаг ${step + 1} из ${steps.length}`}
@@ -119,17 +123,17 @@ export default function OnboardingScreen() {
 
       {step === 0 ? (
         <View style={styles.hero}>
-          <SectionLabel>Интерактивные истории · 16+</SectionLabel>
-          <Text variant="display">Ваши слова меняют то, что будет дальше.</Text>
+          <SectionLabel>Истории с выбором · 16+</SectionLabel>
+          <Text variant="display">Вы решаете, что ответить.</Text>
           <Text color={nativeColors.textSecondary} style={styles.copy}>
-            Четыре варианта ответа. Никаких случайных реплик. История работает
-            без сети и сохраняет каждый выбор на устройстве.
+            В каждом разговоре у вас четыре ответа. Каждый вызывает свою реакцию
+            и может изменить то, что будет дальше. Читать можно без интернета.
           </Text>
           <View style={styles.fictionDisclosure}>
-            <Text variant="label">Это вымышленная авторская история.</Text>
+            <Text variant="label">Здесь всё вымышлено.</Text>
             <Text variant="caption" color={nativeColors.textSecondary}>
-              Персонажи и сообщения заранее написаны авторами CharTalk. Перед
-              вами не живой человек и не ИИ-чат.
+              Персонажей и их реплики придумали авторы. Это не переписка с
+              реальным человеком и не чат с ИИ.
             </Text>
           </View>
           <View style={styles.promiseRow}>
@@ -137,7 +141,7 @@ export default function OnboardingScreen() {
               <Text variant="mono">01</Text>
             </View>
             <Text style={styles.promiseText}>
-              Выбирайте интонацию, а не угадывайте «правильный» ответ.
+              Единственного правильного ответа здесь нет.
             </Text>
           </View>
           <View style={styles.promiseRow}>
@@ -145,7 +149,7 @@ export default function OnboardingScreen() {
               <Text variant="mono">02</Text>
             </View>
             <Text style={styles.promiseText}>
-              Отмените выбор в течение трёх секунд.
+              Нажимаете на ответ — он сразу отправляется.
             </Text>
           </View>
           <View style={styles.promiseRow}>
@@ -153,7 +157,8 @@ export default function OnboardingScreen() {
               <Text variant="mono">03</Text>
             </View>
             <Text style={styles.promiseText}>
-              Пропускайте чувствительные сцены без штрафа.
+              Если сцена вам не подходит, её можно пропустить и продолжить
+              другим путём.
             </Text>
           </View>
         </View>
@@ -161,47 +166,33 @@ export default function OnboardingScreen() {
 
       {step === 1 ? (
         <View style={styles.hero}>
-          <SectionLabel>Как это устроено</SectionLabel>
-          <Text variant="title">Короткий ритм, долгие последствия.</Text>
+          <SectionLabel>Пример сцены</SectionLabel>
+          <Text variant="title">Что вы ответите Ире?</Text>
           <View style={styles.demoMessage}>
             <Text variant="caption" color={nativeColors.emberSoft}>
-              Ира · сейчас
+              Ира
             </Text>
-            <Text>«Ты ведь понимаешь, почему я позвала именно тебя?»</Text>
+            <Text>
+              Ты всё-таки здесь. Кто-то поменял мой текст после проверки, и я
+              уже написала заявление об увольнении.
+            </Text>
           </View>
           {[
-            'Скажи прямо.',
-            'Похоже, ты уже решила.',
-            'Я сначала выслушаю.',
-            'Мы можем просто уйти.',
+            'Покажи, что поменяли.',
+            'Подожди. Ты правда увольняешься?',
+            'Не хочешь говорить — не надо. Просто посидим.',
+            'У меня чай и сорок минут. С чего начнём?',
           ].map((label, index) => (
-            <View
-              key={label}
-              style={[
-                styles.demoChoice,
-                index === 2 && styles.demoChoiceActive,
-              ]}
-            >
-              <Text
-                variant="mono"
-                color={
-                  index === 2 ? nativeColors.inverse : nativeColors.textMuted
-                }
-              >
+            <View key={label} style={styles.demoChoice}>
+              <Text variant="mono" color={nativeColors.textMuted}>
                 {index + 1}
               </Text>
-              <Text
-                color={
-                  index === 2 ? nativeColors.inverse : nativeColors.textPrimary
-                }
-              >
-                {label}
-              </Text>
+              <Text color={nativeColors.textPrimary}>{label}</Text>
             </View>
           ))}
           <Text variant="caption" color={nativeColors.textMuted}>
-            Числа отношений скрыты. Вы увидите последствия в поступках и
-            формулировках персонажей.
+            Шкалы отношений на экране нет. Что изменилось, будет видно по
+            следующим словам и поступкам Иры.
           </Text>
         </View>
       ) : null}
@@ -211,8 +202,8 @@ export default function OnboardingScreen() {
           <SectionLabel>Обращение</SectionLabel>
           <Text variant="title">Как к вам обращаться?</Text>
           <Text color={nativeColors.textSecondary}>
-            Имя хранится только на этом устройстве. Можно оставить поле пустым —
-            используем «Читатель».
+            Имя останется на этом устройстве. Поле можно оставить пустым —
+            вместо имени появится «Читатель».
           </Text>
           <TextInput
             accessibilityLabel="Ваше имя"
@@ -230,10 +221,10 @@ export default function OnboardingScreen() {
             {displayName.length}/40
           </Text>
           <View>
-            <Text variant="heading">Грамматическая форма</Text>
+            <Text variant="heading">Форма обращения</Text>
             <Text variant="caption" color={nativeColors.textMuted}>
-              Это настройка формулировок, не обязательный выбор пола. Старые
-              реплики при дальнейшем изменении не переписываются.
+              Эта настройка нужна только для слов вроде «первым» и «первой». Пол
+              указывать не нужно. Уже прочитанные сообщения останутся как были.
             </Text>
           </View>
           <View style={styles.grammarChoices} accessibilityRole="radiogroup">
@@ -273,7 +264,7 @@ export default function OnboardingScreen() {
       {step === 3 ? (
         <View style={styles.hero}>
           <SectionLabel>Первая история</SectionLabel>
-          <Text variant="title">С кем начнём?</Text>
+          <Text variant="title">Чью историю открыть первой?</Text>
           <View style={styles.characters}>
             {contentCatalog.characters.slice(0, 5).map(character => {
               const selected = character.characterId === selectedCharacterId
@@ -316,8 +307,8 @@ export default function OnboardingScreen() {
           </View>
           {activeCharacter ? (
             <Text variant="caption" color={nativeColors.textMuted}>
-              Выбор определит лишь первую рекомендацию. Все истории останутся
-              доступны.
+              Это только рекомендация для начала. Потом можно открыть любую
+              историю.
             </Text>
           ) : null}
         </View>
@@ -415,10 +406,6 @@ const createStyles = (nativeColors: ThemeColorAliases) =>
       alignItems: 'center',
       gap: spacing[4],
       paddingHorizontal: spacing[4],
-    },
-    demoChoiceActive: {
-      backgroundColor: nativeColors.emberSoft,
-      borderBottomColor: nativeColors.emberSoft,
     },
     input: {
       color: nativeColors.textPrimary,

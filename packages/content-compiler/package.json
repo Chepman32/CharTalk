@@ -1,5 +1,5 @@
 {
-  "name": "@chartalk/content-compiler",
+  "name": "@razvilka/content-compiler",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -12,11 +12,11 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "@chartalk/content-integrity": "1.0.0",
-    "@chartalk/content-schema": "1.0.0",
-    "@chartalk/dialogue-engine": "1.0.0"
+    "@razvilka/content-integrity": "1.0.0",
+    "@razvilka/content-schema": "1.0.0",
+    "@razvilka/dialogue-engine": "1.0.0"
   },
   "devDependencies": {
-    "@chartalk/test-fixtures": "1.0.0"
+    "@razvilka/test-fixtures": "1.0.0"
   }
 }

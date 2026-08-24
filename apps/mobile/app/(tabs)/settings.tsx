@@ -1,9 +1,9 @@
-import { spacing } from '@chartalk/design-system'
+import { spacing } from '@razvilka/design-system'
 import type {
   NotificationFrequency,
   NotificationTime,
   NotificationWeekendDay,
-} from '@chartalk/app-core'
+} from '@razvilka/app-core'
 import { useRouter } from 'expo-router'
 import {
   Bell,
@@ -212,7 +212,7 @@ export default function SettingsScreen() {
         }
         if (typeof webNavigator.share === 'function') {
           await webNavigator.share({
-            title: 'CharTalk — мои данные',
+            title: 'Развилка — мои данные',
             text: payload,
           })
         } else {
@@ -220,7 +220,7 @@ export default function SettingsScreen() {
           const url = URL.createObjectURL(blob)
           const link = document.createElement('a')
           link.href = url
-          link.download = 'chartalk-local-data.json'
+          link.download = 'razvilka-local-data.json'
           document.body.appendChild(link)
           link.click()
           link.remove()
@@ -230,7 +230,7 @@ export default function SettingsScreen() {
       } else {
         const result = await Share.share({
           message: payload,
-          title: 'CharTalk — мои данные',
+          title: 'Развилка — мои данные',
         })
         setExportMessage(
           result.action === Share.dismissedAction
@@ -510,7 +510,7 @@ export default function SettingsScreen() {
         color={theme.colors.textMuted}
         style={styles.version}
       >
-        CharTalk 1.0.0 · build 1
+        Развилка 1.0.0 · build 1
       </Text>
     </Screen>
   )

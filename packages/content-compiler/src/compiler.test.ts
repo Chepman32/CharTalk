@@ -4,7 +4,7 @@ import type {
   Condition,
   ContentNode,
   ContentPackage,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 import {
   compileContentPackage,
@@ -15,7 +15,7 @@ import {
   normalizeRussianText,
   partitionContentPackage,
 } from './index'
-import { generateBulkFixtureContentPackage } from '@chartalk/test-fixtures'
+import { generateBulkFixtureContentPackage } from '@razvilka/test-fixtures'
 
 const fixture = (overrides?: Partial<ContentPackage>): ContentPackage => ({
   manifest: {

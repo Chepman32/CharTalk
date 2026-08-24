@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import {
   chooseInSimulator,
@@ -15,15 +15,15 @@ import {
 
 describe('studio domain', () => {
   it('permits HTTPS and loopback publishing endpoints only', () => {
-    expect(securePublishBaseUrl('https://publisher.chartalk.app/')).toBe(
-      'https://publisher.chartalk.app',
+    expect(securePublishBaseUrl('https://publisher.razvilka.app/')).toBe(
+      'https://publisher.razvilka.app',
     )
     expect(securePublishBaseUrl('http://localhost:8787')).toBe(
       'http://localhost:8787',
     )
-    expect(securePublishBaseUrl('http://publisher.chartalk.app')).toBeNull()
+    expect(securePublishBaseUrl('http://publisher.razvilka.app')).toBeNull()
     expect(
-      securePublishBaseUrl('https://admin:secret@publisher.chartalk.app'),
+      securePublishBaseUrl('https://admin:secret@publisher.razvilka.app'),
     ).toBeNull()
     expect(securePublishBaseUrl('not a URL')).toBeNull()
   })

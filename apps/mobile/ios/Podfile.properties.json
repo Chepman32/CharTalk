@@ -3,6 +3,6 @@
   "EX_DEV_CLIENT_NETWORK_INSPECTOR": "true",
   "ios.deploymentTarget": "17.0",
   "expo.inlineModules.watchedDirectories": "[]",
-  "expo.inlineModules.xcodeProjectTargets": "{\"mainTarget\":\"CharTalk\",\"targets\":[]}",
+  "expo.inlineModules.xcodeProjectTargets": "{\"mainTarget\":\"Razvilka\",\"targets\":[]}",
   "expo.sqlite.enableFTS": "true"
 }

@@ -1,14 +1,14 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 
-import { evaluateProductionRelease } from '@chartalk/content-compiler'
+import { evaluateProductionRelease } from '@razvilka/content-compiler'
 import {
   BULK_FIXTURE_DEFAULTS,
   generateBulkFixtureContentPackage,
-} from '@chartalk/test-fixtures'
+} from '@razvilka/test-fixtures'
 
 const outputPath = resolve(
-  process.env.CHARTALK_BULK_CONTENT_REPORT ??
+  process.env.RAZVILKA_BULK_CONTENT_REPORT ??
     'artifacts/bulk-content-report.json',
 )
 const content = generateBulkFixtureContentPackage()

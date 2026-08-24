@@ -1,5 +1,5 @@
 {
-  "name": "@chartalk/content-integrity",
+  "name": "@razvilka/content-integrity",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -11,11 +11,11 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "@chartalk/content-schema": "1.0.0",
+    "@razvilka/content-schema": "1.0.0",
     "@noble/curves": "2.3.0",
     "@noble/hashes": "2.3.0"
   },
   "devDependencies": {
-    "@chartalk/test-fixtures": "1.0.0"
+    "@razvilka/test-fixtures": "1.0.0"
   }
 }

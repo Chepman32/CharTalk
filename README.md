@@ -1,6 +1,6 @@
-# CharTalk
+# Развилка
 
-CharTalk is a Russian-first, local-first mobile interactive-fiction app. Every decision presents exactly four authored replies. A deterministic engine applies the selected reply, records its consequences atomically, and resolves the next authored state without runtime text generation.
+Развилка is a Russian-first, local-first mobile interactive-fiction app. Every decision presents exactly four authored replies. A deterministic engine applies the selected reply, records its consequences atomically, and resolves the next authored state without runtime text generation.
 
 ## Workspace
 
@@ -34,16 +34,16 @@ npm run dev:api
 npm run dev:studio
 ```
 
-The API contract is in `services/api/openapi.yaml`. Production deployment uses the root `Dockerfile`; it requires a mounted signed content package, public key, content-asset root, writable database volume, and a high-entropy admin token. For separated editorial permissions, set `CHARTALK_CMS_WRITER_TOKEN`, `CHARTALK_CMS_EDITOR_TOKEN`, `CHARTALK_CMS_QA_TOKEN`, and `CHARTALK_CMS_PUBLISHER_TOKEN`; validation accepts writer/editor/QA/publisher tokens while publication accepts publisher only. Ordinary serving replicas keep publishing disabled. A publisher additionally requires `CHARTALK_SIGNING_PRIVATE_KEY_FILE` and `CHARTALK_SIGNING_KEY_ID`; publication also requires the exact build ID in `X-CharTalk-Confirm-Build-Id`.
+The API contract is in `services/api/openapi.yaml`. Production deployment uses the root `Dockerfile`; it requires a mounted signed content package, public key, content-asset root, writable database volume, and a high-entropy admin token. For separated editorial permissions, set `RAZVILKA_CMS_WRITER_TOKEN`, `RAZVILKA_CMS_EDITOR_TOKEN`, `RAZVILKA_CMS_QA_TOKEN`, and `RAZVILKA_CMS_PUBLISHER_TOKEN`; validation accepts writer/editor/QA/publisher tokens while publication accepts publisher only. Ordinary serving replicas keep publishing disabled. A publisher additionally requires `RAZVILKA_SIGNING_PRIVATE_KEY_FILE` and `RAZVILKA_SIGNING_KEY_ID`; publication also requires the exact build ID in `X-Razvilka-Confirm-Build-Id`.
 
 Content media is mounted at
-`$CHARTALK_CONTENT_ASSET_ROOT/<url-encoded-pack-id>/<url-encoded-build-id>/<asset.path>`.
-Mobile releases should carry `EXPO_PUBLIC_CHARTALK_CONTENT_PUBLIC_KEYS` as a JSON map of trusted key IDs to base64url Ed25519 public keys so old and new keys can overlap safely during rotation.
+`$RAZVILKA_CONTENT_ASSET_ROOT/<url-encoded-pack-id>/<url-encoded-build-id>/<asset.path>`.
+Mobile releases should carry `EXPO_PUBLIC_RAZVILKA_CONTENT_PUBLIC_KEYS` as a JSON map of trusted key IDs to base64url Ed25519 public keys so old and new keys can overlap safely during rotation.
 
 Android release builds are fail-closed: CI must provide
-`CHARTALK_ANDROID_KEYSTORE_FILE`, `CHARTALK_ANDROID_KEYSTORE_PASSWORD`,
-`CHARTALK_ANDROID_KEY_ALIAS`, and `CHARTALK_ANDROID_KEY_PASSWORD` from its
-secret manager. `CHARTALK_ALLOW_DEBUG_SIGNING=true` is reserved for local
+`RAZVILKA_ANDROID_KEYSTORE_FILE`, `RAZVILKA_ANDROID_KEYSTORE_PASSWORD`,
+`RAZVILKA_ANDROID_KEY_ALIAS`, and `RAZVILKA_ANDROID_KEY_PASSWORD` from its
+secret manager. `RAZVILKA_ALLOW_DEBUG_SIGNING=true` is reserved for local
 standalone smoke APKs and must never be used for store submission.
 
 ## Verification
@@ -69,14 +69,14 @@ deterministic partitioner with a production key. It refuses unsigned output and
 re-runs the production gate before writing any shard:
 
 ```bash
-CHARTALK_SIGNING_PRIVATE_KEY_FILE=/secure/key.pem \
-CHARTALK_SIGNING_KEY_ID=prod-2026-q3 \
-CHARTALK_MAX_STORIES_PER_SHARD=50 \
+RAZVILKA_SIGNING_PRIVATE_KEY_FILE=/secure/key.pem \
+RAZVILKA_SIGNING_KEY_ID=prod-2026-q3 \
+RAZVILKA_MAX_STORIES_PER_SHARD=50 \
 npm run partition:content -- input.json artifacts/content-shards
 ```
 
 Fixture-only local output can be inspected with
-`CHARTALK_ALLOW_UNSIGNED_SHARDS=true`; those shards retain pending signatures
+`RAZVILKA_ALLOW_UNSIGNED_SHARDS=true`; those shards retain pending signatures
 and cannot be activated by a production publisher.
 
 The reader also ships the bulk fixture as five checked-in, story-owned local

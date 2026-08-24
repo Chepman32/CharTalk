@@ -1,4 +1,4 @@
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 import { describe, expect, it } from 'vitest'
 
 import { diffContentPackages } from './content-diff'

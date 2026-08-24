@@ -3,7 +3,7 @@ import type {
   ContentNode,
   ContentPackage,
   Effect,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 import { collectAnnotatedTextUnits } from './text-preview'
 

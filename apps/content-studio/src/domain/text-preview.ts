@@ -1,4 +1,4 @@
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 
 export type GrammarProfile = 'masculine' | 'feminine' | 'neutral'
 

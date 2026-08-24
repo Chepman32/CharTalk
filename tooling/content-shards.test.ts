@@ -9,8 +9,8 @@ import { generateKeyPairSync } from 'node:crypto'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import { verifyContentPackage } from '@chartalk/content-compiler/signing'
-import { generateBulkFixtureContentPackage } from '@chartalk/test-fixtures'
+import { verifyContentPackage } from '@razvilka/content-compiler/signing'
+import { generateBulkFixtureContentPackage } from '@razvilka/test-fixtures'
 import { mergeContentPackages } from '../apps/mobile/src/content-library'
 import { describe, expect, it } from 'vitest'
 
@@ -87,7 +87,7 @@ describe('content shard publication pipeline', () => {
       maxStoriesPerShard: 2,
       allowUnsigned: true,
     })
-    const outputDirectory = mkdtempSync(join(tmpdir(), 'chartalk-shards-'))
+    const outputDirectory = mkdtempSync(join(tmpdir(), 'razvilka-shards-'))
     const written = writeContentShardBundle(result, outputDirectory)
 
     expect(written.shardPaths).toHaveLength(2)

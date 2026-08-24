@@ -19,11 +19,16 @@ async function attachScreen(page: Page, testInfo: TestInfo, name: string) {
 }
 
 async function finishOnboarding(page: Page) {
+  await expect(page.getByText('Здесь всё вымышлено.')).toBeVisible()
   await expect(
-    page.getByText('Это вымышленная авторская история.'),
+    page.getByText(/не переписка с реальным человеком и не чат с ИИ/),
   ).toBeVisible()
-  await expect(page.getByText(/не живой человек и не ИИ-чат/)).toBeVisible()
+  await expect(
+    page.getByText('Нажимаете на ответ — он сразу отправляется.'),
+  ).toBeVisible()
   await page.getByRole('button', { name: 'Продолжить' }).click()
+  await expect(page.getByText('Что вы ответите Ире?')).toBeVisible()
+  await expect(page.getByText('Покажи, что поменяли.')).toBeVisible()
   await page.getByRole('button', { name: 'Продолжить' }).click()
   await page.getByRole('textbox', { name: 'Ваше имя' }).fill('Саша')
   await page.getByRole('button', { name: 'Продолжить' }).click()
@@ -100,6 +105,9 @@ test('onboarding actions remain fully reachable at the small viewport', async ({
   if (box && viewport) {
     expect(box.y + box.height).toBeLessThanOrEqual(viewport.height)
   }
+
+  await continueButton.click()
+  await expect(page.getByText('Что вы ответите Ире?')).toBeInViewport()
 })
 
 test('downloads reports the built-in package size without a download step', async ({
@@ -374,7 +382,7 @@ test('a newer cached catalog never gates an already bundled story', async ({
 
   await page.evaluate(() => {
     localStorage.setItem(
-      'chartalk.catalog.cache.v1',
+      'razvilka.catalog.cache.v1',
       JSON.stringify({
         data: {
           packId: 'pack.sample',

@@ -2,7 +2,7 @@ import {
   initialNarrativeState,
   type DecisionNode,
   type NarrativeState,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 export interface CapacityTranscriptEntry {
   entryId: string

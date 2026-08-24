@@ -3,8 +3,8 @@ import { createHash } from 'node:crypto'
 import {
   initialNarrativeState,
   type ContentPackage,
-} from '@chartalk/content-schema'
-import { replayEvents } from '@chartalk/dialogue-engine'
+} from '@razvilka/content-schema'
+import { replayEvents } from '@razvilka/dialogue-engine'
 import {
   compareEventChain,
   syncConflictCodeSchema,
@@ -17,7 +17,7 @@ import {
   type SyncPushRequest,
   type SyncPushResponse,
   type SyncRunDescriptor,
-} from '@chartalk/sync-protocol'
+} from '@razvilka/sync-protocol'
 
 export interface SyncPrincipal {
   accountId: string

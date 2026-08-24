@@ -1,8 +1,8 @@
 import { generateKeyPairSync } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
 
-import { signContentPackage } from '@chartalk/content-compiler/signing'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { signContentPackage } from '@razvilka/content-compiler/signing'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import { parseBootstrapContent } from './bootstrap'
 

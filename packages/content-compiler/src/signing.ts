@@ -8,8 +8,8 @@ import {
 import {
   checksumContentPackage,
   unsignedContentBytes,
-} from '@chartalk/content-integrity'
-import type { ContentPackage } from '@chartalk/content-schema'
+} from '@razvilka/content-integrity'
+import type { ContentPackage } from '@razvilka/content-schema'
 
 const unsignedPayload = (content: ContentPackage): Buffer =>
   Buffer.from(unsignedContentBytes(content))

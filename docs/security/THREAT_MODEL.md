@@ -2,7 +2,7 @@
 
 ## Scope and trust boundaries
 
-CharTalk has four principal boundaries: the untrusted mobile client; immutable signed content; the public API; and the restricted editorial/publishing environment. A modified client is expected. Client-computed state, content versions, entitlements, and endings are never server authority. Cloud sync and payments are deliberately disabled by the v1 decision register.
+Развилка has four principal boundaries: the untrusted mobile client; immutable signed content; the public API; and the restricted editorial/publishing environment. A modified client is expected. Client-computed state, content versions, entitlements, and endings are never server authority. Cloud sync and payments are deliberately disabled by the v1 decision register.
 
 ## Protected assets
 

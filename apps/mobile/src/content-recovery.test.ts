@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { StoryRun } from '@chartalk/app-core'
+import type { StoryRun } from '@razvilka/app-core'
 
 import {
   contentBuildKey,

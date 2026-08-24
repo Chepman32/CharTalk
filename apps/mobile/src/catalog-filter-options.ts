@@ -1,4 +1,4 @@
-import type { Story } from '@chartalk/content-schema'
+import type { Story } from '@razvilka/content-schema'
 
 import type { CatalogSort, DurationFilter } from '@/catalog-query'
 

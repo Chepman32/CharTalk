@@ -1,4 +1,4 @@
-# Character voice bible — шаблон CharTalk
+# Character voice bible — шаблон «Развилки»
 
 Статус: шаблон для native-editor review. Заполненный файл хранится рядом с утверждённым content pack и имеет тот же immutable build ID.
 

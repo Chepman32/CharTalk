@@ -8,13 +8,13 @@ import type {
   ReaderSettings,
   StoryRun,
   SubmitContentReportInput,
-} from '@chartalk/app-core'
+} from '@razvilka/app-core'
 import {
   diagnosticContentErrorEvent,
   diagnosticLatencyBucketForMs,
   type DiagnosticEvent,
-} from '@chartalk/analytics-schema'
-import type { ContentPackage } from '@chartalk/content-schema'
+} from '@razvilka/analytics-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 import React, {
   createContext,
   useCallback,
@@ -602,9 +602,9 @@ export function AppProvider({ children }: React.PropsWithChildren) {
           const content = await installContentPackage({
             packId,
             buildId,
-            baseUrl: process.env.EXPO_PUBLIC_CHARTALK_API_URL,
-            publicKey: process.env.EXPO_PUBLIC_CHARTALK_CONTENT_PUBLIC_KEY,
-            publicKeys: process.env.EXPO_PUBLIC_CHARTALK_CONTENT_PUBLIC_KEYS,
+            baseUrl: process.env.EXPO_PUBLIC_RAZVILKA_API_URL,
+            publicKey: process.env.EXPO_PUBLIC_RAZVILKA_CONTENT_PUBLIC_KEY,
+            publicKeys: process.env.EXPO_PUBLIC_RAZVILKA_CONTENT_PUBLIC_KEYS,
             contentStore: runtime.contentStore,
             mediaStore: runtime.mediaStore,
             registerContent: value =>

@@ -127,9 +127,9 @@ export function validateIosProjectMetadata(
   }
   if (
     !input.project.includes('PBXNativeTarget') ||
-    !input.project.includes('CharTalk')
+    !input.project.includes('Razvilka')
   ) {
-    errors.push('project must contain the CharTalk native target')
+    errors.push('project must contain the Razvilka native target')
   }
   if (!input.project.includes('TARGETED_DEVICE_FAMILY = "1,2";')) {
     errors.push('project must support iPhone and iPad device families')
@@ -139,14 +139,34 @@ export function validateIosProjectMetadata(
   ) {
     errors.push('project must configure the AppIcon asset catalog')
   }
+  if (
+    !input.project.includes(
+      'HERMES_CLI_PATH = "$(SRCROOT)/../../../node_modules/hermes-compiler/hermesc/osx-bin/hermesc";',
+    )
+  ) {
+    errors.push(
+      'Hermes compiler path must be derived safely from the project root',
+    )
+  }
+  const invokesResolvedReactNativeScript =
+    input.project.includes('"$REACT_NATIVE_XCODE_SCRIPT"') ||
+    input.project.includes('\\"$REACT_NATIVE_XCODE_SCRIPT\\"')
+  if (
+    !input.project.includes('REACT_NATIVE_XCODE_SCRIPT=') ||
+    !invokesResolvedReactNativeScript
+  ) {
+    errors.push(
+      'React Native bundle script must invoke its resolved path safely',
+    )
+  }
   if (!input.project.includes('Release')) {
     errors.push('project must include a Release configuration')
   }
   if (!input.plist.includes('<string>arm64</string>')) {
     errors.push('Info.plist must require arm64')
   }
-  if (!input.plist.includes('<string>chartalk</string>')) {
-    errors.push('Info.plist must include the chartalk URL scheme')
+  if (!input.plist.includes('<string>razvilka</string>')) {
+    errors.push('Info.plist must include the razvilka URL scheme')
   }
   if (
     typeof bundleIdentifier === 'string' &&
@@ -162,7 +182,7 @@ export function validateIosProjectMetadata(
 }
 
 export function validateXcodeProjectListing(output: string): string[] {
-  return output.includes('CharTalk') && output.includes('Release')
+  return output.includes('Razvilka') && output.includes('Release')
     ? []
     : ['target/configuration not listed by xcodebuild']
 }
@@ -173,9 +193,9 @@ export function runIosProjectSmoke(
 ): number {
   const iosRoot = resolve(projectRoot, 'apps/mobile/ios')
   const appConfigPath = resolve(projectRoot, 'apps/mobile/app.json')
-  const projectPath = resolve(iosRoot, 'CharTalk.xcodeproj')
+  const projectPath = resolve(iosRoot, 'Razvilka.xcodeproj')
   const pbxprojPath = resolve(projectPath, 'project.pbxproj')
-  const plistPath = resolve(iosRoot, 'CharTalk/Info.plist')
+  const plistPath = resolve(iosRoot, 'Razvilka/Info.plist')
   const podfilePropertiesPath = resolve(iosRoot, 'Podfile.properties.json')
 
   const requiredFiles = [
@@ -232,7 +252,7 @@ export function runIosProjectSmoke(
   }
 
   console.log(
-    'iOS native project smoke passed: CharTalk target, Release configuration, and Expo metadata are aligned.',
+    'iOS native project smoke passed: Razvilka target, Release configuration, and Expo metadata are aligned.',
   )
   return 0
 }

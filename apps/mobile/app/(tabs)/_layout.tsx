@@ -1,4 +1,4 @@
-import { typography } from '@chartalk/design-system'
+import { typography } from '@razvilka/design-system'
 import { Books, GearSix, Tray } from 'phosphor-react-native'
 import { Tabs } from 'expo-router'
 import React from 'react'

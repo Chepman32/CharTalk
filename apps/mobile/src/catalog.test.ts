@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import { mergeDiscoveryCatalog, packageForStory } from './catalog'
 

@@ -1,4 +1,4 @@
-import type { TranscriptEntry } from '@chartalk/app-core'
+import type { TranscriptEntry } from '@razvilka/app-core'
 
 export const TRANSCRIPT_PAGE_SIZE = 200
 export const TRANSCRIPT_WINDOW_LIMIT = 600

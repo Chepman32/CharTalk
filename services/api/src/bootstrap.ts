@@ -1,11 +1,11 @@
 import type { KeyLike } from 'node:crypto'
 
-import { evaluateProductionRelease } from '@chartalk/content-compiler'
-import { verifyContentPackage } from '@chartalk/content-compiler/signing'
+import { evaluateProductionRelease } from '@razvilka/content-compiler'
+import { verifyContentPackage } from '@razvilka/content-compiler/signing'
 import {
   contentPackageSchema,
   type ContentPackage,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 export function parseBootstrapContent(
   source: string,

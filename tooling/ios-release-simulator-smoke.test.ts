@@ -76,27 +76,27 @@ describe('iOS Release Simulator smoke helpers', () => {
   })
 
   it('resolves the default Release Simulator app path and honors an override', () => {
-    expect(resolveIosSimulatorAppPath('/tmp/chartalk-derived')).toBe(
-      '/tmp/chartalk-derived/Build/Products/Release-iphonesimulator/CharTalk.app',
+    expect(resolveIosSimulatorAppPath('/tmp/razvilka-derived')).toBe(
+      '/tmp/razvilka-derived/Build/Products/Release-iphonesimulator/Razvilka.app',
     )
     expect(
-      resolveIosSimulatorAppPath('/tmp/chartalk-derived', '/tmp/custom.app'),
+      resolveIosSimulatorAppPath('/tmp/razvilka-derived', '/tmp/custom.app'),
     ).toBe('/tmp/custom.app')
   })
 
   it('parses smoke CLI options without losing defaults', () => {
     expect(
       parseIosSimulatorSmokeArgs([
-        '--derived-data=/tmp/chartalk-derived',
+        '--derived-data=/tmp/razvilka-derived',
         '--device=IPHONE-17-PRO',
-        '--screenshots=/tmp/chartalk-shots',
+        '--screenshots=/tmp/razvilka-shots',
         '--require-device',
       ]),
     ).toEqual({
-      derivedDataPath: '/tmp/chartalk-derived',
+      derivedDataPath: '/tmp/razvilka-derived',
       deviceId: 'IPHONE-17-PRO',
       requireDevice: true,
-      screenshotDirectory: '/tmp/chartalk-shots',
+      screenshotDirectory: '/tmp/razvilka-shots',
     })
     expect(parseIosSimulatorSmokeArgs([])).toEqual({
       derivedDataPath: undefined,

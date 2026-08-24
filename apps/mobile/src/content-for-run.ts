@@ -1,4 +1,4 @@
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 
 /**
  * A run is pinned to the immutable build that created it. Never substitute the

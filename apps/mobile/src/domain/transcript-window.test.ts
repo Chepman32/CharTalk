@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { TranscriptEntry } from '@chartalk/app-core'
+import type { TranscriptEntry } from '@razvilka/app-core'
 
 import {
   TRANSCRIPT_PAGE_SIZE,

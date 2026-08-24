@@ -1,5 +1,5 @@
-import type { ThemePreference } from '@chartalk/app-core'
-import { spacing, themes } from '@chartalk/design-system'
+import type { ThemePreference } from '@razvilka/app-core'
+import { spacing, themes } from '@razvilka/design-system'
 import { CheckCircle, CircleIcon, DeviceMobile } from 'phosphor-react-native'
 import React, { useMemo } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'

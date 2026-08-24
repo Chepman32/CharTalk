@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { initialNarrativeState } from '@chartalk/content-schema'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { initialNarrativeState } from '@razvilka/content-schema'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import {
   buildActiveRunSnapshots,

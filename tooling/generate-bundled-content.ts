@@ -1,7 +1,7 @@
 import { mkdir, readdir, unlink, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-import { generateBulkFixtureContentPackage } from '@chartalk/test-fixtures'
+import { generateBulkFixtureContentPackage } from '@razvilka/test-fixtures'
 import { buildBundledContentArtifacts } from './generate-bundled-content-artifacts'
 
 const bundledDirectory = resolve(process.cwd(), 'apps/mobile/src')

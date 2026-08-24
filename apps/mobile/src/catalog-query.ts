@@ -1,4 +1,4 @@
-import type { ContentWarning, Story } from '@chartalk/content-schema'
+import type { ContentWarning, Story } from '@razvilka/content-schema'
 
 import type { CatalogContent } from './catalog'
 

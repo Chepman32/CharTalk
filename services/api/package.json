@@ -1,5 +1,5 @@
 {
-  "name": "@chartalk/api",
+  "name": "@razvilka/api",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -13,12 +13,12 @@
     "build": "tsc -p tsconfig.json --noEmit && esbuild src/server.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/server.js --sourcemap"
   },
   "dependencies": {
-    "@chartalk/content-compiler": "1.0.0",
-    "@chartalk/analytics-schema": "1.0.0",
-    "@chartalk/content-schema": "1.0.0",
-    "@chartalk/dialogue-engine": "1.0.0",
-    "@chartalk/sync-protocol": "1.0.0",
-    "@chartalk/test-fixtures": "1.0.0",
+    "@razvilka/content-compiler": "1.0.0",
+    "@razvilka/analytics-schema": "1.0.0",
+    "@razvilka/content-schema": "1.0.0",
+    "@razvilka/dialogue-engine": "1.0.0",
+    "@razvilka/sync-protocol": "1.0.0",
+    "@razvilka/test-fixtures": "1.0.0",
     "@hono/node-server": "2.1.0",
     "hono": "4.13.1",
     "zod": "4.4.3"

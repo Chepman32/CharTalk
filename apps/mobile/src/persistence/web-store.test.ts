@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import { DurableAppRepository } from '@chartalk/app-core'
-import { resolveDecision } from '@chartalk/dialogue-engine'
+import { DurableAppRepository } from '@razvilka/app-core'
+import { resolveDecision } from '@razvilka/dialogue-engine'
 import {
   generateBulkFixtureContentPackage,
   sampleContentPackage,
-} from '@chartalk/test-fixtures'
+} from '@razvilka/test-fixtures'
 
 import { WebSnapshotStore } from './web-store'
 import { contentPackageByteCount } from './content-store'

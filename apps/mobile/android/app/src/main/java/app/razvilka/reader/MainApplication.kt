@@ -1,4 +1,4 @@
-package app.chartalk.reader
+package app.razvilka.reader
 
 import android.app.Application
 import android.content.res.Configuration

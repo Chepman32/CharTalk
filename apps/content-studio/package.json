@@ -1,5 +1,5 @@
 {
-  "name": "@chartalk/content-studio",
+  "name": "@razvilka/content-studio",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -10,11 +10,11 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@chartalk/content-compiler": "1.0.0",
-    "@chartalk/content-integrity": "1.0.0",
-    "@chartalk/content-schema": "1.0.0",
-    "@chartalk/dialogue-engine": "1.0.0",
-    "@chartalk/test-fixtures": "1.0.0",
+    "@razvilka/content-compiler": "1.0.0",
+    "@razvilka/content-integrity": "1.0.0",
+    "@razvilka/content-schema": "1.0.0",
+    "@razvilka/dialogue-engine": "1.0.0",
+    "@razvilka/test-fixtures": "1.0.0",
     "@phosphor-icons/react": "2.1.10",
     "react": "19.2.3",
     "react-dom": "19.2.3"

@@ -1,4 +1,4 @@
-import { DurableAppRepository } from '@chartalk/app-core'
+import { DurableAppRepository } from '@razvilka/app-core'
 import * as Crypto from 'expo-crypto'
 
 import {

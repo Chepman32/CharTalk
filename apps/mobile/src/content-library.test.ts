@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   generateBulkFixtureContentPackage,
   sampleContentPackage,
-} from '@chartalk/test-fixtures'
+} from '@razvilka/test-fixtures'
 
 import { mergeContentPackages } from './content-library'
 

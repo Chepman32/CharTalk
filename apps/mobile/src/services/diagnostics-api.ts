@@ -1,8 +1,8 @@
-import type { DiagnosticEvent } from '@chartalk/analytics-schema'
+import type { DiagnosticEvent } from '@razvilka/analytics-schema'
 
 import { secureServiceBaseUrl } from './secure-endpoint'
 
-export type { DiagnosticEvent } from '@chartalk/analytics-schema'
+export type { DiagnosticEvent } from '@razvilka/analytics-schema'
 
 const createDiagnosticEventId = (): string => {
   if (typeof globalThis.crypto?.randomUUID === 'function') {
@@ -53,7 +53,7 @@ export async function sendDiagnostic(
   options: SendOptions = {},
 ): Promise<boolean> {
   const baseUrl = secureServiceBaseUrl(
-    options.baseUrl ?? process.env.EXPO_PUBLIC_CHARTALK_API_URL,
+    options.baseUrl ?? process.env.EXPO_PUBLIC_RAZVILKA_API_URL,
   )
   if (!consent || !baseUrl) return false
 

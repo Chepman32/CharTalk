@@ -1,4 +1,4 @@
-import { generateBulkFixtureContentPackage } from '@chartalk/test-fixtures'
+import { generateBulkFixtureContentPackage } from '@razvilka/test-fixtures'
 import { describe, expect, it } from 'vitest'
 
 import { buildBundledContentArtifacts } from './generate-bundled-content-artifacts'

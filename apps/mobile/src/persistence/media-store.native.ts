@@ -1,4 +1,4 @@
-import type { ContentAsset, ContentPackage } from '@chartalk/content-schema'
+import type { ContentAsset, ContentPackage } from '@razvilka/content-schema'
 import * as Crypto from 'expo-crypto'
 import { AppState, type AppStateStatus } from 'react-native'
 import { Directory, DownloadTask, File, Paths } from 'expo-file-system'

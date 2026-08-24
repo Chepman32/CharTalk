@@ -36,12 +36,12 @@ export function validateContainerContract(
   if (!dockerfile.includes('ENV NODE_ENV=production')) {
     errors.push('runtime image must set NODE_ENV=production')
   }
-  if (!dockerfile.includes('CHARTALK_API_DB_PATH=/app/var/chartalk-api.db')) {
+  if (!dockerfile.includes('RAZVILKA_API_DB_PATH=/app/var/razvilka-api.db')) {
     errors.push(
       'runtime image must point its database path at the durable volume',
     )
   }
-  if (!dockerfile.includes('CHARTALK_CONTENT_ASSET_ROOT=/app/content-assets')) {
+  if (!dockerfile.includes('RAZVILKA_CONTENT_ASSET_ROOT=/app/content-assets')) {
     errors.push(
       'runtime image must point its content asset root at the durable volume',
     )

@@ -6,8 +6,8 @@ import type {
   ContentPackage,
   Episode,
   Story,
-} from '@chartalk/content-schema'
-import { catalogDataSchema } from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
+import { catalogDataSchema } from '@razvilka/content-schema'
 
 export interface CachedCatalog {
   data: CatalogData

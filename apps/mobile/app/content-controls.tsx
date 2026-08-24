@@ -1,5 +1,5 @@
-import type { ContentWarning } from '@chartalk/content-schema'
-import { spacing } from '@chartalk/design-system'
+import type { ContentWarning } from '@razvilka/content-schema'
+import { spacing } from '@razvilka/design-system'
 import {
   EyeSlash,
   ShieldCheck,

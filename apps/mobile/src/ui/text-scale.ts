@@ -1,4 +1,4 @@
-import type { ReaderSettings } from '@chartalk/app-core'
+import type { ReaderSettings } from '@razvilka/app-core'
 
 const scaleByPreference: Record<ReaderSettings['textScale'], number> = {
   standard: 1,

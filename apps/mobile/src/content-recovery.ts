@@ -1,4 +1,4 @@
-import type { StoryRun } from '@chartalk/app-core'
+import type { StoryRun } from '@razvilka/app-core'
 
 export interface MissingContentBuild {
   buildId: string

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { defaultSettings } from '@chartalk/app-core'
+import { defaultSettings } from '@razvilka/app-core'
 
 import { messageRevealDelayMs } from './reading-motion'
 

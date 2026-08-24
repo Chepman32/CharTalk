@@ -2,7 +2,7 @@ import type {
   NotificationFrequency,
   NotificationTime,
   NotificationWeekendDay,
-} from '@chartalk/app-core'
+} from '@razvilka/app-core'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 

@@ -2,20 +2,20 @@ import {
   evaluateProductionRelease,
   type CompilationReport,
   type ProductionReleaseGate,
-} from '@chartalk/content-compiler'
+} from '@razvilka/content-compiler'
 import type {
   Condition,
   ContentNode,
   ContentPackage,
   NarrativeState,
-} from '@chartalk/content-schema'
-import { initialNarrativeState } from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
+import { initialNarrativeState } from '@razvilka/content-schema'
 import {
   applyChoice,
   enterDecision,
   resolveDecision,
   type ResolvedChoice,
-} from '@chartalk/dialogue-engine'
+} from '@razvilka/dialogue-engine'
 
 export type StudioView =
   'overview' | 'content' | 'graph' | 'simulator' | 'review' | 'release'

@@ -5,10 +5,10 @@ import { dirname, resolve } from 'node:path'
 import {
   compileContentPackage,
   evaluateProductionRelease,
-} from '@chartalk/content-compiler'
-import { verifyContentPackage } from '@chartalk/content-compiler/signing'
-import { contentPackageSchema } from '@chartalk/content-schema'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+} from '@razvilka/content-compiler'
+import { verifyContentPackage } from '@razvilka/content-compiler/signing'
+import { contentPackageSchema } from '@razvilka/content-schema'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 const argumentsList = process.argv.slice(2)
 const valueAfter = (flag: string): string | undefined => {
@@ -16,9 +16,9 @@ const valueAfter = (flag: string): string | undefined => {
   return index >= 0 ? argumentsList[index + 1] : undefined
 }
 
-const inputPath = valueAfter('--input') ?? process.env.CHARTALK_RELEASE_PACKAGE
+const inputPath = valueAfter('--input') ?? process.env.RAZVILKA_RELEASE_PACKAGE
 const publicKeyPath =
-  valueAfter('--public-key') ?? process.env.CHARTALK_SIGNING_PUBLIC_KEY_FILE
+  valueAfter('--public-key') ?? process.env.RAZVILKA_SIGNING_PUBLIC_KEY_FILE
 const outputPath = resolve(
   valueAfter('--output') ?? 'artifacts/content-validation.json',
 )

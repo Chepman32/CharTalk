@@ -1,11 +1,11 @@
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-import { evaluateProductionRelease } from '@chartalk/content-compiler'
+import { evaluateProductionRelease } from '@razvilka/content-compiler'
 import {
   BULK_FIXTURE_SCALE_DEFAULTS,
   generateBulkFixtureContentPackage,
-} from '@chartalk/test-fixtures'
+} from '@razvilka/test-fixtures'
 
 import { buildContentShards } from './content-shards'
 

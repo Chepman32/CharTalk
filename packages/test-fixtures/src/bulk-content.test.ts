@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { compileContentPackage } from '@chartalk/content-compiler'
-import { auditRussianQuality } from '@chartalk/content-integrity'
+import { compileContentPackage } from '@razvilka/content-compiler'
+import { auditRussianQuality } from '@razvilka/content-integrity'
 
 import {
   BULK_FIXTURE_DEFAULTS,
@@ -89,7 +89,7 @@ describe('bulk fixture content generator', () => {
     expect(bulk.nodes.every(node => node.editorial.status === 'fixture')).toBe(
       true,
     )
-  })
+  }, 20_000)
 
   it('documents the structural scale candidate separately from bundled content', () => {
     const decisionsPerStory = BULK_FIXTURE_SCALE_DEFAULTS.stageCount

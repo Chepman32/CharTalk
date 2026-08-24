@@ -2,10 +2,10 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { performance } from 'node:perf_hooks'
 
-import { normalizeRussianText } from '@chartalk/content-compiler'
-import { initialNarrativeState } from '@chartalk/content-schema'
-import { resolveDecision } from '@chartalk/dialogue-engine'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { normalizeRussianText } from '@razvilka/content-compiler'
+import { initialNarrativeState } from '@razvilka/content-schema'
+import { resolveDecision } from '@razvilka/dialogue-engine'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import {
   TRANSCRIPT_WINDOW_LIMIT,
@@ -18,27 +18,27 @@ import {
   searchTextInventory,
 } from './capacity-load'
 
-const target = Number(process.env.CHARTALK_CAPACITY_UNITS ?? 1_000_000)
+const target = Number(process.env.RAZVILKA_CAPACITY_UNITS ?? 1_000_000)
 if (!Number.isInteger(target) || target < 1) {
-  throw new Error('CHARTALK_CAPACITY_UNITS must be a positive integer')
+  throw new Error('RAZVILKA_CAPACITY_UNITS must be a positive integer')
 }
 const decisionTarget = Number(
-  process.env.CHARTALK_CAPACITY_DECISIONS ?? 200_000,
+  process.env.RAZVILKA_CAPACITY_DECISIONS ?? 200_000,
 )
 if (!Number.isInteger(decisionTarget) || decisionTarget < 1) {
-  throw new Error('CHARTALK_CAPACITY_DECISIONS must be a positive integer')
+  throw new Error('RAZVILKA_CAPACITY_DECISIONS must be a positive integer')
 }
 const installedShardTarget = Number(
-  process.env.CHARTALK_CAPACITY_INSTALLED_DECISIONS ?? 20_000,
+  process.env.RAZVILKA_CAPACITY_INSTALLED_DECISIONS ?? 20_000,
 )
 if (!Number.isInteger(installedShardTarget) || installedShardTarget < 1) {
   throw new Error(
-    'CHARTALK_CAPACITY_INSTALLED_DECISIONS must be a positive integer',
+    'RAZVILKA_CAPACITY_INSTALLED_DECISIONS must be a positive integer',
   )
 }
-const activeRunTarget = Number(process.env.CHARTALK_CAPACITY_ACTIVE_RUNS ?? 100)
+const activeRunTarget = Number(process.env.RAZVILKA_CAPACITY_ACTIVE_RUNS ?? 100)
 if (!Number.isInteger(activeRunTarget) || activeRunTarget < 1) {
-  throw new Error('CHARTALK_CAPACITY_ACTIVE_RUNS must be a positive integer')
+  throw new Error('RAZVILKA_CAPACITY_ACTIVE_RUNS must be a positive integer')
 }
 
 const startedAt = performance.now()

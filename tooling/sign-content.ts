@@ -2,16 +2,16 @@ import { createPrivateKey } from 'node:crypto'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 
-import { evaluateProductionRelease } from '@chartalk/content-compiler'
-import { signContentPackage } from '@chartalk/content-compiler/signing'
-import { contentPackageSchema } from '@chartalk/content-schema'
+import { evaluateProductionRelease } from '@razvilka/content-compiler'
+import { signContentPackage } from '@razvilka/content-compiler/signing'
+import { contentPackageSchema } from '@razvilka/content-schema'
 
 const [inputArgument, outputArgument] = process.argv.slice(2)
-const keyPath = process.env.CHARTALK_SIGNING_PRIVATE_KEY_FILE
-const signingKeyId = process.env.CHARTALK_SIGNING_KEY_ID
+const keyPath = process.env.RAZVILKA_SIGNING_PRIVATE_KEY_FILE
+const signingKeyId = process.env.RAZVILKA_SIGNING_KEY_ID
 if (!inputArgument || !outputArgument || !keyPath || !signingKeyId) {
   throw new Error(
-    'Usage: CHARTALK_SIGNING_PRIVATE_KEY_FILE=/secure/key.pem CHARTALK_SIGNING_KEY_ID=prod-2026-q3 npm run sign:content -- input.json output.json',
+    'Usage: RAZVILKA_SIGNING_PRIVATE_KEY_FILE=/secure/key.pem RAZVILKA_SIGNING_KEY_ID=prod-2026-q3 npm run sign:content -- input.json output.json',
   )
 }
 

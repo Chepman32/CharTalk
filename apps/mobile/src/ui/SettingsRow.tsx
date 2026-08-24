@@ -1,4 +1,4 @@
-import { spacing } from '@chartalk/design-system'
+import { spacing } from '@razvilka/design-system'
 import type { IconProps } from 'phosphor-react-native'
 import { CaretRight } from 'phosphor-react-native'
 import React, { useMemo } from 'react'

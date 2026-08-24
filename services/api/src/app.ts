@@ -3,26 +3,26 @@ import { timingSafeEqual, type KeyLike } from 'node:crypto'
 import {
   compileContentPackage,
   evaluateProductionRelease,
-} from '@chartalk/content-compiler'
+} from '@razvilka/content-compiler'
 import {
   diagnosticDurationBuckets,
   diagnosticEventNames,
   diagnosticLatencyBuckets,
   diagnosticNetworkClasses,
   diagnosticNodeTypes,
-} from '@chartalk/analytics-schema'
-import type { DiagnosticEvent as DiagnosticEventContract } from '@chartalk/analytics-schema'
-import { signContentPackage } from '@chartalk/content-compiler/signing'
+} from '@razvilka/analytics-schema'
+import type { DiagnosticEvent as DiagnosticEventContract } from '@razvilka/analytics-schema'
+import { signContentPackage } from '@razvilka/content-compiler/signing'
 import {
   contentPackageSchema,
   type ContentAsset,
   type ContentPackage,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 import {
   syncPullResponseSchema,
   syncPushRequestSchema,
   syncPushResponseSchema,
-} from '@chartalk/sync-protocol'
+} from '@razvilka/sync-protocol'
 import { Hono, type Context } from 'hono'
 import { z } from 'zod'
 
@@ -245,7 +245,7 @@ export function createApi(options: ApiOptions) {
   ) =>
     c.json(
       {
-        type: `https://chartalk.app/problems/${type}`,
+        type: `https://razvilka.app/problems/${type}`,
         title,
         status,
         detail,
@@ -383,7 +383,7 @@ export function createApi(options: ApiOptions) {
       )
       return c.json(
         {
-          type: 'https://chartalk.app/problems/rate-limit-exceeded',
+          type: 'https://razvilka.app/problems/rate-limit-exceeded',
           title: 'Too many requests',
           status: 429,
           detail: 'Retry after the indicated delay.',
@@ -920,7 +920,7 @@ export function createApi(options: ApiOptions) {
         signingKeyId: options.signingKeyId,
       },
     })
-    const confirmedBuildId = c.req.header('x-chartalk-confirm-build-id')
+    const confirmedBuildId = c.req.header('x-razvilka-confirm-build-id')
     if (confirmedBuildId !== candidate.manifest.buildId) {
       return problem(
         c,

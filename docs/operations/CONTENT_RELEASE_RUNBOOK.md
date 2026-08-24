@@ -11,10 +11,10 @@
 
 ## Sign and publish
 
-Use an isolated publisher with no public ingress. Mount the private key read-only for the signing operation; never place it in an environment value, repository, build artifact, or application log. Set a stable `CHARTALK_SIGNING_KEY_ID`, type the exact immutable `buildId` in the studio, and submit it as `X-CharTalk-Confirm-Build-Id`; aliases such as `latest` are rejected. Publish the immutable package, verify its returned manifest, key ID, and checksum from a separate serving replica, then promote catalog metadata.
+Use an isolated publisher with no public ingress. Mount the private key read-only for the signing operation; never place it in an environment value, repository, build artifact, or application log. Set a stable `RAZVILKA_SIGNING_KEY_ID`, type the exact immutable `buildId` in the studio, and submit it as `X-Razvilka-Confirm-Build-Id`; aliases such as `latest` are rejected. Publish the immutable package, verify its returned manifest, key ID, and checksum from a separate serving replica, then promote catalog metadata.
 
 Package media uses this immutable layout:
-`$CHARTALK_CONTENT_ASSET_ROOT/<url-encoded-pack-id>/<url-encoded-build-id>/<asset.path>`.
+`$RAZVILKA_CONTENT_ASSET_ROOT/<url-encoded-pack-id>/<url-encoded-build-id>/<asset.path>`.
 The publisher verifies every regular file, MIME, byte limit, and SHA-256 digest before signing.
 
 Roll out 1% → 10% → 50% → 100%, holding long enough to observe download success, signature failures, content-error reports, crash-free sessions, and completion. Do not mutate a published build. Corrections receive a new build ID.

@@ -1,23 +1,23 @@
 {
   "expo": {
-    "name": "CharTalk",
-    "slug": "chartalk",
+    "name": "Развилка",
+    "slug": "razvilka",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "chartalk",
+    "scheme": "razvilka",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.chartalk.reader",
+      "bundleIdentifier": "app.razvilka.reader",
       "deploymentTarget": "17.0",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "app.chartalk.reader",
+      "package": "app.razvilka.reader",
       "minSdkVersion": 29,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -56,7 +56,7 @@
         "expo-secure-store",
         {
           "configureAndroidBackup": true,
-          "faceIDPermission": "Разрешить CharTalk защищать локальные данные с помощью Face ID."
+          "faceIDPermission": "Разрешить приложению «Развилка» защищать локальные данные с помощью Face ID."
         }
       ]
     ],

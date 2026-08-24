@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   validateIosProjectMetadata,
@@ -6,10 +8,10 @@ import {
 
 const appConfig = JSON.stringify({
   expo: {
-    name: 'CharTalk',
+    name: 'Razvilka',
     newArchEnabled: true,
     ios: {
-      bundleIdentifier: 'app.chartalk.reader',
+      bundleIdentifier: 'app.razvilka.reader',
       deploymentTarget: '17.0',
       supportsTablet: true,
     },
@@ -17,11 +19,14 @@ const appConfig = JSON.stringify({
 })
 
 const project = `
-PBXNativeTarget /* CharTalk */
-PRODUCT_BUNDLE_IDENTIFIER = app.chartalk.reader;
+PBXNativeTarget /* Razvilka */
+PRODUCT_BUNDLE_IDENTIFIER = app.razvilka.reader;
 IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 TARGETED_DEVICE_FAMILY = "1,2";
 ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+HERMES_CLI_PATH = "$(SRCROOT)/../../../node_modules/hermes-compiler/hermesc/osx-bin/hermesc";
+REACT_NATIVE_XCODE_SCRIPT="$PROJECT_ROOT/node_modules/react-native/scripts/react-native-xcode.sh"
+"$REACT_NATIVE_XCODE_SCRIPT"
 Release
 `
 
@@ -31,14 +36,34 @@ const podfileProperties = JSON.stringify({
 
 const plist = `
 <key>CFBundleURLSchemes</key>
-<string>chartalk</string>
-<string>app.chartalk.reader</string>
+<string>razvilka</string>
+<string>app.razvilka.reader</string>
 <key>UIRequiredDeviceCapabilities</key>
 <string>arm64</string>
 <string>UIInterfaceOrientationPortrait</string>
 `
 
 describe('iOS native project smoke metadata', () => {
+  it('keeps the Expo Constants script path quoted inside nested bash', () => {
+    const dependencyPatch = readFileSync(
+      resolve(import.meta.dirname, '../patches/expo-constants+57.0.13.patch'),
+      'utf8',
+    )
+    const addedScriptLine = dependencyPatch
+      .split('\n')
+      .find(line => line.startsWith('+    :script =>'))
+    const addedBasenameLine = dependencyPatch
+      .split('\n')
+      .find(line => line.startsWith('+PROJECT_DIR_BASENAME='))
+
+    expect(addedScriptLine).toBe(
+      '+    :script => "bash -l -c \\"\\\\\\"#{env_vars}$PODS_TARGET_SRCROOT/../scripts/get-app-config-ios.sh\\\\\\"\\"",',
+    )
+    expect(addedBasenameLine).toBe(
+      '+PROJECT_DIR_BASENAME=$(basename "$PROJECT_DIR")',
+    )
+  })
+
   it('accepts a CNG project matching the Expo contract', () => {
     expect(
       validateIosProjectMetadata({
@@ -54,7 +79,7 @@ describe('iOS native project smoke metadata', () => {
     const result = validateIosProjectMetadata({
       appConfig,
       project: project
-        .replace('app.chartalk.reader', 'app.chartalk.other')
+        .replace('app.razvilka.reader', 'app.razvilka.other')
         .replace('17.0', '16.4'),
       plist,
       podfileProperties: podfileProperties.replace('17.0', '16.4'),
@@ -102,8 +127,8 @@ describe('iOS native project smoke metadata', () => {
       ),
       project,
       plist: plist
-        .replace('<string>chartalk</string>', '')
-        .replace('<string>app.chartalk.reader</string>', ''),
+        .replace('<string>razvilka</string>', '')
+        .replace('<string>app.razvilka.reader</string>', ''),
       podfileProperties,
     })
 
@@ -111,18 +136,49 @@ describe('iOS native project smoke metadata', () => {
     expect(result.errors).toEqual(
       expect.arrayContaining([
         'expo.ios.supportsTablet must be true',
-        'Info.plist must include the chartalk URL scheme',
+        'Info.plist must include the razvilka URL scheme',
         'Info.plist must include the app bundle URL scheme',
       ]),
     )
   })
 
   it('checks the Xcode listing independently of metadata validation', () => {
-    expect(validateXcodeProjectListing('Targets:\n CharTalk\nRelease')).toEqual(
+    expect(validateXcodeProjectListing('Targets:\n Razvilka\nRelease')).toEqual(
       [],
     )
     expect(validateXcodeProjectListing('Targets:\n OtherApp')).toEqual([
       'target/configuration not listed by xcodebuild',
     ])
+  })
+
+  it('rejects an unquoted React Native bundle-script path', () => {
+    const result = validateIosProjectMetadata({
+      appConfig,
+      project: project
+        .replace(/REACT_NATIVE_XCODE_SCRIPT=.*\n/, '')
+        .replace('"$REACT_NATIVE_XCODE_SCRIPT"\n', ''),
+      plist,
+      podfileProperties,
+    })
+
+    expect(result.errors).toContain(
+      'React Native bundle script must invoke its resolved path safely',
+    )
+  })
+
+  it('rejects a Hermes compiler path that is not derived from the Xcode source root', () => {
+    const result = validateIosProjectMetadata({
+      appConfig,
+      project: project.replace(
+        'HERMES_CLI_PATH = "$(SRCROOT)/../../../node_modules/hermes-compiler/hermesc/osx-bin/hermesc";\n',
+        '',
+      ),
+      plist,
+      podfileProperties,
+    })
+
+    expect(result.errors).toContain(
+      'Hermes compiler path must be derived safely from the project root',
+    )
   })
 })

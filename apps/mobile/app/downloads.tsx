@@ -1,4 +1,4 @@
-import { spacing } from '@chartalk/design-system'
+import { spacing } from '@razvilka/design-system'
 import {
   CheckCircle,
   HardDrives,
@@ -45,9 +45,9 @@ export default function DownloadsScreen() {
     0,
   )
   const updatesConfigured = contentUpdateConfigured(
-    process.env.EXPO_PUBLIC_CHARTALK_API_URL,
-    process.env.EXPO_PUBLIC_CHARTALK_CONTENT_PUBLIC_KEY,
-    process.env.EXPO_PUBLIC_CHARTALK_CONTENT_PUBLIC_KEYS,
+    process.env.EXPO_PUBLIC_RAZVILKA_API_URL,
+    process.env.EXPO_PUBLIC_RAZVILKA_CONTENT_PUBLIC_KEY,
+    process.env.EXPO_PUBLIC_RAZVILKA_CONTENT_PUBLIC_KEYS,
   )
   const protectedBuildKeys = new Set(
     snapshot?.runs.map(run =>
@@ -141,7 +141,7 @@ export default function DownloadsScreen() {
         <View style={styles.recovery}>
           <Text variant="heading">Точные версии прохождений</Text>
           <Text color={nativeColors.textSecondary}>
-            Эти сборки нужны для продолжения сохранённого текста. CharTalk не
+            Эти сборки нужны для продолжения сохранённого текста. «Развилка» не
             подменит их текущей версией каталога.
           </Text>
           {missingRunBuilds.map(run => (
@@ -221,7 +221,7 @@ export default function DownloadsScreen() {
       <View style={styles.note}>
         <Text variant="heading">Если обновление прервётся</Text>
         <Text color={nativeColors.textSecondary}>
-          CharTalk продолжит использовать последнюю проверенную версию. При
+          «Развилка» продолжит использовать последнюю проверенную версию. При
           следующей попытке загрузка продолжится с сохранённой точки.
         </Text>
         <Text variant="caption" color={nativeColors.textMuted}>

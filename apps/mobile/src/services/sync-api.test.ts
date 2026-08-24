@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { MemoryAppRepository } from '@chartalk/app-core'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { MemoryAppRepository } from '@razvilka/app-core'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import {
   emptySyncState,
@@ -50,7 +50,7 @@ describe('sync-api', () => {
     const disabled = await flushSyncOutbox({
       repository,
       stateStore: disabledState,
-      baseUrl: 'https://api.chartalk.app',
+      baseUrl: 'https://api.razvilka.app',
       accessToken: 'session-token',
       deviceId: 'device.1',
     })
@@ -79,7 +79,7 @@ describe('sync-api', () => {
     const idle = await flushSyncOutbox({
       repository,
       stateStore,
-      baseUrl: 'https://api.chartalk.app',
+      baseUrl: 'https://api.razvilka.app',
       accessToken: 'session-token',
       deviceId: 'device.1',
       now: () => '2026-08-14T00:00:00.100Z',
@@ -88,7 +88,7 @@ describe('sync-api', () => {
     expect(idle.status).toBe('idle')
 
     const pulled = await pullSyncRun({
-      baseUrl: 'https://api.chartalk.app',
+      baseUrl: 'https://api.razvilka.app',
       accessToken: 'session-token',
       deviceId: 'device.1',
       runId: 'run.1',
@@ -113,7 +113,7 @@ describe('sync-api', () => {
     const unavailable = await flushSyncOutbox({
       repository,
       stateStore,
-      baseUrl: 'https://api.chartalk.app',
+      baseUrl: 'https://api.razvilka.app',
       accessToken: 'session-token',
       deviceId: 'device.1',
       now: () => '2026-08-14T00:00:00.000Z',
@@ -127,7 +127,7 @@ describe('sync-api', () => {
     const invalid = await flushSyncOutbox({
       repository,
       stateStore,
-      baseUrl: 'https://api.chartalk.app',
+      baseUrl: 'https://api.razvilka.app',
       accessToken: 'session-token',
       deviceId: 'device.1',
       now: () => '2026-08-14T00:02:00.000Z',
@@ -145,7 +145,7 @@ describe('sync-api', () => {
     const result = await flushSyncOutbox({
       repository,
       stateStore,
-      baseUrl: 'https://api.chartalk.app',
+      baseUrl: 'https://api.razvilka.app',
       accessToken: 'session-token',
       deviceId: 'device.1',
       now: () => '2026-08-14T00:00:00.000Z',
@@ -186,7 +186,7 @@ describe('sync-api', () => {
     const result = await flushSyncOutbox({
       repository,
       stateStore,
-      baseUrl: 'https://api.chartalk.app',
+      baseUrl: 'https://api.razvilka.app',
       accessToken: 'session-token',
       deviceId: 'device.1',
       now: () => '2026-08-14T00:00:00.000Z',

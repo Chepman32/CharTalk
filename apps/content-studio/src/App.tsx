@@ -2,12 +2,12 @@ import type {
   ContentNode,
   ContentPackage,
   DecisionNode,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 import {
   auditRussianQuality,
   type RussianQualityIssue,
-} from '@chartalk/content-integrity'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+} from '@razvilka/content-integrity'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 import {
   ArrowCounterClockwise,
   ArrowRight,
@@ -64,8 +64,8 @@ import {
 import { diffContentPackages, type ContentDiff } from './domain/content-diff'
 import { grammarPreviewRows } from './domain/text-preview'
 
-const DRAFT_KEY = 'chartalk.studio.draft.v2'
-const LEGACY_DRAFT_KEY = 'chartalk.studio.draft.v1'
+const DRAFT_KEY = 'razvilka.studio.draft.v2'
+const LEGACY_DRAFT_KEY = 'razvilka.studio.draft.v1'
 
 const navItems: { id: StudioView; label: string; icon: typeof Gauge }[] = [
   { id: 'overview', label: 'Обзор', icon: Gauge },
@@ -147,7 +147,7 @@ export function App() {
   const [publishing, setPublishing] = useState(false)
   const [apiUrl, setApiUrl] = useState(
     () =>
-      localStorage.getItem('chartalk.studio.api') ?? 'http://localhost:8787',
+      localStorage.getItem('razvilka.studio.api') ?? 'http://localhost:8787',
   )
   const [adminToken, setAdminToken] = useState('')
   const [signingKeyId, setSigningKeyId] = useState(
@@ -309,7 +309,9 @@ export function App() {
       setNotice(`Импортирован ${file.name}. Запустите проверку перед работой.`)
       setPublishError(null)
     } catch {
-      setPublishError('Файл не удалось прочитать как пакет CharTalk.')
+      setPublishError(
+        'Файл не удалось прочитать как пакет приложения «Развилка».',
+      )
     } finally {
       event.target.value = ''
     }
@@ -337,7 +339,7 @@ export function App() {
     }
     setPublishing(true)
     setPublishError(null)
-    localStorage.setItem('chartalk.studio.api', publishBaseUrl)
+    localStorage.setItem('razvilka.studio.api', publishBaseUrl)
     try {
       const response = await fetch(
         `${publishBaseUrl}/v1/admin/content/publish`,
@@ -346,7 +348,7 @@ export function App() {
           headers: {
             authorization: `Bearer ${adminToken}`,
             'content-type': 'application/json',
-            'x-chartalk-confirm-build-id': confirmedBuildId,
+            'x-razvilka-confirm-build-id': confirmedBuildId,
           },
           body: JSON.stringify(releaseContent),
         },
@@ -374,7 +376,7 @@ export function App() {
         <div className="brand-lockup">
           <img src={brandMark} alt="" width="38" height="38" />
           <div>
-            <strong>CharTalk</strong>
+            <strong>Развилка</strong>
             <span>Content Studio</span>
           </div>
         </div>

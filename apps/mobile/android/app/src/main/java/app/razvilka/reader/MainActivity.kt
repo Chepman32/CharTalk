@@ -1,4 +1,4 @@
-package app.chartalk.reader
+package app.razvilka.reader
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

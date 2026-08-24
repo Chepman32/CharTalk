@@ -1,5 +1,5 @@
-import { radius, spacing, touchTarget } from '@chartalk/design-system'
-import type { Story } from '@chartalk/content-schema'
+import { radius, spacing, touchTarget } from '@razvilka/design-system'
+import type { Story } from '@razvilka/content-schema'
 import { useRouter } from 'expo-router'
 import {
   ArrowRight,
@@ -163,7 +163,7 @@ export default function StoriesScreen() {
     <Screen testID="stories-screen">
       <View style={styles.header}>
         <View style={styles.headerCopy}>
-          <SectionLabel>CharTalk · локальная библиотека</SectionLabel>
+          <SectionLabel>Развилка · локальная библиотека</SectionLabel>
           <Text variant="title">
             Добрый вечер
             {snapshot?.profile?.displayName

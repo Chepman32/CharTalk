@@ -2,7 +2,7 @@
 
 ## CAPABILITY
 
-A Russian-speaking reader can start without an account, understand that CharTalk is authored fiction, choose a character, open any bundled episode without an additional download, and make one of exactly four meaningful replies at every decision. The selected wording and choice-specific consequence are saved before the story advances. Bundled content, portraits, and limited authored image attachments remain playable offline, and the reader can resume, review a recap, branch from a checkpoint, control sensitive themes, and report a content problem. Signed content updates are optional and never block the bundled catalog.
+A Russian-speaking reader can start without an account, understand that Развилка is authored fiction, choose a character, open any bundled episode without an additional download, and make one of exactly four meaningful replies at every decision. The selected wording and choice-specific consequence are saved before the story advances. Bundled content, portraits, and limited authored image attachments remain playable offline, and the reader can resume, review a recap, branch from a checkpoint, control sensitive themes, and report a content problem. Signed content updates are optional and never block the bundled catalog.
 
 ## CONSTRAINTS
 

@@ -1,4 +1,4 @@
-import { catalogDataSchema } from '@chartalk/content-schema'
+import { catalogDataSchema } from '@razvilka/content-schema'
 
 import type { CachedCatalog } from '@/catalog'
 
@@ -34,7 +34,7 @@ export async function fetchCatalog(
   options: FetchCatalogOptions = {},
 ): Promise<CatalogFetchResult> {
   const baseUrl = secureServiceBaseUrl(
-    options.baseUrl ?? process.env.EXPO_PUBLIC_CHARTALK_API_URL,
+    options.baseUrl ?? process.env.EXPO_PUBLIC_RAZVILKA_API_URL,
   )
   if (!baseUrl) {
     return { status: 'unconfigured', cache: options.cached ?? null }

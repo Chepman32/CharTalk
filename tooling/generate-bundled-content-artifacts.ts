@@ -1,5 +1,5 @@
-import { partitionContentPackage } from '@chartalk/content-compiler'
-import type { ContentPackage } from '@chartalk/content-schema'
+import { partitionContentPackage } from '@razvilka/content-compiler'
+import type { ContentPackage } from '@razvilka/content-schema'
 
 export interface BundledContentArtifact {
   fileName: string

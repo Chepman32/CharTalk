@@ -62,7 +62,7 @@ describe('diagnostics transport', () => {
 
     expect(
       await sendDiagnostic(event, false, {
-        baseUrl: 'https://api.chartalk.app',
+        baseUrl: 'https://api.razvilka.app',
         fetchImpl,
       }),
     ).toBe(false)
@@ -85,23 +85,23 @@ describe('diagnostics transport', () => {
 
     expect(
       await sendDiagnostic({ ...event, durationBucket: 'under_1s' }, true, {
-        baseUrl: 'https://api.chartalk.app/',
+        baseUrl: 'https://api.razvilka.app/',
         fetchImpl: accepted,
       }),
     ).toBe(true)
     expect(accepted).toHaveBeenCalledWith(
-      'https://api.chartalk.app/v1/diagnostics/events',
+      'https://api.razvilka.app/v1/diagnostics/events',
       expect.objectContaining({ method: 'POST' }),
     )
     expect(
       await sendDiagnostic(event, true, {
-        baseUrl: 'https://api.chartalk.app',
+        baseUrl: 'https://api.razvilka.app',
         fetchImpl: rejected,
       }),
     ).toBe(false)
     expect(
       await sendDiagnostic(event, true, {
-        baseUrl: 'https://api.chartalk.app',
+        baseUrl: 'https://api.razvilka.app',
         fetchImpl: offline,
       }),
     ).toBe(false)

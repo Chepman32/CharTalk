@@ -1,7 +1,7 @@
 import {
   contentPackageSchema,
   type ContentPackage,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 import type {
   StudioAuditAction,

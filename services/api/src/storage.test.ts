@@ -5,9 +5,9 @@ import { join } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-import { sampleContentPackage } from '@chartalk/test-fixtures'
-import { initialNarrativeState } from '@chartalk/content-schema'
-import { applyChoice } from '@chartalk/dialogue-engine'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
+import { initialNarrativeState } from '@razvilka/content-schema'
+import { applyChoice } from '@razvilka/dialogue-engine'
 
 import { SqliteApiStore } from './storage'
 
@@ -107,7 +107,7 @@ describe('SqliteApiStore', () => {
   })
 
   it('migrates the legacy build-only primary key without losing the bundle', async () => {
-    const directory = mkdtempSync(join(tmpdir(), 'chartalk-api-'))
+    const directory = mkdtempSync(join(tmpdir(), 'razvilka-api-'))
     const databasePath = join(directory, 'api.db')
     const legacy = new DatabaseSync(databasePath)
     legacy.exec(`
@@ -149,7 +149,7 @@ describe('SqliteApiStore', () => {
   })
 
   it('persists acknowledged sync chains across API restarts', async () => {
-    const directory = mkdtempSync(join(tmpdir(), 'chartalk-sync-'))
+    const directory = mkdtempSync(join(tmpdir(), 'razvilka-sync-'))
     const databasePath = join(directory, 'api.db')
     const store = new SqliteApiStore(databasePath, sampleContentPackage)
     const story = sampleContentPackage.stories.find(

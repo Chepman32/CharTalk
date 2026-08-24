@@ -1,4 +1,4 @@
-import type { DiagnosticEvent } from '@chartalk/analytics-schema'
+import type { DiagnosticEvent } from '@razvilka/analytics-schema'
 
 export const MAX_DIAGNOSTIC_OUTBOX_EVENTS = 500
 

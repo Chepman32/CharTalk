@@ -53,9 +53,9 @@ export interface AndroidReleaseSmokeResult {
 
 const moduleDirectory = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(moduleDirectory, '..')
-const defaultPackageName = 'app.chartalk.reader'
+const defaultPackageName = 'app.razvilka.reader'
 const defaultActivity = '.MainActivity'
-const dumpPath = '/sdcard/chartalk-window.xml'
+const dumpPath = '/sdcard/razvilka-window.xml'
 
 function decodeXmlAttribute(value: string): string {
   return value

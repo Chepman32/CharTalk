@@ -1,4 +1,4 @@
-import { spacing, touchTarget, typography } from '@chartalk/design-system'
+import { spacing, touchTarget, typography } from '@razvilka/design-system'
 import { useRouter } from 'expo-router'
 import {
   ArrowRight,

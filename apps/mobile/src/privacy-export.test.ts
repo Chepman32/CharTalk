@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { AppSnapshot } from '@chartalk/app-core'
+import type { AppSnapshot } from '@razvilka/app-core'
 
 import {
   createLocalDataExport,
@@ -44,7 +44,7 @@ describe('local privacy export', () => {
   it('returns a portable deep copy and never aliases the live snapshot', () => {
     const result = createLocalDataExport(snapshot, '2026-08-13T00:00:00.000Z')
 
-    expect(result.format).toBe('chartalk.local-data')
+    expect(result.format).toBe('razvilka.local-data')
     expect(result.version).toBe(1)
     expect(result.exportedAt).toBe('2026-08-13T00:00:00.000Z')
     expect(result.snapshot).toEqual(snapshot)
@@ -59,7 +59,7 @@ describe('local privacy export', () => {
     ) as ReturnType<typeof createLocalDataExport>
 
     expect(parsed).toMatchObject({
-      format: 'chartalk.local-data',
+      format: 'razvilka.local-data',
       version: 1,
       exportedAt: '2026-08-13T00:00:00.000Z',
       snapshot,

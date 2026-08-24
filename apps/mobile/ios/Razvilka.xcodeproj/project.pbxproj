@@ -11,25 +11,25 @@
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		426BB7378F3F4F750B6CBF13 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A598E4167A426557E7F7F790 /* ExpoModulesProvider.swift */; };
 		54C238274B5B612305B3ED68 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C92CC0BF10C78BAADF3C1947 /* PrivacyInfo.xcprivacy */; };
-		77FACBE493207E90FB9E3BA6 /* libPods-CharTalk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0629E8DDE6D4DC4F91890490 /* libPods-CharTalk.a */; };
+		77FACBE493207E90FB9E3BA6 /* libPods-Razvilka.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0629E8DDE6D4DC4F91890490 /* libPods-Razvilka.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0629E8DDE6D4DC4F91890490 /* libPods-CharTalk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CharTalk.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07F961A680F5B00A75B9A /* CharTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CharTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = CharTalk/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CharTalk/Info.plist; sourceTree = "<group>"; };
-		768D382549E4B0DD798870D9 /* Pods-CharTalk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CharTalk.debug.xcconfig"; path = "Target Support Files/Pods-CharTalk/Pods-CharTalk.debug.xcconfig"; sourceTree = "<group>"; };
-		8C3C52953B40A81994A0E7FF /* Pods-CharTalk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CharTalk.release.xcconfig"; path = "Target Support Files/Pods-CharTalk/Pods-CharTalk.release.xcconfig"; sourceTree = "<group>"; };
-		A598E4167A426557E7F7F790 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-CharTalk/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = CharTalk/SplashScreen.storyboard; sourceTree = "<group>"; };
+		0629E8DDE6D4DC4F91890490 /* libPods-Razvilka.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Razvilka.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Razvilka.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Razvilka.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Razvilka/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Razvilka/Info.plist; sourceTree = "<group>"; };
+		768D382549E4B0DD798870D9 /* Pods-Razvilka.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Razvilka.debug.xcconfig"; path = "Target Support Files/Pods-Razvilka/Pods-Razvilka.debug.xcconfig"; sourceTree = "<group>"; };
+		8C3C52953B40A81994A0E7FF /* Pods-Razvilka.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Razvilka.release.xcconfig"; path = "Target Support Files/Pods-Razvilka/Pods-Razvilka.release.xcconfig"; sourceTree = "<group>"; };
+		A598E4167A426557E7F7F790 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Razvilka/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Razvilka/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		C92CC0BF10C78BAADF3C1947 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CharTalk/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		C92CC0BF10C78BAADF3C1947 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Razvilka/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = CharTalk/AppDelegate.swift; sourceTree = "<group>"; };
-		F11748442D0722820044C1D9 /* CharTalk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CharTalk-Bridging-Header.h"; path = "CharTalk/CharTalk-Bridging-Header.h"; sourceTree = "<group>"; };
+		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Razvilka/AppDelegate.swift; sourceTree = "<group>"; };
+		F11748442D0722820044C1D9 /* Razvilka-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Razvilka-Bridging-Header.h"; path = "Razvilka/Razvilka-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,32 +37,32 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77FACBE493207E90FB9E3BA6 /* libPods-CharTalk.a in Frameworks */,
+				77FACBE493207E90FB9E3BA6 /* libPods-Razvilka.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		13B07FAE1A68108700A75B9A /* CharTalk */ = {
+		13B07FAE1A68108700A75B9A /* Razvilka */ = {
 			isa = PBXGroup;
 			children = (
 				F11748412D0307B40044C1D9 /* AppDelegate.swift */,
-				F11748442D0722820044C1D9 /* CharTalk-Bridging-Header.h */,
+				F11748442D0722820044C1D9 /* Razvilka-Bridging-Header.h */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				C92CC0BF10C78BAADF3C1947 /* PrivacyInfo.xcprivacy */,
 			);
-			name = CharTalk;
+			name = Razvilka;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				0629E8DDE6D4DC4F91890490 /* libPods-CharTalk.a */,
+				0629E8DDE6D4DC4F91890490 /* libPods-Razvilka.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -77,7 +77,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* CharTalk */,
+				13B07FAE1A68108700A75B9A /* Razvilka */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
@@ -92,24 +92,24 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* CharTalk.app */,
+				13B07F961A680F5B00A75B9A /* Razvilka.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		90E04C721567FE20F751A8DD /* CharTalk */ = {
+		90E04C721567FE20F751A8DD /* Razvilka */ = {
 			isa = PBXGroup;
 			children = (
 				A598E4167A426557E7F7F790 /* ExpoModulesProvider.swift */,
 			);
-			name = CharTalk;
+			name = Razvilka;
 			sourceTree = "<group>";
 		};
 		B3FA1795C55E68A26A43A542 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				768D382549E4B0DD798870D9 /* Pods-CharTalk.debug.xcconfig */,
-				8C3C52953B40A81994A0E7FF /* Pods-CharTalk.release.xcconfig */,
+				768D382549E4B0DD798870D9 /* Pods-Razvilka.debug.xcconfig */,
+				8C3C52953B40A81994A0E7FF /* Pods-Razvilka.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -121,13 +121,13 @@
 				BB2F792C24A3F905000567C9 /* Expo.plist */,
 			);
 			name = Supporting;
-			path = CharTalk/Supporting;
+			path = Razvilka/Supporting;
 			sourceTree = "<group>";
 		};
 		F27FFACA6E1E0A32E40D03ED /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				90E04C721567FE20F751A8DD /* CharTalk */,
+				90E04C721567FE20F751A8DD /* Razvilka */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
@@ -135,9 +135,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		13B07F861A680F5B00A75B9A /* CharTalk */ = {
+		13B07F861A680F5B00A75B9A /* Razvilka */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "CharTalk" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Razvilka" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
 				737A2E45CAB54577948057A0 /* [Expo] Configure project */,
@@ -152,9 +152,9 @@
 			);
 			dependencies = (
 			);
-			name = CharTalk;
-			productName = CharTalk;
-			productReference = 13B07F961A680F5B00A75B9A /* CharTalk.app */;
+			name = Razvilka;
+			productName = Razvilka;
+			productReference = 13B07F961A680F5B00A75B9A /* Razvilka.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -170,7 +170,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "CharTalk" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Razvilka" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -183,7 +183,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* CharTalk */,
+				13B07F861A680F5B00A75B9A /* Razvilka */,
 			);
 		};
 /* End PBXProject section */
@@ -218,7 +218,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\n# React Native Community CLI uses the package entry relative to PROJECT_ROOT.\nexport ENTRY_FILE=\"${ENTRY_FILE:-$PROJECT_ROOT/index.js}\"\n\n# Source .xcode.env.updates if it exists to allow\n# SKIP_BUNDLING to be unset if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.updates\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.updates\"\nfi\n# Source local changes to allow overrides\n# if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n\n";
+			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\n# React Native Community CLI uses the package entry relative to PROJECT_ROOT.\nexport ENTRY_FILE=\"${ENTRY_FILE:-$PROJECT_ROOT/index.js}\"\n\n# Source .xcode.env.updates if it exists to allow\n# SKIP_BUNDLING to be unset if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.updates\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.updates\"\nfi\n# Source local changes to allow overrides\n# if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\nREACT_NATIVE_XCODE_SCRIPT=\"$(\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\")\"\n\"$REACT_NATIVE_XCODE_SCRIPT\"\n\n";
 		};
 		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -235,7 +235,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CharTalk-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Razvilka-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -253,18 +253,18 @@
 			inputPaths = (
 				"$(SRCROOT)/.xcode.env",
 				"$(SRCROOT)/.xcode.env.local",
-				"$(SRCROOT)/CharTalk/CharTalk.entitlements",
-				"$(SRCROOT)/Pods/Target Support Files/Pods-CharTalk/expo-configure-project.sh",
+				"$(SRCROOT)/Razvilka/Razvilka.entitlements",
+				"$(SRCROOT)/Pods/Target Support Files/Pods-Razvilka/expo-configure-project.sh",
 			);
 			name = "[Expo] Configure project";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(SRCROOT)/Pods/Target Support Files/Pods-CharTalk/ExpoModulesProvider.swift",
+				"$(SRCROOT)/Pods/Target Support Files/Pods-Razvilka/ExpoModulesProvider.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-CharTalk/expo-configure-project.sh\"\n";
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-Razvilka/expo-configure-project.sh\"\n";
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -272,7 +272,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CharTalk/Pods-CharTalk-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Razvilka/Pods-Razvilka-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXApplication/ExpoApplication_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
@@ -299,7 +299,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CharTalk/Pods-CharTalk-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Razvilka/Pods-Razvilka-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CA30EAE4C1CD46F79E581417 /* [CP] Embed Pods Frameworks */ = {
@@ -308,7 +308,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CharTalk/Pods-CharTalk-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Razvilka/Pods-Razvilka-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem.framework/ExpoFileSystem",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ExpoFont/ExpoFont.framework/ExpoFont",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ExpoImage/ExpoImage.framework/ExpoImage",
@@ -343,7 +343,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CharTalk/Pods-CharTalk-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Razvilka/Pods-Razvilka-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -363,18 +363,19 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 768D382549E4B0DD798870D9 /* Pods-CharTalk.debug.xcconfig */;
+			baseConfigurationReference = 768D382549E4B0DD798870D9 /* Pods-Razvilka.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = CharTalk/CharTalk.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Razvilka/Razvilka.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
+				HERMES_CLI_PATH = "$(SRCROOT)/../../../node_modules/hermes-compiler/hermesc/osx-bin/hermesc";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
 				);
-				INFOPLIST_FILE = CharTalk/Info.plist;
+				INFOPLIST_FILE = Razvilka/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -388,9 +389,9 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = app.chartalk.reader;
-				PRODUCT_NAME = CharTalk;
-				SWIFT_OBJC_BRIDGING_HEADER = "CharTalk/CharTalk-Bridging-Header.h";
+				PRODUCT_BUNDLE_IDENTIFIER = app.razvilka.reader;
+				PRODUCT_NAME = Razvilka;
+				SWIFT_OBJC_BRIDGING_HEADER = "Razvilka/Razvilka-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -400,13 +401,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8C3C52953B40A81994A0E7FF /* Pods-CharTalk.release.xcconfig */;
+			baseConfigurationReference = 8C3C52953B40A81994A0E7FF /* Pods-Razvilka.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = CharTalk/CharTalk.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Razvilka/Razvilka.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = CharTalk/Info.plist;
+				HERMES_CLI_PATH = "$(SRCROOT)/../../../node_modules/hermes-compiler/hermesc/osx-bin/hermesc";
+				INFOPLIST_FILE = Razvilka/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -420,9 +422,9 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = app.chartalk.reader;
-				PRODUCT_NAME = CharTalk;
-				SWIFT_OBJC_BRIDGING_HEADER = "CharTalk/CharTalk-Bridging-Header.h";
+				PRODUCT_BUNDLE_IDENTIFIER = app.razvilka.reader;
+				PRODUCT_NAME = Razvilka;
+				SWIFT_OBJC_BRIDGING_HEADER = "Razvilka/Razvilka-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -568,7 +570,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "CharTalk" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Razvilka" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -577,7 +579,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "CharTalk" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Razvilka" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

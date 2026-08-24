@@ -80,18 +80,18 @@ def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 // A release artifact must never silently fall back to the shared debug key. CI
 // supplies these values from its secret manager; a local debug-signed release
-// is available only with the explicit CHARTALK_ALLOW_DEBUG_SIGNING opt-in.
-def releaseStoreFile = System.getenv('CHARTALK_ANDROID_KEYSTORE_FILE') ?: findProperty('chartalk.android.keystoreFile')
-def releaseStorePassword = System.getenv('CHARTALK_ANDROID_KEYSTORE_PASSWORD') ?: findProperty('chartalk.android.keystorePassword')
-def releaseKeyAlias = System.getenv('CHARTALK_ANDROID_KEY_ALIAS') ?: findProperty('chartalk.android.keyAlias')
-def releaseKeyPassword = System.getenv('CHARTALK_ANDROID_KEY_PASSWORD') ?: findProperty('chartalk.android.keyPassword')
+// is available only with the explicit RAZVILKA_ALLOW_DEBUG_SIGNING opt-in.
+def releaseStoreFile = System.getenv('RAZVILKA_ANDROID_KEYSTORE_FILE') ?: findProperty('razvilka.android.keystoreFile')
+def releaseStorePassword = System.getenv('RAZVILKA_ANDROID_KEYSTORE_PASSWORD') ?: findProperty('razvilka.android.keystorePassword')
+def releaseKeyAlias = System.getenv('RAZVILKA_ANDROID_KEY_ALIAS') ?: findProperty('razvilka.android.keyAlias')
+def releaseKeyPassword = System.getenv('RAZVILKA_ANDROID_KEY_PASSWORD') ?: findProperty('razvilka.android.keyPassword')
 def hasProductionSigning = [
     releaseStoreFile,
     releaseStorePassword,
     releaseKeyAlias,
     releaseKeyPassword,
 ].every { value -> value?.toString()?.trim() }
-def allowDebugSigning = (System.getenv('CHARTALK_ALLOW_DEBUG_SIGNING') ?: findProperty('chartalk.allowDebugSigning') ?: 'false').toString().toBoolean()
+def allowDebugSigning = (System.getenv('RAZVILKA_ALLOW_DEBUG_SIGNING') ?: findProperty('razvilka.allowDebugSigning') ?: 'false').toString().toBoolean()
 def releaseTaskRequested = gradle.startParameter.taskNames.any { taskName ->
     def normalizedTaskName = taskName.toLowerCase()
     normalizedTaskName.contains('release') ||
@@ -107,9 +107,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'app.chartalk.reader'
+    namespace 'app.razvilka.reader'
     defaultConfig {
-        applicationId 'app.chartalk.reader'
+        applicationId 'app.razvilka.reader'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -141,13 +141,13 @@ android {
             if (hasProductionSigning) {
                 signingConfig signingConfigs.release
             } else if (allowDebugSigning) {
-                logger.warn('CHARTALK_ALLOW_DEBUG_SIGNING is enabled; this APK is not production-signable.')
+                logger.warn('RAZVILKA_ALLOW_DEBUG_SIGNING is enabled; this APK is not production-signable.')
                 signingConfig signingConfigs.debug
             } else if (releaseTaskRequested) {
                 throw new GradleException(
-                    'Production Android signing is not configured. Set CHARTALK_ANDROID_KEYSTORE_FILE, ' +
-                    'CHARTALK_ANDROID_KEYSTORE_PASSWORD, CHARTALK_ANDROID_KEY_ALIAS, and ' +
-                    'CHARTALK_ANDROID_KEY_PASSWORD (or explicitly set CHARTALK_ALLOW_DEBUG_SIGNING=true for local smoke only).',
+                    'Production Android signing is not configured. Set RAZVILKA_ANDROID_KEYSTORE_FILE, ' +
+                    'RAZVILKA_ANDROID_KEYSTORE_PASSWORD, RAZVILKA_ANDROID_KEY_ALIAS, and ' +
+                    'RAZVILKA_ANDROID_KEY_PASSWORD (or explicitly set RAZVILKA_ALLOW_DEBUG_SIGNING=true for local smoke only).',
                 )
             } else {
                 // Keep non-release variants configurable without weakening the

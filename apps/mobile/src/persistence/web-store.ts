@@ -1,6 +1,6 @@
-import type { AppSnapshot, SnapshotStore } from '@chartalk/app-core'
-import type { DiagnosticEvent } from '@chartalk/analytics-schema'
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { AppSnapshot, SnapshotStore } from '@razvilka/app-core'
+import type { DiagnosticEvent } from '@razvilka/analytics-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 
 import { parseCachedCatalog, type CachedCatalog } from '../catalog'
 
@@ -18,12 +18,12 @@ import {
   type SyncStateStore,
 } from './sync-state'
 
-const STORAGE_KEY = 'chartalk.app.snapshot.v1'
-const CONTENT_STORAGE_KEY = 'chartalk.content.packages.v1'
-const TRANSCRIPT_ANCHOR_STORAGE_KEY = 'chartalk.transcript.anchors.v1'
-const DIAGNOSTIC_OUTBOX_STORAGE_KEY = 'chartalk.diagnostics.outbox.v1'
-const CATALOG_STORAGE_KEY = 'chartalk.catalog.cache.v1'
-const SYNC_STATE_STORAGE_KEY = 'chartalk.sync.state.v1'
+const STORAGE_KEY = 'razvilka.app.snapshot.v1'
+const CONTENT_STORAGE_KEY = 'razvilka.content.packages.v1'
+const TRANSCRIPT_ANCHOR_STORAGE_KEY = 'razvilka.transcript.anchors.v1'
+const DIAGNOSTIC_OUTBOX_STORAGE_KEY = 'razvilka.diagnostics.outbox.v1'
+const CATALOG_STORAGE_KEY = 'razvilka.catalog.cache.v1'
+const SYNC_STATE_STORAGE_KEY = 'razvilka.sync.state.v1'
 
 interface StoredPackage extends InstalledPackageRecord {
   content: ContentPackage

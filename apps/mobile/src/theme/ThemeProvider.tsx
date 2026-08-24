@@ -1,5 +1,5 @@
-import type { ThemePreference } from '@chartalk/app-core'
-import { themes, type AppTheme, type ThemeName } from '@chartalk/design-system'
+import type { ThemePreference } from '@razvilka/app-core'
+import { themes, type AppTheme, type ThemeName } from '@razvilka/design-system'
 import React, { createContext, useContext, useMemo } from 'react'
 import { useColorScheme } from 'react-native'
 

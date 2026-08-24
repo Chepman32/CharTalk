@@ -16,7 +16,7 @@ apps/mobile/android/app/.cxx
 apps/mobile/android/app/build
 apps/mobile/ios/build
 apps/mobile/ios/Pods
-apps/mobile/ios/CharTalk/Images.xcassets
+apps/mobile/ios/Razvilka/Images.xcassets
 apps/mobile/src/bundled-content.bulk.json
 apps/mobile/src/bundled-content.bulk.shard.*.json
 apps/mobile/src/bundled-content.bulk.catalog.*.json

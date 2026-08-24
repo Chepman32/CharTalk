@@ -1,4 +1,4 @@
-import { radius, spacing } from '@chartalk/design-system'
+import { radius, spacing } from '@razvilka/design-system'
 import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useMemo } from 'react'
@@ -61,7 +61,7 @@ export default function CharacterScreen() {
       <View style={styles.disclosure}>
         <Text variant="label">Вымышленный персонаж · авторский сценарий</Text>
         <Text variant="caption" color={nativeColors.textSecondary}>
-          Все сообщения {character.name} заранее написаны редакцией CharTalk.
+          Все сообщения {character.name} заранее написаны редакцией «Развилки».
           Это не живой собеседник и не ИИ-чат.
         </Text>
       </View>

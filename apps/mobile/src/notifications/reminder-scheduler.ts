@@ -2,7 +2,7 @@ import type {
   NotificationFrequency,
   NotificationTime,
   NotificationWeekendDay,
-} from '@chartalk/app-core'
+} from '@razvilka/app-core'
 
 import { buildWeekendReminderPlan, type WeekendReminder } from './reminder-plan'
 

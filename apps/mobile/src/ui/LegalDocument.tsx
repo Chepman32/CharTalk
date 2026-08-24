@@ -1,4 +1,4 @@
-import { spacing } from '@chartalk/design-system'
+import { spacing } from '@razvilka/design-system'
 import React, { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 

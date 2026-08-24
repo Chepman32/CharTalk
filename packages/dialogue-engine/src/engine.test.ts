@@ -6,8 +6,8 @@ import type {
   ContentNode,
   DecisionNode,
   NarrativeState,
-} from '@chartalk/content-schema'
-import { initialNarrativeState } from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
+import { initialNarrativeState } from '@razvilka/content-schema'
 
 import {
   DialogueEngineError,

@@ -1,10 +1,10 @@
-import type { ContentReport, ReportCategory } from '@chartalk/app-core'
+import type { ContentReport, ReportCategory } from '@razvilka/app-core'
 import {
   radius,
   spacing,
   touchTarget,
   typography,
-} from '@chartalk/design-system'
+} from '@razvilka/design-system'
 import Constants from 'expo-constants'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Check, CheckCircle, PaperPlaneTilt } from 'phosphor-react-native'

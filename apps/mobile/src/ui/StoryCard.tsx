@@ -1,5 +1,5 @@
-import type { Character, Story } from '@chartalk/content-schema'
-import { radius, spacing } from '@chartalk/design-system'
+import type { Character, Story } from '@razvilka/content-schema'
+import { radius, spacing } from '@razvilka/design-system'
 import { Image } from 'expo-image'
 import { ArrowRight } from 'phosphor-react-native'
 import React, { useMemo } from 'react'

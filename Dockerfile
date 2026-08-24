@@ -19,15 +19,15 @@ RUN npm ci --ignore-scripts
 COPY tsconfig.base.json ./
 COPY services/api services/api
 COPY packages packages
-RUN npm run build --workspace @chartalk/api
+RUN npm run build --workspace @razvilka/api
 
 FROM node:24-bookworm-slim AS runtime
 
 ENV NODE_ENV=production \
     PORT=8787 \
-    CHARTALK_API_HOST=0.0.0.0 \
-    CHARTALK_API_DB_PATH=/app/var/chartalk-api.db \
-    CHARTALK_CONTENT_ASSET_ROOT=/app/content-assets
+    RAZVILKA_API_HOST=0.0.0.0 \
+    RAZVILKA_API_DB_PATH=/app/var/razvilka-api.db \
+    RAZVILKA_CONTENT_ASSET_ROOT=/app/content-assets
 WORKDIR /app
 RUN install -d -o node -g node -m 0700 /app/var /app/content-assets
 COPY --from=build --chown=node:node /app/services/api/dist/server.js /app/server.js

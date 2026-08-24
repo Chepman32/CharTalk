@@ -4,21 +4,21 @@ import type {
   ContentPackage,
   NarrativeMessage,
   NarrativeState,
-} from '@chartalk/content-schema'
-import { initialNarrativeState } from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
+import { initialNarrativeState } from '@razvilka/content-schema'
 import {
   applyChoice,
   applyEffects,
   enterDecision,
   resolveDecision,
-} from '@chartalk/dialogue-engine'
+} from '@razvilka/dialogue-engine'
 import {
   syncOutboxEntrySchema,
   syncRunDescriptorSchema,
   toSyncEvent,
   type SyncOutboxEntry,
   type SyncRunDescriptor,
-} from '@chartalk/sync-protocol'
+} from '@razvilka/sync-protocol'
 
 export type TextScale = 'standard' | 'large' | 'extraLarge'
 export type GrammarProfile = 'masculine' | 'feminine' | 'neutralPhrasing'

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import type { ContentReport } from '@chartalk/app-core'
+import type { ContentReport } from '@razvilka/app-core'
 
 import { reportUploadPayload, uploadContentReport } from './report-api'
 
@@ -56,7 +56,7 @@ describe('content report transport', () => {
         { ...report, consentGrantedAt: '' },
         {
           fetchImpl,
-          baseUrl: 'https://api.chartalk.app',
+          baseUrl: 'https://api.razvilka.app',
         },
       ),
     ).toBe(false)
@@ -74,17 +74,17 @@ describe('content report transport', () => {
     expect(
       await uploadContentReport(report, {
         fetchImpl: accepted,
-        baseUrl: 'https://api.chartalk.app/',
+        baseUrl: 'https://api.razvilka.app/',
       }),
     ).toBe(true)
     expect(accepted).toHaveBeenCalledWith(
-      'https://api.chartalk.app/v1/reports',
+      'https://api.razvilka.app/v1/reports',
       expect.objectContaining({ method: 'POST' }),
     )
     expect(
       await uploadContentReport(report, {
         fetchImpl: offline,
-        baseUrl: 'https://api.chartalk.app',
+        baseUrl: 'https://api.razvilka.app',
       }),
     ).toBe(false)
   })

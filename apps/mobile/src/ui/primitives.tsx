@@ -4,11 +4,12 @@ import {
   spacing,
   touchTarget,
   typography,
-} from '@chartalk/design-system'
+} from '@razvilka/design-system'
 import type { IconProps } from 'phosphor-react-native'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   ScrollView,
   type StyleProp,
@@ -86,14 +87,26 @@ export function Text({
 export function Screen({
   children,
   scroll = true,
+  scrollResetKey,
   contentStyle,
   testID,
 }: React.PropsWithChildren<{
   scroll?: boolean
+  scrollResetKey?: string | number
   contentStyle?: StyleProp<ViewStyle>
   testID?: string
 }>) {
   const { styles } = useStyles()
+  const scrollViewRef = useRef<ScrollView>(null)
+
+  useEffect(() => {
+    if (scrollResetKey === undefined) return
+    scrollViewRef.current?.scrollTo({ y: 0, animated: false })
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    }
+  }, [scrollResetKey])
+
   const content = (
     <View style={[styles.screenContent, contentStyle]}>{children}</View>
   )
@@ -105,6 +118,7 @@ export function Screen({
     >
       {scroll ? (
         <ScrollView
+          ref={scrollViewRef}
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}

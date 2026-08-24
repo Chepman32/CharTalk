@@ -37,7 +37,7 @@ export interface IosSimulatorSmokeResult {
 
 const moduleDirectory = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(moduleDirectory, '..')
-const defaultBundleId = 'app.chartalk.reader'
+const defaultBundleId = 'app.razvilka.reader'
 
 export function parseSimulatorDevices(source: string): IosSimulatorDevice[] {
   let parsed: unknown
@@ -90,7 +90,7 @@ export function resolveIosSimulatorAppPath(
     'Build',
     'Products',
     'Release-iphonesimulator',
-    'CharTalk.app',
+    'Razvilka.app',
   )
 }
 
@@ -178,7 +178,7 @@ function screenshot(
 }
 
 function defaultScreenshotDirectory(): string {
-  return mkdtempSync(join(tmpdir(), 'chartalk-ios-simulator-'))
+  return mkdtempSync(join(tmpdir(), 'razvilka-ios-simulator-'))
 }
 
 export function runIosSimulatorSmoke(

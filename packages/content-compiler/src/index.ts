@@ -7,17 +7,17 @@ import type {
   EndingNode,
   Effect,
   NarrativeState,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 import {
   contentPackageSchema,
   initialNarrativeState,
-} from '@chartalk/content-schema'
-import { validateContentPlaceholders } from '@chartalk/content-integrity'
+} from '@razvilka/content-schema'
+import { validateContentPlaceholders } from '@razvilka/content-integrity'
 import {
   applyEffects,
   canonicalHash,
   resolveDecision,
-} from '@chartalk/dialogue-engine'
+} from '@razvilka/dialogue-engine'
 
 export type ValidationSeverity = 'blocker' | 'warning'
 

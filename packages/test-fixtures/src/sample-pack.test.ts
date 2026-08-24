@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { compileContentPackage } from '@chartalk/content-compiler'
+import { compileContentPackage } from '@razvilka/content-compiler'
 
 import { sampleContentPackage } from './index'
 

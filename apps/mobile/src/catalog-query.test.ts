@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import type { ContentPackage } from '@chartalk/content-schema'
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import type { ContentPackage } from '@razvilka/content-schema'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import {
   catalogPage,

@@ -6,7 +6,7 @@ describe('contentUpdateConfigured', () => {
   it('accepts the rotation-safe public key map without the legacy key', () => {
     expect(
       contentUpdateConfigured(
-        'https://api.chartalk.app',
+        'https://api.razvilka.app',
         undefined,
         '{"prod-2026-q3":"key"}',
       ),
@@ -15,18 +15,18 @@ describe('contentUpdateConfigured', () => {
 
   it('rejects missing endpoint or trusted key material', () => {
     expect(contentUpdateConfigured(undefined, 'legacy', undefined)).toBe(false)
-    expect(contentUpdateConfigured('https://api.chartalk.app', ' ', ' ')).toBe(
+    expect(contentUpdateConfigured('https://api.razvilka.app', ' ', ' ')).toBe(
       false,
     )
     expect(
       contentUpdateConfigured(
-        'https://api.chartalk.app',
+        'https://api.razvilka.app',
         undefined,
         '{not-json',
       ),
     ).toBe(false)
     expect(
-      contentUpdateConfigured('https://api.chartalk.app', undefined, '{}'),
+      contentUpdateConfigured('https://api.razvilka.app', undefined, '{}'),
     ).toBe(false)
   })
 })

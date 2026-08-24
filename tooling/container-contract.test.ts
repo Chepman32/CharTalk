@@ -20,7 +20,7 @@ COPY packages/analytics-schema/package.json packages/analytics-schema/package.js
 COPY packages/content-schema/package.json packages/content-schema/package.json
 RUN npm ci --ignore-scripts
 FROM node:24-bookworm-slim AS runtime
-ENV NODE_ENV=production CHARTALK_API_DB_PATH=/app/var/chartalk-api.db CHARTALK_CONTENT_ASSET_ROOT=/app/content-assets
+ENV NODE_ENV=production RAZVILKA_API_DB_PATH=/app/var/razvilka-api.db RAZVILKA_CONTENT_ASSET_ROOT=/app/content-assets
 VOLUME ["/app/var", "/app/content-assets"]
 USER node
 EXPOSE 8787
@@ -47,12 +47,12 @@ describe('container contract', () => {
         )
         .replace('USER node', 'USER root')
         .replace(
-          'CHARTALK_API_DB_PATH=/app/var/chartalk-api.db',
-          'CHARTALK_API_DB_PATH=/tmp/chartalk-api.db',
+          'RAZVILKA_API_DB_PATH=/app/var/razvilka-api.db',
+          'RAZVILKA_API_DB_PATH=/tmp/razvilka-api.db',
         )
         .replace(
-          'CHARTALK_CONTENT_ASSET_ROOT=/app/content-assets',
-          'CHARTALK_CONTENT_ASSET_ROOT=/tmp/assets',
+          'RAZVILKA_CONTENT_ASSET_ROOT=/app/content-assets',
+          'RAZVILKA_CONTENT_ASSET_ROOT=/tmp/assets',
         )
         .replace('EXPOSE 8787\n', '')
         .replace(

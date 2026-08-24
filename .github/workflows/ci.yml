@@ -47,7 +47,7 @@ jobs:
       - name: Verify production container contract
         run: npm run test:container:contract
       - name: Build production API image
-        run: docker build --tag chartalk-api:${{ github.sha }} .
+        run: docker build --tag razvilka-api:${{ github.sha }} .
 
   e2e:
     runs-on: ubuntu-latest
@@ -83,11 +83,11 @@ jobs:
           distribution: temurin
           java-version: '17'
       - run: npm ci
-      - run: npm run build --workspace @chartalk/mobile
+      - run: npm run build --workspace @razvilka/mobile
       - name: Assemble standalone Android release smoke
         working-directory: apps/mobile/android
         env:
-          CHARTALK_ALLOW_DEBUG_SIGNING: 'true'
+          RAZVILKA_ALLOW_DEBUG_SIGNING: 'true'
         run: ./gradlew app:assembleRelease --no-daemon
       - uses: actions/upload-artifact@v4
         if: always()
@@ -116,6 +116,6 @@ jobs:
         if: always()
         with:
           name: ios-release-simulator
-          path: artifacts/ios-derived/Build/Products/Release-iphonesimulator/CharTalk.app
+          path: artifacts/ios-derived/Build/Products/Release-iphonesimulator/Razvilka.app
           if-no-files-found: ignore
           retention-days: 14

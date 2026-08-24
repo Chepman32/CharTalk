@@ -1,5 +1,5 @@
 {
-  "name": "@chartalk/app-core",
+  "name": "@razvilka/app-core",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -11,12 +11,12 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "@chartalk/content-schema": "1.0.0",
-    "@chartalk/dialogue-engine": "1.0.0",
-    "@chartalk/sync-protocol": "1.0.0",
+    "@razvilka/content-schema": "1.0.0",
+    "@razvilka/dialogue-engine": "1.0.0",
+    "@razvilka/sync-protocol": "1.0.0",
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@chartalk/test-fixtures": "1.0.0"
+    "@razvilka/test-fixtures": "1.0.0"
   }
 }

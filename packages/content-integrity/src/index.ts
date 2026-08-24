@@ -1,7 +1,7 @@
 import { ed25519 } from '@noble/curves/ed25519.js'
 import { sha256 } from '@noble/hashes/sha2.js'
 
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 
 const encoder = new TextEncoder()
 

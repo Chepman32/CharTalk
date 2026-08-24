@@ -808,7 +808,7 @@ const downloadAndNormalize = async (
 
   const imageUrl = `https://images.pexels.com/photos/${replacement.sourceId}/pexels-photo-${replacement.sourceId}.jpeg?auto=compress&cs=tinysrgb&w=2400`
   const response = await fetch(imageUrl, {
-    headers: { 'user-agent': 'CharTalk asset provenance refresh/2026-08-24' },
+    headers: { 'user-agent': 'Razvilka asset provenance refresh/2026-08-24' },
   })
   if (!response.ok) {
     throw new Error(
@@ -836,7 +836,7 @@ const downloadAndNormalize = async (
 
 const serializeDefinitions = (
   definitions: readonly StoryPreviewDefinition[],
-): string => `import type { ContentAsset } from '@chartalk/content-schema'
+): string => `import type { ContentAsset } from '@razvilka/content-schema'
 
 export type StoryPreviewCategory =
   | 'woman'

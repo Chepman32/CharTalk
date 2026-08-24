@@ -1,4 +1,4 @@
-import type { ReaderSettings } from '@chartalk/app-core'
+import type { ReaderSettings } from '@razvilka/app-core'
 
 export const messageRevealDelayMs = (
   settings: Pick<

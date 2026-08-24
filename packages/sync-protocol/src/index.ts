@@ -2,7 +2,7 @@ import {
   effectSchema,
   type ChoiceEvent,
   type Effect,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 import { z } from 'zod'
 
 const stableId = z

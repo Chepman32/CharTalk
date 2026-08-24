@@ -1,7 +1,7 @@
-import type { AppSnapshot } from '@chartalk/app-core'
+import type { AppSnapshot } from '@razvilka/app-core'
 
 export interface LocalDataExport {
-  format: 'chartalk.local-data'
+  format: 'razvilka.local-data'
   version: 1
   exportedAt: string
   snapshot: AppSnapshot
@@ -14,7 +14,7 @@ export const createLocalDataExport = (
   snapshot: AppSnapshot,
   exportedAt = new Date().toISOString(),
 ): LocalDataExport => ({
-  format: 'chartalk.local-data',
+  format: 'razvilka.local-data',
   version: 1,
   exportedAt,
   snapshot: cloneJson(snapshot),

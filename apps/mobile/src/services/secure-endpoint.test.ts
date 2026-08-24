@@ -4,11 +4,11 @@ import { secureServiceBaseUrl } from './secure-endpoint'
 
 describe('secureServiceBaseUrl', () => {
   it('accepts HTTPS endpoints and removes a trailing slash', () => {
-    expect(secureServiceBaseUrl('https://api.chartalk.app/')).toBe(
-      'https://api.chartalk.app',
+    expect(secureServiceBaseUrl('https://api.razvilka.app/')).toBe(
+      'https://api.razvilka.app',
     )
-    expect(secureServiceBaseUrl('https://api.chartalk.app/v1')).toBe(
-      'https://api.chartalk.app/v1',
+    expect(secureServiceBaseUrl('https://api.razvilka.app/v1')).toBe(
+      'https://api.razvilka.app/v1',
     )
   })
 
@@ -24,12 +24,12 @@ describe('secureServiceBaseUrl', () => {
     undefined,
     '',
     'not a URL',
-    'http://api.chartalk.app',
+    'http://api.razvilka.app',
     'http://localhost.example.com',
-    'ftp://api.chartalk.app',
-    'https://publisher:secret@api.chartalk.app',
-    'https://api.chartalk.app/?token=secret',
-    'https://api.chartalk.app/#fragment',
+    'ftp://api.razvilka.app',
+    'https://publisher:secret@api.razvilka.app',
+    'https://api.razvilka.app/?token=secret',
+    'https://api.razvilka.app/#fragment',
   ])('rejects an unsafe endpoint %s', endpoint => {
     expect(secureServiceBaseUrl(endpoint)).toBeUndefined()
   })

@@ -1,4 +1,4 @@
-import { sampleContentPackage } from '@chartalk/test-fixtures'
+import { sampleContentPackage } from '@razvilka/test-fixtures'
 
 import { storyPreviewSources } from './story-preview-sources.generated'
 

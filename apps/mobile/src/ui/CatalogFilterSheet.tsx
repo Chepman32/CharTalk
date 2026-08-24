@@ -1,5 +1,5 @@
-import { radius, spacing, touchTarget } from '@chartalk/design-system'
-import type { Story } from '@chartalk/content-schema'
+import { radius, spacing, touchTarget } from '@razvilka/design-system'
+import type { Story } from '@razvilka/content-schema'
 import { Check, X } from 'phosphor-react-native'
 import React, { useMemo } from 'react'
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'

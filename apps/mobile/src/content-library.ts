@@ -1,4 +1,4 @@
-import type { ContentPackage } from '@chartalk/content-schema'
+import type { ContentPackage } from '@razvilka/content-schema'
 
 const mergeById = <T>(
   packages: readonly ContentPackage[],

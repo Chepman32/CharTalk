@@ -2,11 +2,11 @@ import {
   base64UrlDecode,
   validateContentPlaceholders,
   verifySignedContentPackage,
-} from '@chartalk/content-integrity'
+} from '@razvilka/content-integrity'
 import {
   contentPackageSchema,
   type ContentPackage,
-} from '@chartalk/content-schema'
+} from '@razvilka/content-schema'
 
 import type { ContentPackageStore } from '@/persistence/content-store'
 import type { ContentMediaStore } from '@/persistence/media-store'

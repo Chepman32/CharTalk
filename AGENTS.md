@@ -1,12 +1,12 @@
-# CharTalk engineering handbook for coding agents
+# Развилка engineering handbook for coding agents
 
 This file applies to the entire repository. It is both a project orientation and
-an execution contract for agents changing CharTalk. Read it before editing code,
+an execution contract for agents changing Развилка. Read it before editing code,
 content contracts, native projects, release tooling, or product documentation.
 
-## 1. What CharTalk is
+## 1. What Развилка is
 
-CharTalk is a Russian-first, local-first mobile interactive-fiction reader. It
+Развилка is a Russian-first, local-first mobile interactive-fiction reader. It
 uses the familiar rhythm of a private chat while retaining the determinism,
 authorship, continuity, and testability of a visual novel.
 
@@ -27,7 +27,7 @@ The short product promise is:
 
 > Выбирай, что ответить. Персонажи запомнят. История изменится.
 
-CharTalk is not an AI companion, dating service, messenger with real people,
+Развилка is not an AI companion, dating service, messenger with real people,
 social network, therapy product, or infinite conversation simulator. Do not add
 copy or behavior that obscures the authored and fictional nature of the product.
 
@@ -180,7 +180,7 @@ regression coverage.
 
 ## 6. Monorepo map
 
-CharTalk is an npm-workspaces TypeScript monorepo.
+Развилка is an npm-workspaces TypeScript monorepo.
 
 ### Applications
 
@@ -360,7 +360,7 @@ active exact build remain usable offline.
 
 ### UI and themes
 
-Use semantic tokens from `@chartalk/design-system` and the theme provider. Do not
+Use semantic tokens from `@razvilka/design-system` and the theme provider. Do not
 scatter raw brand colors, inconsistent target sizes, or private type scales.
 Interactive controls must preserve at least the shared 48 logical-pixel target.
 
@@ -485,7 +485,7 @@ Current behavior:
   ceiling.
 - If both categories apply, reminder copy alternates. An unfinished reminder is
   only planned when an active run exists.
-- Scheduled requests are tagged. Reconciliation cancels only CharTalk reading
+- Scheduled requests are tagged. Reconciliation cancels only Развилка reading
   reminders, never unrelated notifications.
 - A reminder tap navigates to the stories tab.
 - The coordinator reconciles after durable snapshot changes and when the app
@@ -529,7 +529,7 @@ run.
 
 Large catalogs may be partitioned into independently downloadable story-owned
 shards. Production shard output must be signed and pass the same release gate.
-`CHARTALK_ALLOW_UNSIGNED_SHARDS=true` is for local inspection only.
+`RAZVILKA_ALLOW_UNSIGNED_SHARDS=true` is for local inspection only.
 
 Content release requires exact immutable `buildId` confirmation, two-person
 approval, isolated signing, separate verification, staged rollout, and rollback
@@ -682,44 +682,44 @@ settings have different trust properties.
 
 ### API and publisher
 
-- `CHARTALK_API_HOST`, `PORT` — bind address and port.
-- `CHARTALK_API_DB_PATH` — writable service SQLite path.
-- `CHARTALK_ALLOWED_ORIGINS` — explicit browser origins.
-- `CHARTALK_CONTENT_PACKAGE_PATH` — mounted release package.
-- `CHARTALK_CONTENT_ASSET_ROOT` — immutable media root.
-- `CHARTALK_SIGNING_PUBLIC_KEY_FILE` — serving verification key.
-- `CHARTALK_SIGNING_KEY_ID` — immutable key identity.
-- `CHARTALK_ADMIN_TOKEN` — high-entropy bearer secret.
-- `CHARTALK_PUBLISH_ENABLED` — false on ordinary serving replicas.
-- `CHARTALK_SIGNING_PRIVATE_KEY_FILE` — isolated publisher-only read-only mount.
-- `CHARTALK_CMS_WRITER_TOKEN`, `CHARTALK_CMS_EDITOR_TOKEN`,
-  `CHARTALK_CMS_QA_TOKEN`, `CHARTALK_CMS_PUBLISHER_TOKEN` — separated editorial
+- `RAZVILKA_API_HOST`, `PORT` — bind address and port.
+- `RAZVILKA_API_DB_PATH` — writable service SQLite path.
+- `RAZVILKA_ALLOWED_ORIGINS` — explicit browser origins.
+- `RAZVILKA_CONTENT_PACKAGE_PATH` — mounted release package.
+- `RAZVILKA_CONTENT_ASSET_ROOT` — immutable media root.
+- `RAZVILKA_SIGNING_PUBLIC_KEY_FILE` — serving verification key.
+- `RAZVILKA_SIGNING_KEY_ID` — immutable key identity.
+- `RAZVILKA_ADMIN_TOKEN` — high-entropy bearer secret.
+- `RAZVILKA_PUBLISH_ENABLED` — false on ordinary serving replicas.
+- `RAZVILKA_SIGNING_PRIVATE_KEY_FILE` — isolated publisher-only read-only mount.
+- `RAZVILKA_CMS_WRITER_TOKEN`, `RAZVILKA_CMS_EDITOR_TOKEN`,
+  `RAZVILKA_CMS_QA_TOKEN`, `RAZVILKA_CMS_PUBLISHER_TOKEN` — separated editorial
   roles where configured.
-- `CHARTALK_SYNC_ENABLED`, `CHARTALK_SYNC_TOKEN`,
-  `CHARTALK_SYNC_ACCOUNT_ID` — optional sync boundary, disabled by default.
+- `RAZVILKA_SYNC_ENABLED`, `RAZVILKA_SYNC_TOKEN`,
+  `RAZVILKA_SYNC_ACCOUNT_ID` — optional sync boundary, disabled by default.
 
 ### Mobile public configuration
 
-- `EXPO_PUBLIC_CHARTALK_API_URL` — public service URL.
-- `EXPO_PUBLIC_CHARTALK_CONTENT_PUBLIC_KEYS` — JSON key-ID to base64url Ed25519
+- `EXPO_PUBLIC_RAZVILKA_API_URL` — public service URL.
+- `EXPO_PUBLIC_RAZVILKA_CONTENT_PUBLIC_KEYS` — JSON key-ID to base64url Ed25519
   public-key map used for rotation overlap.
-- `EXPO_PUBLIC_CHARTALK_CONTENT_PUBLIC_KEY` — legacy development fallback only.
+- `EXPO_PUBLIC_RAZVILKA_CONTENT_PUBLIC_KEY` — legacy development fallback only.
 
 ### Android signing
 
-- `CHARTALK_ANDROID_KEYSTORE_FILE`;
-- `CHARTALK_ANDROID_KEYSTORE_PASSWORD`;
-- `CHARTALK_ANDROID_KEY_ALIAS`;
-- `CHARTALK_ANDROID_KEY_PASSWORD`.
+- `RAZVILKA_ANDROID_KEYSTORE_FILE`;
+- `RAZVILKA_ANDROID_KEYSTORE_PASSWORD`;
+- `RAZVILKA_ANDROID_KEY_ALIAS`;
+- `RAZVILKA_ANDROID_KEY_PASSWORD`.
 
-Release signing fails closed without these. `CHARTALK_ALLOW_DEBUG_SIGNING=true`
+Release signing fails closed without these. `RAZVILKA_ALLOW_DEBUG_SIGNING=true`
 is only for explicit local standalone smoke builds, never store submission.
 
 ### Tooling-only controls
 
-Capacity, shard, report, and smoke tools accept `CHARTALK_CAPACITY_*`,
-`CHARTALK_MAX_STORIES_PER_SHARD`, `CHARTALK_ALLOW_UNSIGNED_SHARDS`,
-`CHARTALK_RELEASE_PACKAGE`, and related variables. Treat bypass flags as local
+Capacity, shard, report, and smoke tools accept `RAZVILKA_CAPACITY_*`,
+`RAZVILKA_MAX_STORIES_PER_SHARD`, `RAZVILKA_ALLOW_UNSIGNED_SHARDS`,
+`RAZVILKA_RELEASE_PACKAGE`, and related variables. Treat bypass flags as local
 fixture controls, not production configuration.
 
 ## 21. Local setup and common commands

@@ -1,5 +1,5 @@
-import type { TextScale } from '@chartalk/app-core'
-import { spacing } from '@chartalk/design-system'
+import type { TextScale } from '@razvilka/app-core'
+import { spacing } from '@razvilka/design-system'
 import { CheckCircle, CircleIcon } from 'phosphor-react-native'
 import React, { useMemo } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
