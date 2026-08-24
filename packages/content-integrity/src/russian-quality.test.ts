@@ -34,13 +34,24 @@ describe('Russian editorial quality screen', () => {
 
   it('flags common case-governance mistakes in generated-style prose', () => {
     const issues = inspectRussianText(
-      'Разберёмся с первой детали. После разговора о риска вернёмся к плану.',
+      'Разберёмся с первой детали. После разговора о риска вернёмся к плану. Начнём с первую деталь.',
       'nodes.1.text',
     )
 
     expect(
       issues.filter(issue => issue.code === 'UNNATURAL_CASE_CONSTRUCTION'),
-    ).toHaveLength(2)
+    ).toHaveLength(3)
+  })
+
+  it('flags generic support and boundary formulas from generated dialogue', () => {
+    const issues = inspectRussianText(
+      'Я рядом. Попробуем оставить себе безопасный следующий шаг вместе. Граница названа прямо; теперь разговор можно продолжить без давления. Оставим вопрос открытым и попробуем назвать границу.',
+      'nodes.2.text',
+    )
+
+    expect(issues.some(issue => issue.code === 'GENERIC_THERAPY_FORMULA')).toBe(
+      true,
+    )
   })
 
   it('reports duplicate authored units without treating them as blockers', () => {

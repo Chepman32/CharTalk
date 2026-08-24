@@ -63,6 +63,16 @@ describe('bulk fixture content generator', () => {
     expect(decisionCount).toBeGreaterThanOrEqual(5_000)
     expect(bulk.nodes.length).toBeGreaterThanOrEqual(20_000)
     expect(choiceCount).toBeGreaterThanOrEqual(20_000)
+    expect(
+      bulk.nodes
+        .filter(node => node.type === 'decision')
+        .flatMap(node =>
+          node.choiceSlots.flatMap(slot =>
+            slot.candidates.filter(candidate => candidate.text.length > 110),
+          ),
+        ),
+    ).toEqual([])
+    expect(auditRussianQuality(bulk).warningIssueCount).toBe(0)
     expect(bulk.manifest.packId).toBe('pack.ru.bulk.fixture')
     expect(bulk.episodes.every(episode => episode.isBundled)).toBe(true)
     expect(
@@ -163,7 +173,21 @@ describe('bulk fixture content generator', () => {
     ).toBe(true)
     expect(
       reactions.some(text => /спасибо, что не отмахиваешься/i.test(text)),
-    ).toBe(true)
+    ).toBe(false)
+    expect(
+      choices.some(text =>
+        /Оставим вопрос открытым|Я рядом\.|Давай держаться рядом|Граница (?:ясна|важнее)/i.test(
+          text,
+        ),
+      ),
+    ).toBe(false)
+    expect(
+      choices.some(text =>
+        /Начнём с (?:первую деталь|сроки|источник|риск|обещание|границу|союзника|следующий шаг|старую запись|разговор|маршрут|тишину|письмо|доказательство|свидетеля|выход|последнюю версию|своё время|чужую просьбу|план|утро|разговор начистоту|помощь|паузу)/i.test(
+          text,
+        ),
+      ),
+    ).toBe(false)
     expect(
       [...choices, ...reactions].every(
         text =>
@@ -210,6 +234,9 @@ describe('bulk fixture content generator', () => {
       ),
     ).toBe(true)
     expect(
+      decisionTexts.every(text => !/На столе — .* на краю стола/i.test(text)),
+    ).toBe(true)
+    expect(
       choices.every(
         text =>
           !/^(Проверим|Разберёмся с|Рядом\. Проверим|Не рубим с плеча):/i.test(
@@ -219,7 +246,7 @@ describe('bulk fixture content generator', () => {
     ).toBe(true)
     expect(
       choices.some(text =>
-        /не (?:будем )?рубить с плеча.*разберём/i.test(text),
+        /не (?:будем )?рубить с плеча.*(?:разберём|проверим)/i.test(text),
       ),
     ).toBe(true)
     expect(
@@ -243,6 +270,19 @@ describe('bulk fixture content generator', () => {
     ).toBe(true)
     expect(reactions.some(text => /«Давай начнём с .*»/i.test(text))).toBe(true)
     expect(endings.every(text => !/В этой истории в /i.test(text))).toBe(true)
+    expect(
+      endings.some(text =>
+        /Вы выбрали идти рядом|Пауза оказалась решением сама по себе|право не отвечать сию секунду/i.test(
+          text,
+        ),
+      ),
+    ).toBe(false)
+    expect(
+      content.nodes
+        .filter(node => node.type === 'ending')
+        .flatMap(node => node.epilogueFacts)
+        .some(text => /В этой истории вы выбрали/i.test(text)),
+    ).toBe(false)
   })
 
   it('keeps the catalogue readable instead of exposing fixture labels as story copy', () => {
@@ -321,6 +361,13 @@ describe('bulk fixture content generator', () => {
         text => !/персонаж запомнит не правильный ответ/i.test(text),
       ),
     ).toBe(true)
+    expect(
+      premises.some(text =>
+        /важен не «правильный» ответ|способ быть рядом|оставляет место для собственного решения/i.test(
+          text,
+        ),
+      ),
+    ).toBe(false)
   })
 
   it('uses the natural Russian с/со form before instrumental phrases', () => {
@@ -340,12 +387,12 @@ describe('bulk fixture content generator', () => {
       return []
     })
     const malformed =
-      /с (сроками|следующим шагом|старой записью|свидетелем|своим временем)/i
+      /с (сроками|следующим шагом|старой записью|свидетелем|своим временем|временем встречи)/i
 
     expect(copy.some(text => malformed.test(text))).toBe(false)
     expect(
       copy.some(text =>
-        /со сроками|со следующим шагом|со старой записью|со свидетелем|со своим временем/i.test(
+        /со сроками|со следующим шагом|со старой записью|со свидетелем|со своим временем|со временем встречи/i.test(
           text,
         ),
       ),

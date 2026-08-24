@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { storyPreviewDefinitions } from './story-previews.generated'
+import {
+  STORY_PREVIEW_SEMANTIC_REPLACEMENTS,
+  storyPreviewDefinitions,
+} from './story-previews.generated'
 
 describe('story preview inventory', () => {
   it('keeps every bundled preview source and normalized cover unique', () => {
@@ -39,19 +42,42 @@ describe('story preview inventory', () => {
       return counts
     }, {})
 
-    expect(categoryCounts.woman).toBe(124)
-    expect(categoryCounts.landscape).toBe(17)
+    expect(categoryCounts.woman).toBe(191)
+    expect(categoryCounts.landscape).toBe(3)
     expect(categoryCounts).toMatchObject({
-      man: 12,
-      building: 22,
-      vehicle: 12,
-      object: 24,
-      scene: 16,
-      interior: 5,
-      nature: 11,
+      man: 8,
+      building: 14,
+      vehicle: 3,
+      object: 12,
+      scene: 8,
+      interior: 4,
     })
     expect(categoryCounts.woman).toBeGreaterThan(
       storyPreviewDefinitions.length / 2,
     )
+  })
+
+  it('keeps the reviewed semantic replacements on the corrected asset build', () => {
+    expect(STORY_PREVIEW_SEMANTIC_REPLACEMENTS).toHaveLength(100)
+    expect(new Set(STORY_PREVIEW_SEMANTIC_REPLACEMENTS).size).toBe(
+      STORY_PREVIEW_SEMANTIC_REPLACEMENTS.length,
+    )
+
+    const definitionByStoryId = new Map(
+      storyPreviewDefinitions.map(definition => [
+        definition.storyId,
+        definition,
+      ]),
+    )
+    for (const storyId of STORY_PREVIEW_SEMANTIC_REPLACEMENTS) {
+      const definition = definitionByStoryId.get(storyId)
+      expect(definition?.asset.assetId).toBe(`cover.${storyId}.2026-08-24`)
+      expect(definition?.asset.path).toBe(
+        `story-previews/${storyId}.2026-08-24.jpg`,
+      )
+      expect(definition?.asset.altText).not.toBe(
+        'Фотографический портрет женщины.',
+      )
+    }
   })
 })

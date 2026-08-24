@@ -29,9 +29,9 @@ No portrait represents or implies a real person's likeness. The content manifest
 
 The bundled catalog uses 243 story-specific licensed photographs. No photograph
 or normalized output is reused. The mix is intentionally women-led without
-turning the catalog into a wall of landscapes: 124 women portraits, 12 men
-portraits, 22 buildings, 12 vehicles, 24 everyday objects, 16 everyday scenes,
-5 interiors, 11 nature details, and 17 landscapes.
+turning the catalog into a wall of landscapes: 191 women-led photographs, 8
+men-led photographs, 14 buildings, 3 vehicles, 12 everyday objects, 8 everyday
+scenes, 4 interiors, and 3 landscapes.
 
 The auditable record is
 `packages/test-fixtures/src/story-previews.generated.ts`. Every entry contains
@@ -43,10 +43,16 @@ catalog exposes one. Pexels sources use the
 
 All source files were visually curated, square-cropped with attention-aware
 positioning, resized to 1024×1024, encoded as progressive JPEG at quality 82,
-and stripped of embedded metadata on 2026-08-23. The resulting assets are
-allowed on story catalog cards and other story-preview surfaces. They do not
-replace character identity portraits on profile or detail surfaces, and their
-use does not imply endorsement by any depicted person.
+and stripped of embedded metadata. On 2026-08-24 every cover was checked against
+its title and premise; 79 definite mismatches and 21 weak or overly generic fits
+were replaced with new licensed sources keyed to visible story cues such as
+letters, archives, keys, maps, recordings, cameras, transit, windows, posters,
+lockers, receipts, and snow.
+The replaced assets received new immutable IDs while the 2026-08-23 files remain
+available for older exact builds. The resulting assets are allowed on story
+catalog cards and other story-preview surfaces. They do not replace character
+identity portraits on profile or detail surfaces, and their use does not imply
+endorsement by any depicted person.
 
 ## Development attachment
 

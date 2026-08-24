@@ -108,7 +108,7 @@ describe('bundled reader catalog', () => {
       50, 50, 50, 50, 40,
     ])
     expect(first[1]?.manifest.buildId).toBe(
-      'ru-bulk-fixture-2026.08.23.3.shard.001',
+      'ru-bulk-fixture-2026.08.24.2.shard.001',
     )
     expect(
       first

@@ -368,7 +368,7 @@ describe('MemoryAppRepository', () => {
       manifest: {
         ...sampleContentPackage.manifest,
         contentVersion: '1.2.0',
-        buildId: 'ru-sample-2026.08.23.2',
+        buildId: 'ru-sample-2026.08.24.2',
       },
     }
     let created = 0

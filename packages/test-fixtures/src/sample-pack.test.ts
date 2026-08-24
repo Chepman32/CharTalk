@@ -53,4 +53,31 @@ describe('sampleContentPackage', () => {
     expect(asset?.kind).toBe('attachment')
     expect(asset?.path).toBe('attachments/archive-note.png')
   })
+
+  it('keeps long-running continuation copy concrete and conversational', () => {
+    const continuationCopy = sampleContentPackage.nodes.flatMap(node => {
+      if (!node.nodeId.includes('.continuation.')) return []
+      if (node.type === 'decision') {
+        return [
+          ...node.messageVariants.flatMap(variant =>
+            variant.messages.map(message => message.text),
+          ),
+          ...node.choiceSlots.flatMap(slot =>
+            slot.candidates.map(candidate => candidate.text),
+          ),
+        ]
+      }
+      if (node.type === 'reaction') {
+        return node.messages.map(message => message.text)
+      }
+      return []
+    })
+    const generatedTherapyFormula =
+      /Оставим вопрос открытым|Я рядом\. Попробуем|оставить себе безопасный следующий шаг|Граница названа прямо|без давления|не оставаться с ним одной|Я не согласна|Сейчас важнее (?:сверить|разделить|найти|оставить|проверить|назвать)/iu
+
+    expect(continuationCopy.length).toBeGreaterThan(0)
+    expect(
+      continuationCopy.some(text => generatedTherapyFormula.test(text)),
+    ).toBe(false)
+  })
 })

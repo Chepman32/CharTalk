@@ -239,11 +239,11 @@ const intentCallbacks: Record<string, (context: DecisionContext) => string> = {
   'ask-detail': context =>
     `После твоего вопроса я ещё раз проверила ${context.accusative}.`,
   'set-boundary': context =>
-    `После разговора о границе я убрала лишнее и оставила только ${context.accusative}.`,
+    `Мы договорились не уходить в сторону: сейчас проверяем только ${context.accusative}.`,
   'offer-alliance': context =>
-    `Хорошо, что ты остался рядом. Теперь можно спокойно посмотреть на ${context.accusative}.`,
+    `Вдвоём будет быстрее. Давай проверим ${context.accusative}.`,
   'hold-question': context =>
-    `Мы не будем спешить с выводом — сначала сверим ${context.accusative}.`,
+    `С выводом повременим — сначала сверим ${context.accusative}.`,
 }
 
 /**
@@ -273,40 +273,40 @@ const storyTitleStems = [
 
 const choiceTextSets = [
   [
-    'Проверим {context}: вот зацепка — {clue}.',
-    'Обозначим границу и проверим {context}: {clue}.',
-    'Я рядом. Разберём {context}: {clue}.',
-    'Не будем рубить с плеча — разберём {context}: {clue}.',
+    'Проверим {context}. Зацепка: {clue}.',
+    'Сначала договоримся: обсуждаем только {context}. Зацепка: {clue}.',
+    'Давай проверим {context} вдвоём. Зацепка: {clue}.',
+    'Не будем рубить с плеча. Сначала проверим {context}: {clue}.',
   ],
   [
     'Покажи исходник. Сверим {context}: {clue}.',
-    'Стоп. Граница важнее: проверим {context} — {clue}.',
+    'Стоп. Пока обсуждаем только {context}: {clue}.',
     'Давай по шагам. Разберём {context}: {clue}.',
     'Пока рано ставить точку. Проверим {context}: {clue}.',
   ],
   [
-    'Что мы знаем наверняка? Сверим {context}: {clue}.',
-    'Сначала разберём {context}: {clue}.',
-    'Если хочешь, я останусь. Разберём {context}: {clue}.',
-    'Давай возьмём паузу. Проверим {context}: {clue}.',
+    'Что известно наверняка? Проверим {context}: {clue}.',
+    'Не будем уходить в сторону. Сейчас проверяем {context}: {clue}.',
+    'Если хочешь, проверим {context} вдвоём: {clue}.',
+    'Возьмём паузу с выводами. Проверим {context}: {clue}.',
   ],
   [
-    'Давай сверим источник и {context}: {clue}.',
-    'Мне нужна граница. Сначала проверим {context}: {clue}.',
-    'Я никуда не спешу. Разберём {context}: {clue}.',
-    'Оставим вопрос открытым. Проверим {context}: {clue}.',
+    'Сверим источник и {context}: {clue}.',
+    'Сначала договоримся о рамках. Потом проверим {context}: {clue}.',
+    'Я не тороплюсь. Давай разберём {context}: {clue}.',
+    'С выводом повременим. Проверим {context}: {clue}.',
   ],
   [
-    'Проверим {context}: вот зацепка — {clue}.',
-    'Скажу прямо: нужна пауза. Проверим {context}: {clue}.',
-    'Давай держаться рядом. Разберём {context}: {clue}.',
+    'Проверим {context}. Вот зацепка: {clue}.',
+    'Пока только {context}. Зацепка: {clue}.',
+    'Давай сверим {context} вдвоём: {clue}.',
     'Не будем додумывать. Посмотрим на {context}: {clue}.',
   ],
   [
-    'Уточним одну вещь: {context}. Начнём с {clue}.',
-    'Граница ясна. Теперь проверим {context}: {clue}.',
-    'Я готова выслушать. Начнём с {context}: {clue}.',
-    'Возьмём минуту. Проверим {context}: {clue}.',
+    'Уточним одну вещь — {context}. Зацепка: {clue}.',
+    'Договоримся сразу: дальше только про {context}. Зацепка: {clue}.',
+    'Я помогу. Проверим {context}: {clue}.',
+    'Сначала проверим {context}: {clue}. Выводы потом.',
   ],
 ] as const
 /**
@@ -361,22 +361,22 @@ const decisionContexts: readonly (readonly [
       about: 'обещании',
     },
     {
-      accusative: 'границу',
-      genitive: 'границы',
-      instrumental: 'границей',
-      about: 'границе',
+      accusative: 'условия',
+      genitive: 'условий',
+      instrumental: 'условиями',
+      about: 'условиях',
     },
     {
-      accusative: 'союзника',
-      genitive: 'союзника',
-      instrumental: 'союзником',
-      about: 'союзнике',
+      accusative: 'список участников',
+      genitive: 'списка участников',
+      instrumental: 'списком участников',
+      about: 'списке участников',
     },
     {
-      accusative: 'следующий шаг',
-      genitive: 'следующего шага',
-      instrumental: 'следующим шагом',
-      about: 'следующем шаге',
+      accusative: 'порядок действий',
+      genitive: 'порядка действий',
+      instrumental: 'порядком действий',
+      about: 'порядке действий',
     },
   ],
   [
@@ -387,10 +387,10 @@ const decisionContexts: readonly (readonly [
       about: 'старой записи',
     },
     {
-      accusative: 'разговор',
-      genitive: 'разговора',
-      instrumental: 'разговором',
-      about: 'разговоре',
+      accusative: 'переписку',
+      genitive: 'переписки',
+      instrumental: 'перепиской',
+      about: 'переписке',
     },
     {
       accusative: 'маршрут',
@@ -399,10 +399,10 @@ const decisionContexts: readonly (readonly [
       about: 'маршруте',
     },
     {
-      accusative: 'тишину',
-      genitive: 'тишины',
-      instrumental: 'тишиной',
-      about: 'тишине',
+      accusative: 'последовательность событий',
+      genitive: 'последовательности событий',
+      instrumental: 'последовательностью событий',
+      about: 'последовательности событий',
     },
   ],
   [
@@ -419,16 +419,16 @@ const decisionContexts: readonly (readonly [
       about: 'доказательстве',
     },
     {
-      accusative: 'свидетеля',
-      genitive: 'свидетеля',
-      instrumental: 'свидетелем',
-      about: 'свидетеле',
+      accusative: 'показания свидетеля',
+      genitive: 'показаний свидетеля',
+      instrumental: 'показаниями свидетеля',
+      about: 'показаниях свидетеля',
     },
     {
-      accusative: 'выход',
-      genitive: 'выхода',
-      instrumental: 'выходом',
-      about: 'выходе',
+      accusative: 'запасной вариант',
+      genitive: 'запасного варианта',
+      instrumental: 'запасным вариантом',
+      about: 'запасном варианте',
     },
   ],
   [
@@ -439,10 +439,10 @@ const decisionContexts: readonly (readonly [
       about: 'последней версии',
     },
     {
-      accusative: 'своё время',
-      genitive: 'своего времени',
-      instrumental: 'своим временем',
-      about: 'своём времени',
+      accusative: 'время встречи',
+      genitive: 'времени встречи',
+      instrumental: 'временем встречи',
+      about: 'времени встречи',
     },
     {
       accusative: 'чужую просьбу',
@@ -459,74 +459,36 @@ const decisionContexts: readonly (readonly [
   ],
   [
     {
-      accusative: 'утро',
-      genitive: 'утра',
-      instrumental: 'утром',
-      about: 'утре',
+      accusative: 'утреннюю запись',
+      genitive: 'утренней записи',
+      instrumental: 'утренней записью',
+      about: 'утренней записи',
     },
     {
-      accusative: 'разговор начистоту',
-      genitive: 'разговора начистоту',
-      instrumental: 'разговором начистоту',
-      about: 'разговоре начистоту',
+      accusative: 'разговор',
+      genitive: 'разговора',
+      instrumental: 'разговором',
+      about: 'разговоре',
     },
     {
-      accusative: 'помощь',
-      genitive: 'помощи',
-      instrumental: 'помощью',
-      about: 'помощи',
+      accusative: 'предложенную помощь',
+      genitive: 'предложенной помощи',
+      instrumental: 'предложенной помощью',
+      about: 'предложенной помощи',
     },
     {
-      accusative: 'паузу',
-      genitive: 'паузы',
-      instrumental: 'паузой',
-      about: 'паузе',
+      accusative: 'причину паузы',
+      genitive: 'причины паузы',
+      instrumental: 'причиной паузы',
+      about: 'причине паузы',
     },
   ],
 ] as const
 const decisionPrompts = [
-  'Сначала проверим {context} — без догадок.',
-  'Меня не отпускает {context}. Как к этому подступиться?',
-  'Нельзя упустить {context}. С чего начнём?',
+  'Сначала проверим {context}. Остальное пока отложим.',
+  'Я всё думаю про {context}. С чего начать проверку?',
+  'Нельзя упустить {context}. Что проверим сначала?',
   'Если первая версия не подтвердится, что проверим следующим?',
-] as const
-const decisionBeats = [
-  [
-    'Сначала — то, что видно.',
-    'Начнём с простого вопроса.',
-    'Дай мне минуту, я соберусь.',
-    'Есть вариант не торопиться.',
-  ],
-  [
-    'Первый след уже нашёлся.',
-    'Теперь важны детали.',
-    'Я хочу проверить одну вещь.',
-    'Один вопрос всё ещё висит.',
-  ],
-  [
-    'Дальше будет сложнее.',
-    'Здесь легко сделать неверный вывод.',
-    'Можно выбрать более тихий путь.',
-    'Но оставим место для сомнений.',
-  ],
-  [
-    'Появилась новая зацепка.',
-    'Теперь стоит говорить прямо.',
-    'Я не хочу проходить это одна.',
-    'Сначала сверим версии.',
-  ],
-  [
-    'Мы подошли к неприятной части.',
-    'Факты уже не спрячешь.',
-    'Мне нужна передышка, но не отказ.',
-    'И всё-таки решать придётся.',
-  ],
-  [
-    'Остался последний вопрос.',
-    'Финал зависит от одной детали.',
-    'Я готова услышать ответ.',
-    'Сделаем последний шаг спокойно.',
-  ],
 ] as const
 
 /**
@@ -767,12 +729,11 @@ const anchorForStory = (storyIndex: number): string => {
 }
 
 const choiceClueForStory = (storyIndex: number): string => {
-  const place = anchorPlaces[storyIndex % anchorPlaces.length]!
   const detail =
     choiceAnchorDetails[
       Math.floor(storyIndex / anchorPlaces.length) % choiceAnchorDetails.length
     ]!
-  return `${place}, ${detail}`
+  return detail
 }
 
 const pad = (value: number, width = 4): string =>
@@ -796,7 +757,9 @@ const russianCount = (
 }
 
 const withRussianS = (phrase: string): string =>
-  /^[сз][бвгджзклмнпрстфхцчшщ]/i.test(phrase) ? `со ${phrase}` : `с ${phrase}`
+  /^(?:[сз][бвгджзклмнпрстфхцчшщ]|врем)/i.test(phrase)
+    ? `со ${phrase}`
+    : `с ${phrase}`
 
 const four = <T>(items: readonly T[]): [T, T, T, T] => [
   items[0]!,
@@ -830,32 +793,31 @@ const editorial = (characterId: string): DecisionNode['editorial'] => ({
 const makeCharacter = (index: number): Character => {
   const name = `${names[index % names.length]} ${surnames[Math.floor(index / names.length) % surnames.length]}`
   const firstName = names[index % names.length]!
-  const theme = themes[index % themes.length]!
   const anchor = anchorForStory(index)
   const genre = genres[index % genres.length]!
   const dynamic = dynamics[index % dynamics.length]!
   const hooks = [
-    `${firstName} не любит делать выводы на ходу: тема «${theme}» оставила слишком много белых пятен.`,
-    `Смена закончилась, а ${anchor} нашлась странная деталь.`,
-    `${firstName} привыкла проверять мелочи. Сегодня эта привычка привела её к теме «${theme}».`,
-    `В истории «${theme}» ${firstName} больше всего боится поспешного ответа.`,
-    `Когда ${firstName} пишет «есть минутка?», это значит: тема «${theme}» снова требует разговора.`,
-    `Она нашла не ответ, а новую зацепку: ${anchor}.`,
+    `${firstName} не любит делать выводы на ходу. В этой истории слишком много белых пятен.`,
+    `Смена закончилась. Странная деталь нашлась ${anchor}.`,
+    `${firstName} привыкла проверять мелочи. Сегодня одна из них заставила её вернуться к записям.`,
+    `${firstName} больше всего боится поспешить и обвинить не того человека.`,
+    `Когда ${firstName} пишет «есть минутка?», значит, снова нашлось то, о чём лучше поговорить.`,
+    `Она нашла не ответ, а новую зацепку ${anchor}.`,
   ] as const
   const hookTails = [
     ' Похоже, без разговора не обойтись.',
     ' Сегодня лучше не спешить.',
     ' Сначала стоит выслушать обе стороны.',
-    ' Дальше всё решит один честный вопрос.',
-    ' Такая деталь ещё вернётся.',
-    ' Тут важно оставить место для сомнений.',
-    ' Иногда самый прямой путь начинается с паузы.',
+    ' Дальше нужен один точный вопрос.',
+    ' Эту деталь придётся проверить ещё раз.',
+    ' Тут без проверки легко ошибиться.',
+    ' Иногда лучше сначала взять паузу.',
   ] as const
   const descriptions = [
-    `Авторская история о разговоре, который начинается ${anchor} и постепенно меняет доверие, границы и следующий шаг.`,
-    `Сначала это обычный разговор о теме «${theme}». Потом появляется деталь, которую уже не получится не заметить: ${anchor}.`,
-    `История о двух людях, которым приходится сверять факты и границы ${anchor}, не решая всё друг за друга.`,
-    `Одна странная деталь, один поздний разговор и несколько способов не сделать вывод за другого — так начинается эта история ${anchor}.`,
+    `Разговор начинается ${anchor}: в записях не сходятся время, подписи и порядок событий.`,
+    `Сначала это обычный разговор. Потом ${firstName} находит странную деталь ${anchor}, и прежняя версия перестаёт сходиться.`,
+    `Двое сверяют версии, найденные ${anchor}, и каждый отвечает за своё решение.`,
+    `Поздний разговор начинается ${anchor}: одна деталь не сходится с остальными, и её нужно проверить.`,
   ] as const
   return {
     characterId: `char.bulk.${pad(index + 1)}`,
@@ -883,9 +845,9 @@ const makeStory = (
   const stem = storyTitleStems[index % storyTitleStems.length]!
   const title = `${theme[0]?.toUpperCase() ?? theme}${theme.slice(1)} — ${stem}`
   const premises = [
-    `Вокруг темы «${theme}» всё начинается ${anchor}. В этой истории важен не «правильный» ответ, а выбранный вами способ быть рядом.`,
-    `${stem} — история о том, как одна деталь, найденная ${anchor}, меняет разговор и оставляет место для собственного решения.`,
-    `У темы «${theme}» нет одного правильного финала. Всё начинается ${anchor}, а дальше важны факты, границы и то, что вы решите сказать.`,
+    `Всё начинается ${anchor}: в записях обнаруживается деталь, которой там не должно быть.`,
+    `${stem} начинается с находки ${anchor}. Она заставляет перепроверить даты, подписи и чужие алиби.`,
+    `Деталь, найденная ${anchor}, ломает привычную версию событий. Дальше придётся сверять факты и решать, кому верить.`,
   ] as const
   return {
     storyId,
@@ -1003,19 +965,17 @@ const makeDecision = (
   stageCount: number,
 ): DecisionNode => {
   const nodeId = decisionIdForStage(storyId, stage)
-  const firstName = character.name.split(' ')[0] ?? character.name
   const anchor = anchorForStory(storyIndex)
   const stageEvidence = stageEvidenceFor(stage)
   const context = decisionContexts[stage % decisionContexts.length]![0]
   const prompt = decisionPrompts[
     (storyIndex + stage) % decisionPrompts.length
   ]!.replace('{context}', context.accusative)
-  const beat = decisionBeats[stage % decisionBeats.length]![0]
   const setup = [
-    `${firstName}, я снова сверилась с записями ${anchor}.`,
-    `На этот раз деталь нашлась ${anchor}.`,
-    `Ладно, давай без лишних кругов. Записи ${anchor} перед нами.`,
-    `Я пока не делаю выводов. Записи ${anchor} перед нами — слишком многое указывает на ${context.accusative}.`,
+    `Я снова сверилась с записями, найденными ${anchor}. Передо мной — ${stageEvidence}.`,
+    `На этот раз несоответствие нашлось ${anchor}. Рядом лежит ${stageEvidence}.`,
+    `Ладно, без лишних кругов. Вот улика, найденная ${anchor}: ${stageEvidence}.`,
+    `Я пока не делаю выводов. Новая улика лежит ${anchor}: ${stageEvidence}.`,
   ][(storyIndex + stage) % 4]!
   const choices = four(
     Array.from({ length: branchCount }, (_, choiceBranch) =>
@@ -1029,7 +989,7 @@ const makeDecision = (
     ),
   )
   const memoryKey = `${storyId}.memory.lastIntent`
-  const fallbackText = `${beat} ${setup} Рядом лежит ${stageEvidence}. ${prompt}`
+  const fallbackText = `${setup} ${prompt}`
   const messageVariants = [
     ...choiceIntents.map(([, intent]) => ({
       variantId: `${nodeId}.after-${intent}`,
@@ -1074,20 +1034,13 @@ const makeEnding = (
   storyIndex: number,
   choiceBranch: number,
 ): ContentNode => {
-  const theme = themes[storyIndex % themes.length]!
   const firstName = character.name.split(' ')[0] ?? character.name
   const anchor = anchorForStory(storyIndex)
   const endingTitles = [
-    'Факты на столе',
-    'Граница обозначена',
-    'Рядом, без лишних слов',
-    'Пауза перед следующим шагом',
-  ] as const
-  const endingMoments = [
-    'после долгой проверки деталей',
-    'после названной границы',
-    'после нескольких честных разговоров',
-    'после последнего вопроса',
+    'Факты сошлись',
+    'На этом остановимся',
+    'Проверка вдвоём',
+    'Выводы подождут',
   ] as const
   const nodeId = endingNodeId(storyId, choiceBranch)
   const context =
@@ -1097,22 +1050,27 @@ const makeEnding = (
     type: 'ending',
     sceneId: `${storyId}.scene.main`,
     endingId: `${storyId}.outcome.${choiceBranch + 1}`,
-    title: `${character.name}: ${endingTitles[choiceBranch]} · ${context.accusative} · ${endingMoments[choiceBranch]} · ${theme}`,
+    title: `${character.name}: ${endingTitles[choiceBranch]}`,
     messages: [
       message(
         `${nodeId}.message`,
         character.characterId,
         [
-          `К финалу главный вопрос — «${context.accusative}» — больше не висит в воздухе. Все записи, найденные ${anchor}, собраны вместе, и можно двигаться дальше.`,
-          `Вы обозначили границу и не стали торопить ответ по поводу ${context.genitive}. ${firstName} оставляет записи ${anchor} и предлагает вернуться к ним, когда появятся новые факты.`,
-          `Вы выбрали идти рядом: вопрос «${context.accusative}» разобран по шагам, а следующий разговор начинается ${anchor}.`,
-          `Пауза оказалась решением сама по себе. После разговора о ${context.about} у этой истории есть план, записи ${anchor} и право не отвечать сию секунду.`,
+          `Удалось проверить ${context.accusative}. Материалы, найденные ${anchor}, собраны вместе; теперь понятно, что делать дальше.`,
+          `По поводу ${context.genitive} договорились не спешить. ${firstName} сохранит записи, найденные ${anchor}, и вернётся к ним, когда появятся новые факты.`,
+          `Удалось разобрать ${context.accusative} вдвоём. ${firstName} сохранила записи, найденные ${anchor}, и составила список дальнейших проверок.`,
+          `Решение по поводу ${context.genitive} отложили до новых фактов. Исходники, найденные ${anchor}, остались без изменений.`,
         ][choiceBranch]!,
         80,
       ),
     ],
     epilogueFacts: [
-      `В этой истории вы выбрали «${choiceIntents[choiceBranch]![0]}» и разобрались ${withRussianS(context.instrumental)}: записи ${anchor} остались под рукой, а следующий шаг — за вами.`,
+      [
+        `Проверенные материалы, найденные ${anchor}, остались под рукой; сомнительные детали отмечены отдельно.`,
+        `В разговоре зафиксировали, к чему пока не возвращаются. Записи, найденные ${anchor}, сохранены для следующей проверки.`,
+        `${firstName} проверила записи, найденные ${anchor}, вместе с собеседником и знает, с чего продолжить.`,
+        `Вывод отложили до новой проверки; исходники, найденные ${anchor}, сохранили без изменений.`,
+      ][choiceBranch]!,
     ],
     editorial: editorial(character.characterId),
   }
@@ -1155,10 +1113,10 @@ const makeStoryNodes = (
             `${reactionId}.message`,
             character.characterId,
             [
-              `«Давай начнём с проверки ${context.genitive}», — говорит ${character.name.split(' ')[0] ?? character.name}. Она ещё раз сверяет записи ${anchor}. Рядом лежит ${stageEvidence}.`,
-              `«Границу лучше назвать прямо, а ${withRussianS(context.instrumental)} разобраться отдельно», — отвечает ${character.name.split(' ')[0] ?? character.name}, не убирая записи ${anchor}. Рядом лежит ${stageEvidence}.`,
-              `«Спасибо, что не отмахиваешься. Я рядом: спокойно разберём ${context.accusative}», — говорит ${character.name.split(' ')[0] ?? character.name}, раскладывая записи ${anchor}. Рядом лежит ${stageEvidence}.`,
-              `«Сначала сверим ${context.accusative}, потом решим, что это значит», — говорит ${character.name.split(' ')[0] ?? character.name}, закрывая папку ${anchor}. Рядом лежит ${stageEvidence}.`,
+              `«Давай начнём с проверки ${context.genitive}», — говорит ${character.name.split(' ')[0] ?? character.name}. Она ещё раз сверяет записи, найденные ${anchor}. Рядом лежит ${stageEvidence}.`,
+              `«Сначала договоримся, чего не касаемся; ${withRussianS(context.instrumental)} разберёмся отдельно», — отвечает ${character.name.split(' ')[0] ?? character.name}, не убирая материалы, найденные ${anchor}. Рядом лежит ${stageEvidence}.`,
+              `«Хорошо, вдвоём будет быстрее. Разберём ${context.accusative}», — говорит ${character.name.split(' ')[0] ?? character.name}, раскладывая материалы, найденные ${anchor}. Рядом лежит ${stageEvidence}.`,
+              `«Сначала сверим ${context.accusative}, потом решим, что это значит», — говорит ${character.name.split(' ')[0] ?? character.name}, помечая записи, найденные ${anchor}. Рядом лежит ${stageEvidence}.`,
             ][choiceBranch]!,
             100,
           ),
@@ -1216,11 +1174,11 @@ export function generateBulkFixtureContentPackage(
       packId: 'pack.ru.bulk.fixture',
       locale: 'ru-RU',
       schemaVersion: 1,
-      contentVersion: '0.2.2',
-      buildId: 'ru-bulk-fixture-2026.08.23.3',
+      contentVersion: '0.2.4',
+      buildId: 'ru-bulk-fixture-2026.08.24.2',
       minEngineVersion: '1.0.0',
       maxEngineVersion: '1.x',
-      createdAt: '2026-08-23T00:00:00.000Z',
+      createdAt: '2026-08-24T00:00:00.000Z',
       checksum: 'sha256:development-bulk-fixture',
       signature: 'ed25519:development-bulk-fixture',
     },
