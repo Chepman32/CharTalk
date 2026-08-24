@@ -1,0 +1,4 @@
+title: 30/50 characters
+subtitle: 58/80 characters
+description: 3919/4000 characters
+Metadata validation passed.

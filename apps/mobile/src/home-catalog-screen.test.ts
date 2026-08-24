@@ -8,11 +8,18 @@ const homeCatalogSource = readFileSync(
 )
 
 describe('home catalog screen', () => {
-  it('renders every story without pagination or update controls', () => {
+  it('virtualizes every story without pagination or update controls', () => {
     expect({
-      rendersCompleteResult: homeCatalogSource.includes(
+      usesVirtualizedList: homeCatalogSource.includes('<FlatList'),
+      passesCompleteResultToList: homeCatalogSource.includes('data={stories}'),
+      eagerlyMapsEveryStory: homeCatalogSource.includes(
         '{stories.map(story => (',
       ),
+      boundsRenderWindow:
+        homeCatalogSource.includes('initialNumToRender=') &&
+        homeCatalogSource.includes('maxToRenderPerBatch=') &&
+        homeCatalogSource.includes('windowSize='),
+      disablesOuterScroll: homeCatalogSource.includes('scroll={false}'),
       hasPaginationState: /\b(PAGE_SIZE|visibleCount|catalogPage)\b/.test(
         homeCatalogSource,
       ),
@@ -27,7 +34,11 @@ describe('home catalog screen', () => {
       ),
       hasCyclingFilterHelper: /\bnextValue\b/.test(homeCatalogSource),
     }).toEqual({
-      rendersCompleteResult: true,
+      usesVirtualizedList: true,
+      passesCompleteResultToList: true,
+      eagerlyMapsEveryStory: false,
+      boundsRenderWindow: true,
+      disablesOuterScroll: true,
       hasPaginationState: false,
       hasLoadMoreControl: false,
       hasCatalogRefreshControl: false,

@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "609d7193a6d527b50b45e9ccf3bf454bbf0bebf8",
-    "indexed_at": "2026-08-24T15:00:58Z",
+    "commit": "405574c1bad30e12ddb7d50e607b34eaf0cead5a",
+    "indexed_at": "2026-08-24T15:46:47Z",
     "project": "Users-antonchepur-Documents-Android-versions-CharTalk",
-    "nodes": 6065,
-    "edges": 14122,
-    "original_size": 18546688,
-    "compressed_size": 2521548,
+    "nodes": 0,
+    "edges": 0,
+    "original_size": 102400,
+    "compressed_size": 1468,
     "compression_level": 3
 }
